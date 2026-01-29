@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001/api/analysis';
+const API_URL = 'http://localhost:5000';
 
 export async function extractTextFromPdf(file) {
   const reader = new FileReader();
@@ -21,9 +21,8 @@ export async function extractTextFromPdf(file) {
   return fullText;
 }
 
-// Enviar para análise
 export async function analyzeExam(pdfText) {
-  const response = await fetch(`${API_URL}/hemogram`, {
+  const response = await fetch(`${API_URL}/api/analysis/hemogram`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message: pdfText })
@@ -37,7 +36,6 @@ export async function analyzeExam(pdfText) {
   return data.reply;
 }
 
-// Carregar PDF.js
 export function loadPdfJs() {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');

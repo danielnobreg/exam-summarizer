@@ -1,72 +1,40 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import * as analysisService from '../services/analysisService';
+import { getUserData } from '../services/userService';
 
-export default function App() {
+export default function Dashboard({ user, onLogout }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState('');
   const [error, setError] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-
+  const [userData, setUserData] = useState(null);
+  
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js';
-    script.onload = () => {
-      if (window.pdfjsLib) {
-        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 
-          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    analysisService.loadPdfJs();
+    
+    async function loadUserData() {
+      try {
+        const data = await getUserData(user.uid);
+        setUserData(data);
+      } catch (err) {
+        console.error('Erro ao buscar dados do usuário:', err);
       }
-    };
-    document.body.appendChild(script);
-    return () => {
-      try { document.body.removeChild(script); } catch (e) {}
-    };
-  }, []);
-
-  async function extractTextFromPdf(file) {
-    const reader = new FileReader();
-    const arrayBuffer = await new Promise((resolve, reject) => {
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(file);
-    });
-
-    const pdf = await window.pdfjsLib.getDocument(arrayBuffer).promise;
-    let fullText = '';
-
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items.map(item => item.str).join(' ');
-      fullText += pageText + '\n';
-    }
-
-    return fullText;
-  }
+    }  
+    loadUserData();
+  }, [user.uid]);
 
   async function handleAnalyze() {
     if (!file) return;
-
     setLoading(true);
     setError('');
     setApiResponse('');
 
     try {
-      const pdfText = await extractTextFromPdf(file);
-
-      const response = await fetch('http://localhost:3001/api/analysis/hemogram', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: pdfText })
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao comunicar com a API');
-      }
-
-      const data = await response.json();
-      setApiResponse(data.reply);
-
+      const pdfText = await analysisService.extractTextFromPdf(file);
+      const result = await analysisService.analyzeExam(pdfText);
+      setApiResponse(result);
     } catch (err) {
       setError(err.message || 'Erro ao processar PDF');
     } finally {
@@ -85,25 +53,14 @@ export default function App() {
     }
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
+  const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true); };
+  const handleDragLeave = (e) => { e.preventDefault(); setIsDragging(false); };
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
     processFile(e.dataTransfer.files[0]);
   };
-
-  const handleFileChange = (e) => {
-    processFile(e.target.files?.[0]);
-  };
+  const handleFileChange = (e) => { processFile(e.target.files?.[0]); };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(apiResponse).then(() => {
@@ -113,34 +70,51 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
-        
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4">
+      {/* Header com Logout */}
+      <div className="max-w-2xl mx-auto mb-4 flex justify-between items-center">
+        <div>
+          <p className="text-sm text-gray-600">Logado como:</p>
+          <p className="font-semibold text-gray-800">
+            {userData?.name} {userData?.isAdmin && '(Administrador)'}
+          </p>
+          <p className="text-xs text-gray-500">{userData?.email}</p>
+        </div>
+        <button
+          onClick={onLogout}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+        >
+          Sair
+        </button>
+      </div>
+      
+      {/* Mostrar painel admin se for admin */}
+      {userData?.isAdmin && (
+        <div className="max-w-2xl mx-auto mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm font-semibold text-yellow-800">
+            🔧 Você tem permissões de administrador
+          </p>
+        </div>
+      )}
+
+      <div className="w-full max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center p-3 bg-red-600 rounded-full shadow-lg mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
               <path d="M12 22s8-4 8-10a8 8 0 0 0-16 0c0 6 8 10 8 10Z"/>
             </svg>
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Analisador de Hemograma</h1>
-          <p className="text-lg text-gray-600">Faça o upload do seu PDF de exame para obter uma análise inteligente</p>
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">Análise Laboratorial</h1>
+          <p className="text-lg text-gray-600">Faça o upload do PDF dos exames para obter um resumo de seus resultados. </p>
         </div>
 
-        {/* Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
-          
-          {/* Upload Area */}
           <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
-              Arquivo PDF do Exame
-            </label>
-            
+            <label className="block text-sm font-semibold text-gray-700 mb-3">Arquivo PDF do Exame</label>
             <label 
               htmlFor="file-upload" 
               className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer transition ${
-                isDragging 
-                  ? 'border-blue-400 bg-blue-50' 
-                  : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
+                isDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -177,14 +151,12 @@ export default function App() {
             </div>
           )}
 
-          {/* Error */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-center">
               <p className="text-sm text-red-800 font-medium">⚠️ {error}</p>
             </div>
           )}
 
-          {/* Button */}
           <button
             onClick={handleAnalyze}
             disabled={!file || loading}
@@ -208,7 +180,6 @@ export default function App() {
             )}
           </button>
 
-          {/* Results */}
           {(apiResponse || loading) && (
             <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex items-center justify-between mb-4">
@@ -238,16 +209,13 @@ export default function App() {
               </div>
             </div>
           )}
-
         </div>
 
-        {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-xs text-gray-500">
             © 2025 Hemotrack por Daniel Nóbrega. Todos os direitos reservados.
           </p>
         </div>
-
       </div>
     </div>
   );

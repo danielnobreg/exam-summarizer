@@ -1,0 +1,53 @@
+import { 
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from 'firebase/auth';
+import { auth } from '../config/firebaseConfig';
+import { getUserData } from './userService';
+
+export async function login(email, password) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+  
+    const userData = await getUserData(user.uid);
+    
+    return {
+      uid: user.uid,
+      email: user.email,
+      name: userData?.name || 'Usuário',
+      isAdmin: userData?.isAdmin || false
+    };
+  } catch (error) {
+    throw new Error(getErrorMessage(error.code));
+  }
+}
+
+export async function logout() {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    throw new Error('Erro ao fazer logout');
+  }
+}
+
+export function getCurrentUser() {
+  return auth.currentUser;
+}
+
+export function onAuthChange(callback) {
+  return onAuthStateChanged(auth, callback);
+}
+
+function getErrorMessage(errorCode) {
+  const errors = {
+    'auth/invalid-email': 'Email ou senha incorretos',
+    'auth/user-not-found': 'Email ou senha incorretos',
+    'auth/wrong-password': 'Email ou senha incorretos',
+    'auth/too-many-requests': 'Muitas tentativas. Tente novamente mais tarde',
+    'auth/invalid-credential': 'Email ou senha incorretos'
+  };
+  
+  return errors[errorCode] || 'Email ou senha incorretos';
+}

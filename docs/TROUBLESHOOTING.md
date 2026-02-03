@@ -32,7 +32,7 @@
 No `server/server.js`:
 ```javascript
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://seu-app.vercel.app']
+  origin: ['http://localhost:3000']
 }));
 ```
 

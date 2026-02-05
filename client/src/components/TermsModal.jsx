@@ -131,7 +131,7 @@ Garantir segurança e integridade do sistema.
 
 Os dados não são comercializados.
 
-Poderão ser processados por fornecedores tecnológicos essenciais, incluindo soluções de inteligência artificial, sempre comt técnicas de anonimização, pseudonimização ou minimização, conforme aplicável e permitido por lei.
+Poderão ser processados por fornecedores tecnológicos essenciais, incluindo soluções de inteligência artificial, sempre com técnicas de anonimização, pseudonimização ou minimização, conforme aplicável e permitido por lei.
 
 ## 6. Segurança da Informação
 

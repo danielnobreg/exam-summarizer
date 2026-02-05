@@ -10,6 +10,7 @@ export default function Dashboard({ user, onLogout }) {
   const [copySuccess, setCopySuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [showGuide, setShowGuide] = useState(false ); 
   
   useEffect(() => {
     analysisService.loadPdfJs();
@@ -69,9 +70,74 @@ export default function Dashboard({ user, onLogout }) {
     });
   };
 
+  const handleAdminPanel = () => {
+
+    alert('Painel de administrador em construção! 🚧');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4">
-      {/* Header com Logout */}
+      
+      <button
+        onClick={() => setShowGuide(true)}
+        className="fixed top-6 right-6 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-full shadow-lg border border-gray-200 font-medium text-sm transition-all hover:shadow-xl flex items-center gap-2 z-50"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Como usar
+      </button>
+
+      {showGuide && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-gray-800">📖 Como usar</h2>
+              <button
+                onClick={() => setShowGuide(false)}
+                className="text-gray-400 hover:text-gray-600 transition"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+            
+            <div className="space-y-4 text-sm text-gray-700">
+              <div className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold text-xs">1</span>
+                <p><strong>Faça upload</strong> do arquivo PDF do seu exame laboratorial (clique ou arraste)</p>
+              </div>
+              
+              <div className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold text-xs">2</span>
+                <p><strong>Clique em "Resumir Exame"</strong> e aguarde o processamento</p>
+              </div>
+              
+              <div className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold text-xs">3</span>
+                <p><strong>Copie o resultado</strong> formatado para usar onde precisar</p>
+              </div>
+
+              <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-xs text-blue-800">
+                  💡 <strong>Dica:</strong> O resultado é formatado automaticamente para facilitar a visualização dos dados do exame.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowGuide(false)}
+              className="w-full mt-6 bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition"
+            >
+              Entendi
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-2xl mx-auto mb-4 flex justify-between items-center">
         <div>
           <p className="text-sm text-gray-600">Logado como:</p>
@@ -88,11 +154,16 @@ export default function Dashboard({ user, onLogout }) {
         </button>
       </div>
       
-      {/* Mostrar painel admin se for admin */}
       {userData?.isAdmin && (
         <div className="max-w-2xl mx-auto mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
           <p className="text-sm font-semibold text-yellow-800">
-            🔧 Você tem permissões de administrador
+            🔧 Você tem permissões de administrador.{' '}
+            <button
+              onClick={handleAdminPanel}
+              className="text-yellow-900 underline hover:text-yellow-700 transition"
+            >
+              Clique aqui para abrir o painel
+            </button>
           </p>
         </div>
       )}
@@ -105,7 +176,7 @@ export default function Dashboard({ user, onLogout }) {
             </svg>
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Análise Laboratorial</h1>
-          <p className="text-lg text-gray-600">Faça o upload do PDF dos exames para obter um resumo de seus resultados. </p>
+          <p className="text-lg text-gray-600">Faça o upload do PDF dos exames para obter um resumo de seus resultados.</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
@@ -175,7 +246,7 @@ export default function Dashboard({ user, onLogout }) {
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4.5 3h15"/><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3"/><path d="M6 14h12"/>
                 </svg>
-                Analisar Exame
+                Resumir Exame
               </>
             )}
           </button>

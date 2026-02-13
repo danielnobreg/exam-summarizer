@@ -3,7 +3,6 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { 
   ArrowUp, 
-  Droplet, 
   Activity, 
   PlayCircle, 
   ArrowRight,

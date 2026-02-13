@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import * as adminService from '../services/adminService';
 import * as usageService from '../services/usageService';
-import { ArrowLeft, Users, MessageSquare, Trash2, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Users, MessageSquare, RotateCcw } from 'lucide-react';
 
 export default function AdminPanel({ user, onLogout, onNavigate }) {
   const [activeTab, setActiveTab] = useState('users');

@@ -7,8 +7,6 @@ import {
   Activity, 
   Settings, 
   LogOut, 
-  User,
-  LayoutDashboard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getUserData } from '../services/userService';

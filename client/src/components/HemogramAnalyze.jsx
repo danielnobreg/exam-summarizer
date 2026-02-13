@@ -22,7 +22,6 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
   // Hook customizado para limite de uso
   const { 
     canUse, 
-    dailyUsage, 
     dailyLimit, 
     remaining, 
     loading: usageLoading,

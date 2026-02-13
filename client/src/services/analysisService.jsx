@@ -1,5 +1,5 @@
-const API_URL = process.env.REACT_APP_API_URL;
-
+// const API_URL = process.env.REACT_APP_API_URL; // prod
+const API_URL = 'http://localhost:5000';
 export async function extractTextFromPdf(file) {
   const reader = new FileReader();
   const arrayBuffer = await new Promise((resolve, reject) => {
@@ -21,19 +21,33 @@ export async function extractTextFromPdf(file) {
   return fullText;
 }
 
-export async function analyzeExam(pdfText) {
+// aqui mandamos o texto do PDF + o userId pra API fazer a análise
+export async function analyzeExam(pdfText, userId) {
   const response = await fetch(`${API_URL}/api/analysis/hemogram`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: pdfText })
+    body: JSON.stringify({ 
+      message: pdfText,
+      userId: userId // agora mandamos o userId junto pra controlar o limite
+    })
   });
 
   if (!response.ok) {
+    const errorData = await response.json();
+    // se der erro de limite, jogamos um erro específico
+    if (response.status === 403) {
+      throw new Error(errorData.error || 'Limite diário atingido');
+    }
     throw new Error('Erro ao comunicar com a API');
   }
 
   const data = await response.json();
-  return data.reply;
+  
+  // retornamos tanto a análise quanto os dados de uso
+  return {
+    reply: data.reply,
+    usage: data.usage // { dailyUsage, dailyLimit, remaining }
+  };
 }
 
 export function loadPdfJs() {

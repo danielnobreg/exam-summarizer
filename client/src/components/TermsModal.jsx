@@ -1,4 +1,5 @@
 import React from 'react';
+import { X, FileText, CheckCircle } from 'lucide-react';
 
 export default function TermsModal({ isOpen, onClose, type }) {
   if (!isOpen) return null;
@@ -21,11 +22,9 @@ A plataforma não realiza diagnóstico, prognóstico, prescrição, orientação
 
 Ao utilizar o Hemotrack, o usuário declara expressamente que:
 
-É profissional de Saúde legalmente habilitado, nos termos da legislação brasileira;
-
-Possui registro ativo em seu respectivo conselho profissional, quando aplicável;
-
-Utiliza a plataforma como ferramenta auxiliar, sob sua inteira responsabilidade técnica e ética.
+- É profissional de Saúde legalmente habilitado, nos termos da legislação brasileira;
+- Possui registro ativo em seu respectivo conselho profissional, quando aplicável;
+- Utiliza a plataforma como ferramenta auxiliar, sob sua inteira responsabilidade técnica e ética.
 
 O Hemotrack não realiza validação de credenciais profissionais, cabendo exclusivamente ao usuário a veracidade das informações prestadas.
 
@@ -33,11 +32,9 @@ O Hemotrack não realiza validação de credenciais profissionais, cabendo exclu
 
 4.1. As informações geradas pela plataforma:
 
-São meramente auxiliares e informativas;
-
-Não substituem laudos oficiais;
-
-Não substituem a análise crítica, interpretação clínica ou decisão profissional do usuário.
+- São meramente auxiliares e informativas;
+- Não substituem laudos oficiais;
+- Não substituem a análise crítica, interpretação clínica ou decisão profissional do usuário.
 
 4.2. O Hemotrack não garante a exatidão, completude ou atualidade dos dados processados, especialmente quando os documentos fornecidos forem incompletos, ilegíveis ou imprecisos.
 
@@ -45,25 +42,19 @@ Não substituem a análise crítica, interpretação clínica ou decisão profis
 
 O usuário é integralmente responsável por:
 
-Garantir que possui base legal e autorização para inserir dados de pacientes;
-
-Utilizar a plataforma em conformidade com normas éticas e legais de sua profissão;
-
-Validar todas as informações antes de qualquer aplicação clínica;
-
-Responder por decisões tomadas com base no uso da ferramenta.
+- Garantir que possui base legal e autorização para inserir dados de pacientes;
+- Utilizar a plataforma em conformidade com normas éticas e legais de sua profissão;
+- Validar todas as informações antes de qualquer aplicação clínica;
+- Responder por decisões tomadas com base no uso da ferramenta.
 
 ## 6. Limitação de Responsabilidade
 
 O Hemotrack não se responsabiliza, em nenhuma hipótese, por:
 
-Condutas profissionais adotadas pelo usuário;
-
-Decisões clínicas, médicas ou terapêuticas;
-
-Danos diretos ou indiretos decorrentes do uso das informações processadas;
-
-Eventuais interpretações equivocadas ou uso indevido da plataforma.
+- Condutas profissionais adotadas pelo usuário;
+- Decisões clínicas, médicas ou terapêuticas;
+- Danos diretos ou indiretos decorrentes do uso das informações processadas;
+- Eventuais interpretações equivocadas ou uso indevido da plataforma.
 
 Nada nestes Termos exclui ou limita responsabilidade nos casos de dolo ou culpa grave, conforme a legislação vigente.
 
@@ -93,13 +84,10 @@ Email: hemotracksuporte@gmail.com
 
 Coletamos e tratamos:
 
-Nome e email do profissional
-
-Credenciais de acesso (armazenadas de forma criptografada)
-
-Documentos enviados para processamento
-
-Dados técnicos de uso da plataforma
+- Nome e email do profissional
+- Credenciais de acesso (armazenadas de forma criptografada)
+- Documentos enviados para processamento
+- Dados técnicos de uso da plataforma
 
 Os documentos podem conter dados pessoais sensíveis, incluindo dados de saúde de terceiros (pacientes).
 
@@ -111,21 +99,17 @@ O Hemotrack atua como operador de dados, realizando o tratamento em nome do prof
 
 O tratamento de dados ocorre com fundamento em:
 
-Art. 11, II, f, da LGPD – Tratamento de dados de saúde para tutela da saúde, realizado por profissionais de saúde;
-
-Art. 7º, V – Execução de contrato;
-
-Art. 6º – Princípios da finalidade, necessidade e segurança.
+- Art. 11, II, f, da LGPD – Tratamento de dados de saúde para tutela da saúde, realizado por profissionais de saúde;
+- Art. 7º, V – Execução de contrato;
+- Art. 6º – Princípios da finalidade, necessidade e segurança.
 
 4. Finalidade do Tratamento
 
 Os dados são tratados exclusivamente para:
 
-Processar e organizar exames médicos;
-
-Viabilizar o funcionamento técnico da plataforma;
-
-Garantir segurança e integridade do sistema.
+- Processar e organizar exames médicos;
+- Viabilizar o funcionamento técnico da plataforma;
+- Garantir segurança e integridade do sistema.
 
 ## 5. Compartilhamento de Dados
 
@@ -137,11 +121,9 @@ Poderão ser processados por fornecedores tecnológicos essenciais, incluindo so
 
 Adotamos medidas técnicas e administrativas adequadas, incluindo:
 
-Criptografia de credenciais;
-
-Controle de acesso restrito;
-
-Infraestrutura segura de armazenamento.
+- Criptografia de credenciais;
+- Controle de acesso restrito;
+- Infraestrutura segura de armazenamento.
 
 Apesar disso, nenhum sistema é completamente imune a riscos.
 
@@ -167,36 +149,48 @@ Email: hemotracksuporte@gmail.com
   const { title, text } = content[type] || content.terms;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 font-manrope animate-fadeIn">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col border border-gray-100 overflow-hidden transform transition-all animate-scaleUp">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-full ${type === 'terms' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>
+                {type === 'terms' ? <FileText className="h-5 w-5" /> : <CheckCircle className="h-5 w-5" />}
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition"
+            className="p-2 bg-gray-100 hover:bg-red-100 text-gray-400 hover:text-red-600 rounded-full transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto flex-1">
-          <div className="prose prose-sm max-w-none">
+        <div className="p-8 overflow-y-auto flex-1 custom-scrollbar">
+          <div className="prose prose-sm max-w-none text-gray-600">
             {text.split('\n').map((line, i) => {
               if (line.startsWith('# ')) {
-                return <h1 key={i} className="text-2xl font-bold mt-4 mb-2">{line.replace('# ', '')}</h1>;
+                return (
+                    <div key={i} className="flex items-center gap-2 mt-6 mb-3">
+                        <h1 className="text-2xl font-extrabold text-gray-900">{line.replace('# ', '')}</h1>
+                    </div>
+                );
               } else if (line.startsWith('## ')) {
-                return <h2 key={i} className="text-xl font-semibold mt-3 mb-2">{line.replace('## ', '')}</h2>;
+                return <h2 key={i} className="text-lg font-bold text-gray-800 mt-5 mb-2 pb-1 border-b border-gray-100">{line.replace('## ', '')}</h2>;
               } else if (line.startsWith('- ')) {
-                return <li key={i} className="ml-4">{line.replace('- ', '')}</li>;
+                return (
+                    <div key={i} className="flex items-start gap-2 ml-2 my-1.5">
+                        <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0"></div>
+                        <p className="text-gray-600 leading-relaxed">{line.replace('- ', '')}</p>
+                    </div>
+                );
               } else if (line.startsWith('**')) {
-                return <p key={i} className="font-semibold my-2">{line.replace(/\*\*/g, '')}</p>;
+                return <p key={i} className="font-bold text-gray-800 my-3 bg-gray-50 p-3 rounded-lg border border-gray-100">{line.replace(/\*\*/g, '')}</p>;
               } else if (line.trim()) {
-                return <p key={i} className="my-2 text-gray-700">{line}</p>;
+                return <p key={i} className="my-2 text-gray-600 leading-relaxed">{line}</p>;
               }
               return null;
             })}
@@ -204,12 +198,12 @@ Email: hemotracksuporte@gmail.com
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-gray-200">
+        <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end">
           <button
             onClick={onClose}
-            className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition"
+            className="px-8 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition shadow-lg shadow-red-600/20 hover:-translate-y-0.5"
           >
-            Fechar
+            Entendi e Concordo
           </button>
         </div>
 

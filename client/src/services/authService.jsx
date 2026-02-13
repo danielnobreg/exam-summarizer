@@ -6,6 +6,31 @@ import {
 import { auth } from '../config/firebaseConfig';
 import { getUserData } from './userService';
 
+// const API_URL = process.env.REACT_APP_API_URL; // prod
+const API_URL ="http://localhost:5000"; // build
+
+export async function authFetch(path, options = {}) {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Usuário não autenticado");
+
+  const token = await user.getIdToken(); // token do Firebase
+
+  const res = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "Erro na API");
+
+  return data;
+}
+
+
 export async function login(email, password) {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);

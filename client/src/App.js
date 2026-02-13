@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import HemogramAnalyze from './components/HemogramAnalyze';
+import AdminPanel from './components/AdminPanel';
+import HomePage from './components/HomePage';
+import Contact from './components/Contact';
 import * as authService from './services/authService';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('login');
+  const [currentScreen, setCurrentScreen] = useState('home');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -15,10 +18,10 @@ export default function App() {
           uid: firebaseUser.uid,
           email: firebaseUser.email
         });
-        setCurrentScreen('dashboard');
+        setCurrentScreen('hemogram');
       } else {
         setUser(null);
-        setCurrentScreen('login');
+        setCurrentScreen('home');
       }
       setLoading(false);
     });
@@ -28,13 +31,21 @@ export default function App() {
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
-    setCurrentScreen('dashboard');
+    setCurrentScreen('hemogram');
   };
 
   const handleLogout = async () => {
     await authService.logout();
     setUser(null);
-    setCurrentScreen('login');
+    setCurrentScreen('home');
+  };
+
+  const handleNavigateToAdmin = () => {
+    setCurrentScreen('admin');
+  };
+
+  const handleBackToDashboard = () => {
+    setCurrentScreen('hemogram');
   };
 
   if (loading) {
@@ -45,18 +56,39 @@ export default function App() {
     );
   }
 
-  if (currentScreen === 'dashboard' && user) {
-    return <Dashboard user={user} onLogout={handleLogout} />;
+  if (currentScreen === 'admin' && user) {
+    return (
+      <AdminPanel 
+        user={user} 
+        onLogout={handleLogout}
+        onNavigate={setCurrentScreen}
+      />
+    );
+  }
+
+  if (currentScreen === 'hemogram' && user) {
+    return (
+      <HemogramAnalyze 
+        user={user} 
+        onLogout={handleLogout}
+        onNavigate={setCurrentScreen}
+      />
+    );
+  }
+
+  if (currentScreen === 'contact') {
+    return (
+      <Contact 
+        user={user} 
+        onLogout={handleLogout}
+        onNavigate={setCurrentScreen}
+      />
+    );
   }
 
   if (currentScreen === 'login') {
-    return <Login onSwitchToLogin={() => setCurrentScreen('login')} />;
+    return <Login onLoginSuccess={handleLoginSuccess} onNavigate={setCurrentScreen} />;
   }
 
-  return (
-    <Login 
-      onSwitchToRegister={() => setCurrentScreen('login')}
-      onLoginSuccess={handleLoginSuccess}
-    />
-  );
+  return <HomePage onNavigateLogin={() => setCurrentScreen('login')} onNavigate={setCurrentScreen} user={user} />;
 }

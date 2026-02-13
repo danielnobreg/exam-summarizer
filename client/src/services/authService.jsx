@@ -6,8 +6,7 @@ import {
 import { auth } from '../config/firebaseConfig';
 import { getUserData } from './userService';
 
-// const API_URL = process.env.REACT_APP_API_URL; // prod
-const API_URL ="http://localhost:5000"; // build
+const API_URL = process.env.REACT_APP_API_URL;
 
 export async function authFetch(path, options = {}) {
   const user = auth.currentUser;

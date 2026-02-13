@@ -1,8 +1,8 @@
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 
-// const API_URL = process.env.REACT_APP_API_URL;
-const API_URL = 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL;
+
 export async function createUserProfile(userData) {
   try {
     const response = await fetch(`${API_URL}/api/admin/create-user`, {

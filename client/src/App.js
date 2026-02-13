@@ -40,13 +40,13 @@ export default function App() {
     setCurrentScreen('home');
   };
 
-  const handleNavigateToAdmin = () => {
-    setCurrentScreen('admin');
-  };
+  // const handleNavigateToAdmin = () => {
+  //   setCurrentScreen('admin');
+  // };
 
-  const handleBackToDashboard = () => {
-    setCurrentScreen('hemogram');
-  };
+  // const handleBackToDashboard = () => {
+  //   setCurrentScreen('hemogram');
+  // };
 
   if (loading) {
     return (
@@ -89,6 +89,7 @@ export default function App() {
   if (currentScreen === 'login') {
     return <Login onLoginSuccess={handleLoginSuccess} onNavigate={setCurrentScreen} />;
   }
+
 
   return <HomePage onNavigateLogin={() => setCurrentScreen('login')} onNavigate={setCurrentScreen} user={user} />;
 }

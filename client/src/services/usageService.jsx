@@ -1,5 +1,4 @@
-// const API_URL = process.env.REACT_APP_API_URL; // prod
-const API_URL = 'http://localhost:5000'; // build
+const API_URL = process.env.REACT_APP_API_URL;
 
 // aqui a gente verifica quantas análises o usuário já fez hoje
 export async function checkUsageLimit(userId) {

@@ -1,5 +1,5 @@
-// const API_URL = process.env.REACT_APP_API_URL; // prod
-const API_URL = 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL;
+
 export async function extractTextFromPdf(file) {
   const reader = new FileReader();
   const arrayBuffer = await new Promise((resolve, reject) => {

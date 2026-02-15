@@ -43,7 +43,7 @@ cd server && npm run dev
 
 ## 👤 Autor
 
-Daniel Nóbrega - [Seu GitHub](https://github.com/danielnobreg/)
+ [Daniel Nóbrega](https://github.com/danielnobreg/)
 
 ## 📄 Licença
 

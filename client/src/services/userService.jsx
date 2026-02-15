@@ -30,7 +30,7 @@ export async function createUserProfile(uid, data) {
     await setDoc(doc(db, 'users', uid), {
       name: data.name,
       email: data.email,
-      isAdmin: data.isAdmin || false,
+      isAdmin: false,
       createdAt: new Date().toISOString()
     });
   } catch (error) {

@@ -27,7 +27,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
     loading: usageLoading,
     updateUsageAfterAnalysis,
     refresh: refreshUsage
-  } = useUsageLimit(user?.uid);
+  } = useUsageLimit();
 
   const isAdminUser = !!userData?.isAdmin;
   const canUseEffective = isAdminUser ? true : canUse;
@@ -60,7 +60,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
 
     try {
       const pdfText = await analysisService.extractTextFromPdf(file);
-      const result = await analysisService.analyzeExam(pdfText, user.uid);
+      const result = await analysisService.analyzeExam(pdfText);
       setApiResponse(result.reply);
       
       if (result.usage) {

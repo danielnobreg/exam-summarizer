@@ -1,4 +1,4 @@
-const API_URL = process.env.REACT_APP_API_URL;
+import { authFetch } from './authService';
 
 export async function extractTextFromPdf(file) {
   const reader = new FileReader();
@@ -21,28 +21,14 @@ export async function extractTextFromPdf(file) {
   return fullText;
 }
 
-// aqui mandamos o texto do PDF + o userId pra API fazer a análise
-export async function analyzeExam(pdfText, userId) {
-  const response = await fetch(`${API_URL}/api/analysis/hemogram`, {
+// aqui mandamos o texto do PDF pra API fazer a análise
+// usa authFetch que já adiciona o Bearer token automaticamente
+export async function analyzeExam(pdfText) {
+  const data = await authFetch('/api/analysis/hemogram', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      message: pdfText,
-      userId: userId // agora mandamos o userId junto pra controlar o limite
-    })
+    body: JSON.stringify({ message: pdfText }),
   });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    // se der erro de limite, jogamos um erro específico
-    if (response.status === 403) {
-      throw new Error(errorData.error || 'Limite diário atingido');
-    }
-    throw new Error('Erro ao comunicar com a API');
-  }
-
-  const data = await response.json();
-  
   // retornamos tanto a análise quanto os dados de uso
   return {
     reply: data.reply,

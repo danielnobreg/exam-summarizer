@@ -25,7 +25,7 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-8">
           <button
-            onClick={() => onNavigate('dashboard')}
+            onClick={() => onNavigate('hemogram')}
             className="p-2 bg-white hover:bg-gray-100 rounded-full shadow-sm text-gray-600 transition-all hover:-translate-x-1"
             title="Voltar ao Dashboard"
           >
@@ -108,10 +108,7 @@ function UsersTab({ currentUser }) {
     setSuccess('');
 
     try {
-      await adminService.createUserProfile({
-        ...formData,
-        createdBy: currentUser.uid
-      });
+      await adminService.createUserProfile(formData);
 
       setSuccess('Usuário criado com sucesso!');
       setFormData({ name: '', email: '', password: '', dailyLimit: 5 });

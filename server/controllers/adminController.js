@@ -1,18 +1,10 @@
-const admin = require('firebase-admin');
-
-if (!admin.apps.length) {
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-  
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
-}
-
-const db = admin.firestore();
+const { admin, db } = require('../config/firebaseAdmin');
 
 exports.createUser = async (req, res) => {
   try {
-    const { email, password, name, dailyLimit, createdBy } = req.body;
+    const { email, password, name, dailyLimit } = req.body;
+    // createdBy vem do token do admin autenticado (fonte confiável)
+    const createdBy = req.user.uid;
 
     if (!email || !password || !name) {
       return res.status(400).json({ error: 'Preencha todos os campos obrigatórios' });
@@ -53,6 +45,23 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ error: 'Este email já está cadastrado' });
     }
     
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Erro interno ao criar usuário' });
+  }
+};
+
+// listar todos os usuários (só admin)
+exports.listUsers = async (req, res) => {
+  try {
+    const snapshot = await db.collection('users').get();
+    
+    const users = [];
+    snapshot.forEach((doc) => {
+      users.push({ id: doc.id, ...doc.data() });
+    });
+
+    res.json({ users });
+  } catch (error) {
+    console.error('Erro ao listar usuários:', error);
+    res.status(500).json({ error: 'Erro interno ao listar usuários' });
   }
 };

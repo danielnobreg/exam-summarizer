@@ -1,15 +1,5 @@
 const geminiService = require('../services/geminiService');
-const admin = require('firebase-admin');
-
-if (!admin.apps.length) {
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-}
-
-const db = admin.firestore();
+const { admin, db } = require('../config/firebaseAdmin');
 
 exports.analyzeHemogram = async (req, res, next) => {
   try {
@@ -28,6 +18,7 @@ exports.analyzeHemogram = async (req, res, next) => {
 
     const userData = userDoc.data();
 
+    // admin não consome limite
     if (userData.isAdmin) {
       const analysis = await geminiService.generateAnalysis(message);
       return res.json({

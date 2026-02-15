@@ -7,5 +7,12 @@ module.exports = (req, res, next) => {
     });
   }
 
+  // limite de tamanho do texto extraído (50.000 caracteres)
+  if (message.length > 50000) {
+    return res.status(413).json({
+      error: 'Texto do PDF muito grande. Limite: 50.000 caracteres.'
+    });
+  }
+
   next();
 };

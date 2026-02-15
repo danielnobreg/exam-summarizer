@@ -1,14 +1,4 @@
-const admin = require('firebase-admin');
-
-if (!admin.apps.length) {
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-}
-
-const db = admin.firestore();
+const { admin, db } = require('../config/firebaseAdmin');
 
 // aqui a gente verifica se o usuário ainda tem créditos pra usar hoje
 exports.checkUsageLimit = async (req, res, next) => {
@@ -24,7 +14,7 @@ exports.checkUsageLimit = async (req, res, next) => {
 
     const userData = userDoc.data();
     const dailyLimit = userData.dailyLimit || 5;
-    const today = new Date().toISOString().split('T')[0]; // pega só a data tipo "2025-02-12"
+    const today = new Date().toISOString().split('T')[0];
 
     // se a última vez que usou foi hoje, pega o contador atual, senão reseta pra 0
     const dailyUsage = userData.lastUsageDate === today ? (userData.dailyUsage || 0) : 0;
@@ -105,11 +95,22 @@ exports.incrementUsage = async (req, res, next) => {
 };
 
 // aqui reseta manualmente o contador de um usuário (só admin usa)
+// o requireAdmin middleware já garante que só admin chega aqui
 exports.resetUsage = async (req, res, next) => {
   try {
-    const userId = req.user.uid;
+    // pega o userId do BODY (o usuário alvo), não do token (que é o admin)
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: 'userId é obrigatório' });
+    }
 
     const userRef = db.collection('users').doc(userId);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
     
     // reseta tudo pra zero
     await userRef.update({

@@ -36,10 +36,10 @@ app.use(cors({
 
 app.use(express.json({ limit: '10mb' }));
 
-// rate limiting global — 100 requests por minuto por IP
+// rate limiting global — 20 requests por minuto por IP
 const globalLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 100,
+  max: 200,
   message: { error: 'Muitas requisições. Tente novamente em 1 minuto.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -66,5 +66,5 @@ app.use('/api/usage', usageRoutes);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`🚀 Servidor rodando!`);
 });

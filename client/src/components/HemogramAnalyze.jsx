@@ -46,6 +46,16 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
     loadUserData();
   }, [user.uid]);
 
+  // bloqueia scroll da página quando o guia está aberto
+  useEffect(() => {
+    if (showGuide) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [showGuide]);
+
   async function handleAnalyze() {
     if (!file) return;
     

@@ -14,11 +14,14 @@ const PORT = process.env.PORT || 3000;
 
 // CORS — DEVE ser o PRIMEIRO middleware
 // senão preflight OPTIONS não recebe os headers e o browser bloqueia tudo
+const clientUrl = (process.env.CLIENT_URL || '').trim().replace(/\/+$/, '');
 const allowedOrigins = [
   'http://localhost:5001',
   'http://localhost:5000',
-  process.env.CLIENT_URL
+  clientUrl
 ].filter(Boolean);
+
+console.log('🔒 CORS — origens permitidas:', allowedOrigins);
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -27,6 +30,7 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
+    console.warn('⛔ CORS bloqueou origem:', origin);
     return callback(new Error('Bloqueado pelo CORS'));
   },
   credentials: true

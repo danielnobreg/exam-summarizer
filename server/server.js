@@ -12,14 +12,8 @@ const errorHandler = require('./middlewares/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// segurança — headers HTTP
-app.use(helmet());
-
-app.use(express.json({ limit: '10mb' }));
-
-// CORS — restrito às origens permitidas
-// IMPORTANTE: deve vir ANTES do rate limiter pra que requests bloqueados
-// ainda recebam os headers CORS (senão o browser mostra erro de CORS ao invés de 429)
+// CORS — DEVE ser o PRIMEIRO middleware
+// senão preflight OPTIONS não recebe os headers e o browser bloqueia tudo
 const allowedOrigins = [
   'http://localhost:5001',
   'http://localhost:5000',
@@ -37,6 +31,11 @@ app.use(cors({
   },
   credentials: true
 }));
+
+// segurança — headers HTTP (depois do CORS)
+app.use(helmet());
+
+app.use(express.json({ limit: '10mb' }));
 
 // rate limiting global — 20 requests por minuto por IP
 const globalLimiter = rateLimit({

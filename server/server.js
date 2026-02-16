@@ -15,7 +15,11 @@ const PORT = process.env.PORT || 3000;
 // segurança — headers HTTP
 app.use(helmet());
 
+app.use(express.json({ limit: '10mb' }));
+
 // CORS — restrito às origens permitidas
+// IMPORTANTE: deve vir ANTES do rate limiter pra que requests bloqueados
+// ainda recebam os headers CORS (senão o browser mostra erro de CORS ao invés de 429)
 const allowedOrigins = [
   'http://localhost:5001',
   'http://localhost:5000',
@@ -34,12 +38,10 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(express.json({ limit: '10mb' }));
-
 // rate limiting global — 20 requests por minuto por IP
 const globalLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 200,
+  max: 20,
   message: { error: 'Muitas requisições. Tente novamente em 1 minuto.' },
   standardHeaders: true,
   legacyHeaders: false,

@@ -21,8 +21,6 @@ const allowedOrigins = [
   clientUrl
 ].filter(Boolean);
 
-console.log('🔒 CORS — origens permitidas:', allowedOrigins);
-
 app.use(cors({
   origin: function (origin, callback) {
     // permite requests sem origin (mobile apps, Postman dev, etc)
@@ -30,7 +28,6 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    console.warn('⛔ CORS bloqueou origem:', origin);
     return callback(new Error('Bloqueado pelo CORS'));
   },
   credentials: true

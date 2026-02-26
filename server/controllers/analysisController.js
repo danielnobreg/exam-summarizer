@@ -84,13 +84,13 @@ exports.analyzeXray = async (req, res, next) => {
 };
 
 exports.analyzeECG = async (req, res, next) => {
-  const { promptText } = req.body;
+  const { promptText, images } = req.body;
   
   if (!promptText) {
     return res.status(400).json({ error: "promptText é obrigatório" });
   }
 
   await executeWithUsageLimit(req, res, next, async () => {
-    return await geminiService.generateECGAnalysis(promptText);
+    return await geminiService.generateECGAnalysis(promptText, images);
   });
 };

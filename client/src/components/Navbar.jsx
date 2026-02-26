@@ -132,8 +132,8 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                        >
                           <Bone className="h-5 w-5 text-blue-500 mr-3 group-hover:scale-110 transition-transform" />
                           <div>
-                             <p className="text-sm font-bold text-gray-800">Raio-X</p>
-                             <p className="text-xs text-gray-500">Análise de Raio-X</p>
+                             <p className="text-sm font-bold text-gray-800">Radiografia de Tórax</p>
+                             <p className="text-xs text-gray-500">Análise de Radiografia de Tórax</p>
                           </div>
                        </button>
                        <button 

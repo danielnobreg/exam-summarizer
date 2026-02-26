@@ -44,10 +44,10 @@ export async function analyzeXray(promptText, images) {
   return { reply: data.reply, usage: data.usage };
 }
 
-export async function analyzeECG(promptText) {
+export async function analyzeECG(promptText, images) {
   const data = await authFetch('/api/analysis/ecg', {
     method: 'POST',
-    body: JSON.stringify({ promptText }),
+    body: JSON.stringify({ promptText, images }),
   });
   return { reply: data.reply, usage: data.usage };
 }

@@ -5,6 +5,7 @@ import { getUserData } from '../services/userService';
 import { useUsageLimit } from '../hooks/useUsageLimit';
 import TermsModal from './TermsModal';
 import { LOADING_MESSAGES } from '../services/analysisService';
+import { renderFormattedText } from '../utils/formatters';
 
 export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
   const [file, setFile] = useState(null);
@@ -384,7 +385,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                   </div>
                 ) : (
                   <pre className="whitespace-pre-wrap text-sm font-mono text-gray-800 leading-relaxed custom-scrollbar relative z-10">
-                    {apiResponse}
+                    {renderFormattedText(apiResponse)}
                   </pre>
                 )}
               </div>

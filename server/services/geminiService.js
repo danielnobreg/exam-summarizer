@@ -134,9 +134,12 @@ exports.generateXrayAnalysis = async (promptText, base64Images) => {
   return result.response.text();
 };
 
-exports.generateECGAnalysis = async (promptText) => {
+exports.generateECGAnalysis = async (promptText, base64Images) => {
   const model = getModel(ECG_INSTRUCTION);
   
-  const result = await model.generateContent(promptText);
+  const imageParts = base64Images ? formatImagesForGemini(base64Images) : [];
+  const content = imageParts.length > 0 ? [promptText, ...imageParts] : promptText;
+  
+  const result = await model.generateContent(content);
   return result.response.text();
 };

@@ -4,6 +4,8 @@ import HemogramAnalyze from './components/HemogramAnalyze';
 import AdminPanel from './components/AdminPanel';
 import HomePage from './components/HomePage';
 import Contact from './components/Contact';
+import Xray from './components/Xray';
+import Electrocardiogram from './components/Electrocardiogram';
 import * as authService from './services/authService';
 
 export default function App() {
@@ -18,9 +20,6 @@ export default function App() {
           uid: firebaseUser.uid,
           email: firebaseUser.email
         });
-        setCurrentScreen('hemogram');
-      } else {
-        setUser(null);
         setCurrentScreen('home');
       }
       setLoading(false);
@@ -31,7 +30,7 @@ export default function App() {
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
-    setCurrentScreen('hemogram');
+    setCurrentScreen('home');
   };
 
   const handleLogout = async () => {
@@ -39,14 +38,6 @@ export default function App() {
     setUser(null);
     setCurrentScreen('home');
   };
-
-  // const handleNavigateToAdmin = () => {
-  //   setCurrentScreen('admin');
-  // };
-
-  // const handleBackToDashboard = () => {
-  //   setCurrentScreen('hemogram');
-  // };
 
   if (loading) {
     return (
@@ -76,6 +67,26 @@ export default function App() {
     );
   }
 
+  if (currentScreen === 'xray' && user) {
+    return (
+      <Xray 
+        user={user} 
+        onLogout={handleLogout}
+        onNavigate={setCurrentScreen}
+      />
+    );
+  }
+
+  if (currentScreen === 'ecg' && user) {
+    return (
+      <Electrocardiogram 
+        user={user} 
+        onLogout={handleLogout}
+        onNavigate={setCurrentScreen}
+      />
+    );
+  }
+
   if (currentScreen === 'contact') {
     return (
       <Contact 
@@ -91,5 +102,5 @@ export default function App() {
   }
 
 
-  return <HomePage onNavigateLogin={() => setCurrentScreen('login')} onNavigate={setCurrentScreen} user={user} />;
+  return <HomePage onNavigateLogin={() => setCurrentScreen('login')} onNavigate={setCurrentScreen} user={user} onLogout={handleLogout} />;
 }

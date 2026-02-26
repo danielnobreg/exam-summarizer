@@ -6,10 +6,19 @@ import {
   ChevronDown, 
   Activity, 
   Settings, 
-  LogOut, 
+  LogOut,
+  Bone,
+  HeartPulse
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getUserData } from '../services/userService';
+
+function getInitials(name) {
+  if (!name) return '';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -117,13 +126,25 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                              <p className="text-xs text-gray-500">Análise completa de sangue</p>
                           </div>
                        </button>
-                       <div className="border-t border-gray-100 my-1"></div>
-                       <div className="px-4 py-2 text-xs text-gray-400 font-semibold uppercase tracking-wider">Em Breve</div>
-                       <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 transition text-sm text-gray-500 cursor-not-allowed opacity-70">
-                          Eletrocardiograma
+                       <button 
+                          onClick={() => handleNavigate('xray')}
+                          className="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-50 transition flex items-center group"
+                       >
+                          <Bone className="h-5 w-5 text-blue-500 mr-3 group-hover:scale-110 transition-transform" />
+                          <div>
+                             <p className="text-sm font-bold text-gray-800">Raio-X</p>
+                             <p className="text-xs text-gray-500">Análise de Raio-X</p>
+                          </div>
                        </button>
-                       <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-50 transition text-sm text-gray-500 cursor-not-allowed opacity-70">
-                          Raio-X
+                       <button 
+                          onClick={() => handleNavigate('ecg')}
+                          className="w-full text-left px-4 py-3 rounded-lg hover:bg-purple-50 transition flex items-center group"
+                       >
+                          <HeartPulse className="h-5 w-5 text-purple-500 mr-3 group-hover:scale-110 transition-transform" />
+                          <div>
+                             <p className="text-sm font-bold text-gray-800">Eletrocardiograma</p>
+                             <p className="text-xs text-gray-500">Análise de Eletrocardiograma</p>
+                          </div>
                        </button>
                     </div>
                   </motion.div>
@@ -150,7 +171,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
               >
                 <button className={`flex items-center gap-2 font-medium focus:outline-none ${isLanding ? (isScrolled ? 'text-gray-100' : 'text-white') : 'text-gray-700'}`}>
                   <div className="w-9 h-9 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-bold text-sm shadow-md border-2 border-white/20">
-                    {userData?.name ? userData.name[0].toUpperCase() : (user.name ? user.name[0].toUpperCase() : user.email?.[0].toUpperCase())}
+                    {getInitials(userData?.name || user.name || user.email?.split('@')[0])}
                   </div>
                   <span className="max-w-[100px] truncate hidden lg:block text-sm">
                     {userData?.name ? userData.name.split(' ')[0] : (user.name ? user.name.split(' ')[0] : user.email.split('@')[0])}
@@ -246,22 +267,42 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                 <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${isLanding ? 'text-gray-500' : 'text-gray-400'}`}>
                   Exames
                 </p>
-                <button 
-                    onClick={() => handleNavigate('hemogram')}
-                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 ${
-                        isLanding ? 'text-white border-red-500 bg-gray-800/50' : 'text-gray-900 border-red-500 bg-gray-50'
-                    }`}
-                >
-                    <Activity className="h-4 w-4 mr-2 text-red-500" />
-                    Hemograma
-                </button>
+                <div className="space-y-2">
+                  <button 
+                      onClick={() => handleNavigate('hemogram')}
+                      className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 ${
+                          isLanding ? 'text-white border-red-500 bg-gray-800/50 hover:bg-gray-800/70' : 'text-gray-900 border-red-500 bg-gray-50 hover:bg-red-50/50'
+                      }`}
+                  >
+                      <Activity className="h-4 w-4 mr-2 text-red-500" />
+                      Hemograma
+                  </button>
+                  <button 
+                      onClick={() => handleNavigate('xray')}
+                      className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 ${
+                          isLanding ? 'text-white border-blue-500 bg-gray-800/50 hover:bg-gray-800/70' : 'text-gray-900 border-blue-500 bg-gray-50 hover:bg-blue-50/50'
+                      }`}
+                  >
+                      <Bone className="h-4 w-4 mr-2 text-blue-500" />
+                      Raio-X
+                  </button>
+                  <button 
+                      onClick={() => handleNavigate('ecg')}
+                      className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 ${
+                          isLanding ? 'text-white border-purple-500 bg-gray-800/50 hover:bg-gray-800/70' : 'text-gray-900 border-purple-500 bg-gray-50 hover:bg-purple-50/50'
+                      }`}
+                  >
+                      <HeartPulse className="h-4 w-4 mr-2 text-purple-500" />
+                      Eletrocardiograma
+                  </button>
+                </div>
               </div>
 
               {user ? (
                 <div className={`mt-4 pt-4 border-t ${isLanding ? 'border-gray-800' : 'border-gray-100'}`}>
                    <div className="px-4 flex items-center mb-4">
                       <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold mr-3">
-                        {userData?.name ? userData.name[0].toUpperCase() : (user.name ? user.name[0].toUpperCase() : user.email?.[0].toUpperCase())}
+                        {getInitials(userData?.name || user.name || user.email?.split('@')[0])}
                       </div>
                       <div>
                          <p className={`font-bold ${isLanding ? 'text-gray-900' : 'text-gray-900'}`}>{userData?.name || user.name || 'Usuário'}</p>

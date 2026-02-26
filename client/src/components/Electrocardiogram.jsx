@@ -6,29 +6,31 @@ import { useUsageLimit } from '../hooks/useUsageLimit';
 import TermsModal from './TermsModal';
 import { LOADING_MESSAGES } from '../services/analysisService';
 
-export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
+export default function Electrocardiogram({ user, onLogout, onNavigate }) {
   const [file, setFile] = useState(null);
+  const [ventilation, setVentilation] = useState('Espontânea');
+  const [obs, setObs] = useState('');
+  
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState('');
   const [error, setError] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [showGuide, setShowGuide] = useState(false);
   
-  // Estado para os modais do footer
   const [footerModalOpen, setFooterModalOpen] = useState(false);
   const [footerModalType, setFooterModalType] = useState('terms');
 
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
 
   useEffect(() => {
+    analysisService.loadPdfJs();
+
     if (loading) {
       setLoadingMessageIndex(Math.floor(Math.random() * LOADING_MESSAGES.length));
     }
   }, [loading]);
 
-  // Hook customizado para limite de uso
   const { 
     canUse, 
     dailyLimit, 
@@ -42,8 +44,6 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
   const canUseEffective = isAdminUser ? true : canUse;
   
   useEffect(() => {
-    analysisService.loadPdfJs();
-    
     async function loadUserData() {
       try {
         const data = await getUserData(user.uid);
@@ -55,19 +55,8 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
     loadUserData();
   }, [user.uid]);
 
-  // bloqueia scroll da página quando o guia está aberto
-  useEffect(() => {
-    if (showGuide) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [showGuide]);
-
   async function handleAnalyze() {
     if (!file) return;
-    
     if (!canUseEffective) {
       setError('Limite diário atingido. Tente novamente amanhã!');
       return;
@@ -79,7 +68,9 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
 
     try {
       const pdfText = await analysisService.extractTextFromPdf(file);
-      const result = await analysisService.analyzeExam(pdfText);
+      const promptText = `Ventilação: ${ventilation}\nObservações clínicas: ${obs || 'Nenhuma'}\n\nTEXTO EXTRAÍDO DO PDF DO ECG:\n${pdfText}`;
+
+      const result = await analysisService.analyzeECG(promptText);
       setApiResponse(result.reply);
       
       if (result.usage) {
@@ -87,15 +78,15 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
       }
       
     } catch (err) {
-      if (err.message.includes('Limite')) {
+      if (err.message?.includes('Limite')) {
         setError('Limite diário atingido. Tente novamente amanhã!');
         refreshUsage();
       } else {
-        setError(err.message || 'Erro ao processar PDF');
+        setError(err.message || 'Erro ao processar a imagem do ECG');
       }
     } finally {
       setLoading(false);
-      setFile(null); // Limpa seleção de arquivo
+      setFile(null); // Limpa após análise (opcional, mas bom pra fluxo contínuo)
     }
   }
 
@@ -115,9 +106,15 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    processFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processFile(e.dataTransfer.files[0]);
+    }
   };
-  const handleFileChange = (e) => { processFile(e.target.files?.[0]); };
+  const handleFileChange = (e) => { 
+    if (e.target.files && e.target.files.length > 0) {
+      processFile(e.target.files[0]);
+    }
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(apiResponse).then(() => {
@@ -139,83 +136,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
         onNavigate={onNavigate} 
       />
 
-      {/* Botão Guia */}
-      <button
-        onClick={() => setShowGuide(true)}
-        className="fixed bottom-6 right-6 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-full shadow-lg border border-gray-200 font-medium text-sm transition-all hover:shadow-xl flex items-center gap-2 z-40"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-          <line x1="12" y1="17" x2="12.01" y2="17"/>
-        </svg>
-        Como usar
-      </button>
-
-      {/* Modal Guia */}
-      {showGuide && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scaleUp">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                  Guia de Como usar
-              </h2>
-              <button
-                onClick={() => setShowGuide(false)}
-                className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M18 6L6 18M6 6l12 12"/>
-                </svg>
-              </button>
-            </div>
-            
-            <div className="space-y-6 text-sm text-gray-600">
-              <div className="flex gap-4 items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md shadow-red-200">1</span>
-                <div>
-                    <h3 className="font-bold text-gray-900 mb-1">Faça upload do PDF</h3>
-                    <p>Envie o arquivo PDF do seu exame laboratorial (clique ou arraste para a área indicada).</p>
-                </div>
-              </div>
-              
-              <div className="flex gap-4 items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md shadow-red-200">2</span>
-                <div>
-                    <h3 className="font-bold text-gray-900 mb-1">Clique em "Resumir Exame"</h3>
-                    <p>Nossa IA processará os dados e identificará os principais resultados.</p>
-                </div>
-              </div>
-              
-              <div className="flex gap-4 items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md shadow-red-200">3</span>
-                <div>
-                   <h3 className="font-bold text-gray-900 mb-1">Copie o Resultado</h3>
-                   <p>O resultado formatado estará pronto para ser copiado e usado onde precisar.</p>
-                </div>
-              </div>
-
-              <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                <p className="text-xs text-blue-800 leading-relaxed">
-                  💡 <strong>Dica:</strong> O sistema destaca valores fora do padrão para facilitar sua atenção.
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowGuide(false)}
-              className="w-full mt-8 bg-gray-900 text-white py-3.5 rounded-xl font-bold hover:bg-gray-800 transition shadow-lg hover:-translate-y-0.5"
-            >
-              Entendi
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Conteúdo Principal */}
       <div className="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
-        
-        {/* Aviso de Limite */}
         {!isAdminUser && !canUseEffective && !usageLoading && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 animate-pulse">
              <span className="text-2xl">🚫</span>
@@ -226,52 +147,72 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
           </div>
         )}
 
-        {/* Cabeçalho */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center p-4 bg-white rounded-2xl shadow-sm mb-6 border border-gray-100">
-             <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30 transform rotate-3">
+             <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-600/30 transform rotate-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                <path d="M12 22s8-4 8-10a8 8 0 0 0-16 0c0 6 8 10 8 10Z"/>
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                 </svg>
              </div>
           </div>
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">Análise Laboratorial</h1>
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">Análise de ECG</h1>
           <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            Faça o upload do PDF dos seus exames e obtenha um resumo detalhado com inteligência artificial.
+            Faça upload do laudo em PDF do Eletrocardiograma e preencha os dados do paciente para obter uma primeira impressão de IA.
           </p>
         </div>
 
-        {/* Card de Upload */}
         <div className="bg-white rounded-[2rem] shadow-xl p-8 border border-gray-100 relative overflow-hidden">
-          {/* Blob decorativo de fundo */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl -z-10 opacity-50 translate-x-1/2 -translate-y-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-50 rounded-full blur-3xl -z-10 opacity-50 -translate-x-1/2 translate-y-1/2"></div>
+          <div className="grid grid-cols-1 mb-8">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Ventilação atual do paciente</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="Espontânea" checked={ventilation === 'Espontânea'} onChange={(e) => setVentilation(e.target.value)} className="text-purple-600 focus:ring-purple-500" />
+                  <span className="text-sm text-gray-700">Espontânea</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="Mecânica" checked={ventilation === 'Mecânica'} onChange={(e) => setVentilation(e.target.value)} className="text-purple-600 focus:ring-purple-500" />
+                  <span className="text-sm text-gray-700">Mecânica</span>
+                </label>
+              </div>
+            </div>
+          </div>
 
           <div className="mb-8">
-            <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Arquivo PDF do Exame</label>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Metadados Clínicos (Queixa, Marcapasso, Drenos...)</label>
+            <textarea 
+              value={obs}
+              onChange={(e) => setObs(e.target.value)}
+              placeholder="Ex: Dor torácica súbita há 2 horas. Paciente possui marcapasso definitivo."
+              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-purple-500 outline-none resize-none h-24"
+            />
+          </div>
+
+          <div className="mb-8">
+            <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Arquivo PDF do ECG (Apenas 1)</label>
             <label 
               htmlFor="file-upload" 
-              className={`group flex flex-col items-center justify-center w-full h-52 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 ${
-                isDragging ? 'border-red-400 bg-red-50 scale-[1.02]' : 'border-gray-200 bg-gray-50/50 hover:bg-white hover:border-red-300 hover:shadow-md'
+              className={`group flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 ${
+                isDragging ? 'border-purple-400 bg-purple-50 scale-[1.02]' : 'border-gray-200 bg-gray-50/50 hover:bg-white hover:border-purple-300 hover:shadow-md'
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
               <div className={`transition-transform duration-300 ${isDragging ? 'scale-110' : 'group-hover:scale-110'}`}>
-                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${isDragging ? 'bg-red-100' : 'bg-white shadow-sm group-hover:bg-red-50'}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`transition-colors ${isDragging ? 'text-red-600' : 'text-gray-400 group-hover:text-red-500'}`}>
-                    <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
-                    <path d="M12 12v9"/>
-                    <path d="m16 16-4-4-4 4"/>
+                <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-colors ${isDragging ? 'bg-purple-100' : 'bg-white shadow-sm group-hover:bg-purple-50'}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`transition-colors ${isDragging ? 'text-purple-600' : 'text-gray-400 group-hover:text-purple-500'}`}>
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
                     </svg>
                 </div>
               </div>
-              <p className="text-base text-gray-700 mb-1 font-medium">
+              <p className="text-sm text-gray-700 mb-1 font-medium">
                 {file ? (
                   <span className="text-gray-500 font-bold">Máximo de arquivos anexado</span>
                 ) : (
-                  <><span className="text-red-600 font-bold border-b border-red-200 hover:border-red-600 transition-colors">Clique para enviar</span> ou arraste</>
+                  <><span className="text-purple-600 font-bold border-b border-purple-200 hover:border-purple-600 transition-colors">Clique para enviar</span> ou arraste o PDF</>
                 )}
               </p>
               <p className="text-xs text-gray-400 mt-1">Suporta apenas PDF</p>
@@ -281,6 +222,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                 className="hidden" 
                 accept="application/pdf"
                 onChange={handleFileChange}
+                disabled={!!file}
               />
             </label>
           </div>
@@ -296,21 +238,20 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                     </svg>
                 </div>
                 <div>
-                    <p className="text-sm font-bold text-green-900">{file.name}</p>
-                    <p className="text-xs text-green-700">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                   <p className="text-sm font-bold text-green-900">{file.name}</p>
+                   <p className="text-xs text-green-700">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                 </div>
               </div>
               <button 
-                onClick={() => setFile(null)} 
-                className="text-green-700 hover:text-green-900 p-2 hover:bg-green-100 rounded-full transition"
+                onClick={() => setFile(null)}
+                className="text-green-700 hover:text-green-900 p-2 hover:bg-green-100 rounded-full transition flex-shrink-0"
                 title="Remover arquivo"
               >
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
           )}
 
-          {/* Mensagem de Erro */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl text-center animate-shake">
               <p className="text-sm text-red-800 font-bold flex items-center justify-center gap-2">
@@ -320,13 +261,11 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
             </div>
           )}
 
-          {/* Botão Analisar */}
           <button
             onClick={handleAnalyze}
             disabled={!file || loading || !canUseEffective}
-            className="w-full bg-red-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-red-600/30 hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group"
+            className="w-full bg-purple-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-purple-600/30 hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group"
           >
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             {loading ? (
               <>
                 <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
@@ -342,18 +281,18 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4.5 3h15"/><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3"/><path d="M6 14h12"/>
                 </svg>
-                Resumir Exame
+                Analisar Eletrocardiograma
               </>
             )}
           </button>
 
-          {/* Resultados da Análise */}
+          {/* Resultados */}
           {(apiResponse || loading) && (
             <div className="mt-10 pt-8 border-t border-gray-100 animate-fadeIn">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center text-red-600 text-sm font-black">AI</span>
-                    Resultado da Análise
+                    <span className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 text-sm font-black">AI</span>
+                    Laudo Eletrocardiográfico
                 </h2>
                 {apiResponse && (
                   <button
@@ -377,7 +316,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
               <div className="bg-gray-50/80 rounded-2xl p-6 border border-gray-200 min-h-[150px] shadow-inner relative flex flex-col justify-center">
                 {loading ? (
                   <div className="flex flex-col items-center justify-center py-10 text-gray-500 space-y-4">
-                    <p className="animate-pulse font-medium text-red-600">Lendo, cruzando dados e interpretando o exame...</p>
+                    <p className="animate-pulse font-medium text-purple-600">Processando ondas e ritmo cardíaco...</p>
                     <p className="text-xs text-gray-400 text-center max-w-md animate-fadeIn opacity-80 h-8 transition-opacity duration-500">
                       {LOADING_MESSAGES[loadingMessageIndex]}
                     </p>
@@ -392,7 +331,6 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
           )}
         </div>
 
-        {/* Estatísticas de Uso */}
         {!isAdminUser && (
           <div className="text-center mt-8 mb-6">
             {usageLoading ? (
@@ -409,15 +347,14 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
         )}
       </div>
 
-      {/* Footer Minimalista com Links Legais */}
       <footer className="mt-auto py-6 border-t border-gray-200 bg-white">
         <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-gray-500">
             © 2026 Hemotrack. Todos os direitos reservados.
           </p>
           <div className="flex gap-4">
-             <button onClick={() => openFooterModal('terms')} className="text-xs text-gray-500 hover:text-red-600 transition">Termos de Uso</button>
-             <button onClick={() => openFooterModal('privacy')} className="text-xs text-gray-500 hover:text-red-600 transition">Privacidade</button>
+             <button onClick={() => openFooterModal('terms')} className="text-xs text-gray-500 hover:text-purple-600 transition">Termos de Uso</button>
+             <button onClick={() => openFooterModal('privacy')} className="text-xs text-gray-500 hover:text-purple-600 transition">Privacidade</button>
           </div>
         </div>
       </footer>
@@ -427,7 +364,6 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
         onClose={() => setFooterModalOpen(false)}
         type={footerModalType}
       />
-
     </div>
   );
 }

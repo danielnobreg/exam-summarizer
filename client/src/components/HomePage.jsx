@@ -489,7 +489,7 @@ const AvailableExams = ({ onAnalyzeClick }) => {
 
 // --- Componente Principal ---
 
-const HomePage = ({ onNavigateLogin, onNavigate, user }) => {
+const HomePage = ({ onNavigateLogin, onNavigate, user, onLogout }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -513,6 +513,7 @@ const HomePage = ({ onNavigateLogin, onNavigate, user }) => {
           else if (screen === 'landing' || screen === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
           else if (onNavigate) onNavigate(screen); // Encaminha outras navegações (hemogram, admin, contact) para o App.js
         }} 
+        onLogout={onLogout}
         isLanding={true} 
       />
       

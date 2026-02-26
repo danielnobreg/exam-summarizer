@@ -5,5 +5,7 @@ const validatePDF = require('../middlewares/validatePDF');
 const { authMiddleware } = require('../middlewares/authMiddleware');
 
 router.post('/hemogram', authMiddleware, validatePDF, analysisController.analyzeHemogram);
+router.post('/xray', authMiddleware, analysisController.analyzeXray);
+router.post('/ecg', authMiddleware, analysisController.analyzeECG);
 
 module.exports = router;

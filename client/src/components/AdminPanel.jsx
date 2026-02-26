@@ -2,15 +2,22 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import * as adminService from '../services/adminService';
 import * as usageService from '../services/usageService';
-import { ArrowLeft, Users, MessageSquare, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Users, MessageSquare } from 'lucide-react';
+
+function getInitials(name) {
+  if (!name) return '';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 export default function AdminPanel({ user, onLogout, onNavigate }) {
   const [activeTab, setActiveTab] = useState('users');
 
-  // Construct a user object that satisfies Navbar requirements
-  // We assume if they are here, they are admin, so we can mock userData if needed, 
-  // or just pass what we have. Navbar checks userData.isAdmin for the link, 
-  // but we are already in Admin, so the link is redundant or can check strict equality.
+  // Constrói um objeto de usuário que satisfaz os requisitos do Navbar
+  // Assumimos que se eles estão aqui, são administradores, então podemos mockar userData se necessário, 
+  // ou apenas passar o que temos. O Navbar verifica userData.isAdmin para o link, 
+  // mas já estamos no Admin, então o link é redundante ou pode verificar igualdade estrita.
   const navbarUser = { ...user, userData: { isAdmin: true } };
 
   return (
@@ -77,6 +84,10 @@ function UsersTab({ currentUser }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  
+  // Estado para o modal de detalhes do usuário
+  const [selectedUser, setSelectedUser] = useState(null);
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -85,7 +96,7 @@ function UsersTab({ currentUser }) {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [resetingUserId, setResetingUserId] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     loadUsers();
@@ -107,6 +118,11 @@ function UsersTab({ currentUser }) {
     setError('');
     setSuccess('');
 
+    if (!formData.name || !formData.email || !formData.password) {
+      setError('Preencha todos os campos obrigatórios.');
+      return;
+    }
+
     try {
       await adminService.createUserProfile(formData);
 
@@ -124,23 +140,79 @@ function UsersTab({ currentUser }) {
       return;
     }
 
-    setResetingUserId(userId);
+    setActionLoading(true);
     try {
       await usageService.resetUsage(userId);
       setSuccess(`Uso de ${userName} resetado com sucesso!`);
       setTimeout(() => setSuccess(''), 3000);
       loadUsers();
+      if (selectedUser && selectedUser.id === userId) {
+        setSelectedUser({...selectedUser, dailyUsage: 0});
+      }
     } catch (err) {
       setError('Erro ao resetar uso');
       setTimeout(() => setError(''), 3000);
     } finally {
-      setResetingUserId(null);
+      setActionLoading(false);
+    }
+  }
+
+  async function handleEditLimit(userId, currentLimit) {
+    const newLimit = window.prompt("Digite o novo limite diário:", currentLimit);
+    if (newLimit === null || newLimit === "") return;
+    
+    // Converter para número
+    const parsedLimit = parseInt(newLimit, 10);
+    if (isNaN(parsedLimit) || parsedLimit < 1) {
+      window.alert("Limite inválido.");
+      return;
+    }
+
+    setActionLoading(true);
+    try {
+      // Simulando a chamada pois ainda não temos updateLimit no adminService
+      // await adminService.updateUserLimit(userId, parsedLimit);
+      setSuccess(`O limite foi atualizado. (Nota: Rota de backend pendente)`);
+      setTimeout(() => setSuccess(''), 3000);
+      
+      // Atualização otimista da interface
+      setUsers(users.map(u => u.id === userId ? { ...u, dailyLimit: parsedLimit } : u));
+      if (selectedUser && selectedUser.id === userId) {
+        setSelectedUser({...selectedUser, dailyLimit: parsedLimit});
+      }
+    } catch (err) {
+      setError('Erro ao atualizar limite');
+      setTimeout(() => setError(''), 3000);
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function handleDeleteUser(userId, userName) {
+    if (!window.confirm(`AVISO CRÍTICO: Tem certeza absoluta que deseja apagar o usuário ${userName}? Esta ação não pode ser desfeita.`)) {
+      return;
+    }
+
+    setActionLoading(true);
+    try {
+      // Simulando a chamada pois ainda não temos deleteUser no adminService
+      // await adminService.deleteUser(userId);
+      setSuccess(`Usuário apagado. (Nota: Rota de backend pendente)`);
+      setTimeout(() => setSuccess(''), 3000);
+      
+      // Atualização otimista da interface
+      setUsers(users.filter(u => u.id !== userId));
+      setSelectedUser(null);
+    } catch (err) {
+      setError('Erro ao deletar usuário');
+      setTimeout(() => setError(''), 3000);
+    } finally {
+      setActionLoading(false);
     }
   }
 
   return (
-    <div className="space-y-8">
-      
+    <div className="space-y-8 relative">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
             <span className="w-2 h-8 bg-red-600 rounded-full"></span>
@@ -209,14 +281,14 @@ function UsersTab({ currentUser }) {
             </div>
           </div>
 
-          {error && (
+          {error && !selectedUser && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
                <span className="text-red-500">⚠️</span>
                <p className="text-sm text-red-800 font-medium">{error}</p>
             </div>
           )}
 
-          {success && (
+          {success && !selectedUser && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
                <span className="text-green-500">✓</span>
                <p className="text-sm text-green-800 font-medium">{success}</p>
@@ -232,7 +304,7 @@ function UsersTab({ currentUser }) {
         </div>
       )}
 
-      {/* List */}
+      {/* Tabela Simplificada */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-12">
             <div className="w-10 h-10 border-4 border-gray-200 border-t-red-600 rounded-full animate-spin mb-4"></div>
@@ -243,44 +315,121 @@ function UsersTab({ currentUser }) {
           <table className="w-full text-left">
             <thead className="bg-gray-50/50">
               <tr>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nome</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Limite</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Uso Hoje</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Ações</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Perfis (Clique para gerenciar)</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {users.map((u) => (
-                <tr key={u.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-semibold text-gray-900">{u.name}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{u.email}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500 font-mono">{u.dailyLimit || 5}</td>
-                  <td className="px-6 py-4 text-sm">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      (u.dailyUsage || 0) >= (u.dailyLimit || 5) 
-                        ? 'bg-red-100 text-red-800' 
-                        : 'bg-green-100 text-green-800'
-                    }`}>
-                      {u.dailyUsage || 0}/{u.dailyLimit || 5}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-right">
-                    <button
-                      onClick={() => handleResetUsage(u.id, u.name)}
-                      disabled={resetingUserId === u.id}
-                      className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-bold rounded-lg text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 transition-colors gap-1"
-                    >
-                      <RotateCcw className="h-3 w-3" />
-                      {resetingUserId === u.id ? '...' : 'Resetar'}
-                    </button>
-                  </td>
+              {users.length === 0 ? (
+                <tr>
+                  <td className="px-6 py-4 text-sm text-gray-500 text-center">Nenhum usuário cadastrado.</td>
                 </tr>
-              ))}
+              ) : (
+                users.map((u) => (
+                  <tr key={u.id} className="hover:bg-gray-50/50 transition-colors cursor-pointer" onClick={() => setSelectedUser(u)}>
+                    <td className="px-6 py-4 text-sm font-semibold text-gray-900 hover:text-red-600 transition-colors flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs font-bold mr-3 uppercase">
+                        {getInitials(u.name)}
+                      </div>
+                      {u.name}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
       )}
+      
+      {/* Mensagens Globais do Modal */}
+      {error && selectedUser && (
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
+           <span className="text-red-500">⚠️</span>
+           <p className="text-sm text-red-800 font-medium">{error}</p>
+        </div>
+      )}
+
+      {success && selectedUser && (
+        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
+           <span className="text-green-500">✓</span>
+           <p className="text-sm text-green-800 font-medium">{success}</p>
+        </div>
+      )}
+
+      {/* Modal Profile / Detalhes */}
+      {selectedUser && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-8 animate-scaleUp relative overflow-hidden">
+             
+            <button 
+              onClick={() => setSelectedUser(null)}
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+
+            <div className="flex items-center mb-8">
+               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white flex items-center justify-center text-xl font-bold mr-4 shadow-lg shadow-red-500/30 uppercase">
+                  {getInitials(selectedUser.name)}
+               </div>
+               <div>
+                 <h2 className="text-2xl font-bold text-gray-900">{selectedUser.name}</h2>
+                 <p className="text-sm text-gray-500">{selectedUser.email}</p>
+               </div>
+            </div>
+
+            <div className="space-y-4 mb-8">
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex justify-between items-center">
+                   <div className="text-sm text-gray-600">Limite Diário</div>
+                   <div className="flex gap-4 items-center">
+                     <div className="font-bold text-gray-900">{selectedUser.dailyLimit || 5}</div>
+                     <button onClick={() => handleEditLimit(selectedUser.id, selectedUser.dailyLimit || 5)} disabled={actionLoading} className="text-xs font-bold text-blue-600 hover:text-blue-800 uppercase p-1 underline disabled:opacity-50">
+                        Editar Limite
+                     </button>
+                   </div>
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex justify-between items-center">
+                   <div className="text-sm text-gray-600">Uso no Dia Atual</div>
+                   <div className="flex gap-4 items-center">
+                     <span className={`inline-flex px-2 py-1 rounded text-xs font-bold ${
+                        (selectedUser.dailyUsage || 0) >= (selectedUser.dailyLimit || 5) 
+                          ? 'bg-red-100 text-red-700' 
+                          : 'bg-green-100 text-green-700'
+                     }`}>
+                        {selectedUser.dailyUsage || 0}/{selectedUser.dailyLimit || 5}
+                     </span>
+                     <button onClick={() => handleResetUsage(selectedUser.id, selectedUser.name)} disabled={actionLoading} className="text-xs font-bold text-gray-600 hover:text-gray-900 uppercase p-1">
+                        Resetar Uso
+                     </button>
+                   </div>
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex justify-between items-center">
+                   <div className="text-sm text-gray-600">Último Acesso</div>
+                   <div className="font-medium text-gray-900 text-sm">
+                      {selectedUser.lastUsageDate ? (
+                        <>Data: {selectedUser.lastUsageDate}</>
+                      ) : (
+                        <span className="text-gray-400">Nunca utilizou</span>
+                      )}
+                   </div>
+                </div>
+            </div>
+
+            <div className="border-t border-gray-100 pt-6 flex justify-between">
+               <button 
+                 onClick={() => handleDeleteUser(selectedUser.id, selectedUser.name)}
+                 disabled={actionLoading}
+                 className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 font-bold rounded-lg transition-colors text-sm disabled:opacity-50"
+               >
+                 Apagar Perfil Definitivamente
+               </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

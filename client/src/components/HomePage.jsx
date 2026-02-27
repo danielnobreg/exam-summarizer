@@ -93,7 +93,7 @@ const Hero = ({ onCtaClick }) => {
 
         <FadeIn delay={0.3}>
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Faça upload do seu exame em PDF e receba uma análise detalhada, 
+            Faça upload do seu exame em PDF e/ou Imagem e receba uma análise detalhada, 
             explicativa e profissional em segundos. Tecnologia avançada para sua saúde.
           </p>
         </FadeIn>
@@ -168,8 +168,8 @@ const HowItWorks = () => {
   const steps = [
     {
       icon: <FileUp className="h-10 w-10 text-red-600" />,
-      title: "Upload do PDF",
-      description: "Envie o arquivo PDF do seu exame laboratorial através da nossa plataforma segura.",
+      title: "Upload do PDF/Imagem",
+      description: "Envie o arquivo PDF ou Imagem do seu exame laboratorial através da nossa plataforma segura.",
       number: "01"
     },
     {
@@ -233,7 +233,7 @@ const Features = () => {
   const features = [
     {
       title: "Análise em Segundos",
-      description: "Não espere dias para entender seus exames. Nosso motor de IA processa PDFs complexos instantaneamente, destacando alterações e explicando termos médicos em linguagem simples.",
+      description: "Não espere dias para entender seus exames. Nosso motor de IA processa PDFs e imagens complexas instantaneamente, destacando alterações e explicando termos médicos em linguagem simples.",
       icon: <Zap className="h-6 w-6 text-white" />,
       image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
       align: 'left'

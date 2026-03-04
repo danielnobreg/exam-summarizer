@@ -76,21 +76,16 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
     if (onNavigate) onNavigate(screen);
   };
 
-  // Cores dinâmicas baseadas no estado (landing/scrolled)
-  const navBackground = isLanding
-    ? isScrolled
-      ? "bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-800"
-      : "bg-transparent"
-    : "bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100";
+  // Cores unificadas para fundos claros em toda a aplicação
+  const navBackground = isScrolled
+    ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100"
+    : isLanding
+      ? "bg-transparent"
+      : "bg-white/90 border-b border-gray-50";
 
-  const textColor = isLanding
-    ? isScrolled
-      ? "text-gray-100"
-      : "text-white"
-    : "text-gray-700";
-
-  const logoColor = isLanding ? "text-white" : "text-gray-900";
-  const logoIconColor = "text-red-600";
+  const textColor = "text-slate-700";
+  const logoColor = "text-slate-900";
+  const logoIconColor = "text-blue-600";
 
   return (
     <nav
@@ -109,7 +104,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
             <span
               className={`ml-2 text-2xl font-extrabold tracking-tight ${logoColor}`}
             >
-              Hemotrack
+              Sintesys
             </span>
           </div>
 
@@ -117,7 +112,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
           <div className="hidden md:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center space-x-8">
             <button
               onClick={() => handleNavigate("home")}
-              className={`${textColor} hover:text-red-500 transition-colors font-medium text-sm tracking-wide`}
+              className={`${textColor} hover:text-blue-600 transition-colors font-medium text-sm tracking-wide`}
             >
               Home
             </button>
@@ -129,7 +124,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
               onMouseLeave={() => setIsDropdownOpen(false)}
             >
               <button
-                className={`flex items-center ${textColor} hover:text-red-500 transition-colors font-medium text-sm tracking-wide focus:outline-none`}
+                className={`flex items-center ${textColor} hover:text-blue-600 transition-colors font-medium text-sm tracking-wide focus:outline-none`}
               >
                 Exames
                 <ChevronDown
@@ -149,23 +144,23 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                     <div className="p-2">
                       <button
                         onClick={() => handleNavigate("hemogram")}
-                        className="w-full text-left px-4 py-3 rounded-lg hover:bg-red-50 transition flex items-center group"
+                        className="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-50 transition flex items-center group"
                       >
-                        <Activity className="h-5 w-5 text-red-500 mr-3 group-hover:scale-110 transition-transform" />
+                        <Activity className="h-5 w-5 text-blue-500 mr-3 group-hover:scale-110 transition-transform" />
                         <div>
                           <p className="text-sm font-bold text-gray-800">
-                            Hemograma
+                            Laboratorial
                           </p>
                           <p className="text-xs text-gray-500">
-                            Análise Laboratorial completa de sangue
+                            Análise laboratorial completa
                           </p>
                         </div>
                       </button>
                       <button
                         onClick={() => handleNavigate("xray")}
-                        className="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-50 transition flex items-center group"
+                        className="w-full text-left px-4 py-3 rounded-lg hover:bg-emerald-50 transition flex items-center group"
                       >
-                        <LungsIcon className="h-5 w-5 text-blue-500 mr-3 group-hover:scale-110 transition-transform" />
+                        <LungsIcon className="h-5 w-5 text-emerald-500 mr-3 group-hover:scale-110 transition-transform" />
                         <div>
                           <p className="text-sm font-bold text-gray-800">
                             Radiografia de Tórax
@@ -177,9 +172,9 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                       </button>
                       <button
                         onClick={() => handleNavigate("ecg")}
-                        className="w-full text-left px-4 py-3 rounded-lg hover:bg-purple-50 transition flex items-center group"
+                        className="w-full text-left px-4 py-3 rounded-lg hover:bg-indigo-50 transition flex items-center group"
                       >
-                        <HeartPulse className="h-5 w-5 text-purple-500 mr-3 group-hover:scale-110 transition-transform" />
+                        <HeartPulse className="h-5 w-5 text-indigo-500 mr-3 group-hover:scale-110 transition-transform" />
                         <div>
                           <p className="text-sm font-bold text-gray-800">
                             Eletrocardiograma
@@ -197,7 +192,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
 
             <button
               onClick={() => handleNavigate("contact")}
-              className={`${textColor} hover:text-red-500 transition-colors font-medium text-sm tracking-wide`}
+              className={`${textColor} hover:text-blue-600 transition-colors font-medium text-sm tracking-wide`}
             >
               Contato
             </button>
@@ -213,9 +208,9 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                 onMouseLeave={() => setIsUserMenuOpen(false)}
               >
                 <button
-                  className={`flex items-center gap-2 font-medium focus:outline-none ${isLanding ? (isScrolled ? "text-gray-100" : "text-white") : "text-gray-700"}`}
+                  className={`flex items-center gap-2 font-medium focus:outline-none ${textColor}`}
                 >
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-bold text-sm shadow-md border-2 border-white/20">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center text-white font-bold text-sm shadow-md border-2 border-white/20">
                     {getInitials(
                       userData?.name || user.name || user.email?.split("@")[0],
                     )}
@@ -251,7 +246,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                         {userData?.isAdmin && (
                           <button
                             onClick={() => handleNavigate("admin")}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-red-600 rounded-lg flex items-center transition-colors"
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg flex items-center transition-colors"
                           >
                             <Settings className="h-4 w-4 mr-2" />
                             Painel Admin
@@ -276,11 +271,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
               // Usuário não logado: Botão Login
               <button
                 onClick={() => handleNavigate("login")}
-                className={`font-bold px-6 py-2.5 rounded-xl transition-all duration-300 text-sm ${
-                  isLanding && !isScrolled
-                    ? "bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-red-600 border border-white/30"
-                    : "bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/20 hover:-translate-y-0.5"
-                }`}
+                className={`font-bold px-6 py-2.5 rounded-xl transition-all duration-300 text-sm bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20 hover:-translate-y-0.5`}
               >
                 Entrar
               </button>
@@ -310,69 +301,51 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className={`md:hidden border-b overflow-hidden ${isLanding ? "bg-gray-900 border-gray-800" : "bg-white border-gray-100 shadow-xl"}`}
+            className={`md:hidden border-b overflow-hidden bg-white border-gray-100 shadow-xl`}
           >
             <div className="px-4 pt-2 pb-6 space-y-1">
               <button
                 onClick={() => handleNavigate("home")}
-                className={`block w-full text-left px-4 py-3 text-base font-bold rounded-xl transition-colors ${
-                  isLanding
-                    ? "text-white hover:bg-gray-800"
-                    : "text-gray-900 hover:bg-gray-50"
-                }`}
+                className={`block w-full text-left px-4 py-3 text-base font-bold rounded-xl transition-colors text-slate-900 hover:bg-slate-50`}
               >
                 Home
               </button>
 
               <div className="px-4 py-2">
                 <p
-                  className={`text-xs font-bold uppercase tracking-wider mb-2 ${isLanding ? "text-gray-500" : "text-gray-400"}`}
+                  className={`text-xs font-bold uppercase tracking-wider mb-2 text-slate-400`}
                 >
                   Exames
                 </p>
                 <div className="space-y-2">
                   <button
                     onClick={() => handleNavigate("hemogram")}
-                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 ${
-                      isLanding
-                        ? "text-white border-red-500 bg-gray-800/50 hover:bg-gray-800/70"
-                        : "text-gray-900 border-red-500 bg-gray-50 hover:bg-red-50/50"
-                    }`}
+                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 text-slate-900 border-blue-500 bg-slate-50 hover:bg-blue-50/50`}
                   >
-                    <Activity className="h-4 w-4 mr-2 text-red-500" />
+                    <Activity className="h-4 w-4 mr-2 text-blue-500" />
                     Hemograma
                   </button>
                   <button
                     onClick={() => handleNavigate("xray")}
-                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 ${
-                      isLanding
-                        ? "text-white border-blue-500 bg-gray-800/50 hover:bg-gray-800/70"
-                        : "text-gray-900 border-blue-500 bg-gray-50 hover:bg-blue-50/50"
-                    }`}
+                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 text-slate-900 border-emerald-500 bg-slate-50 hover:bg-emerald-50/50`}
                   >
-                    <LungsIcon className="h-4 w-4 mr-2 text-blue-500" />
+                    <LungsIcon className="h-4 w-4 mr-2 text-emerald-500" />
                     Raio-X
                   </button>
                   <button
                     onClick={() => handleNavigate("ecg")}
-                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 ${
-                      isLanding
-                        ? "text-white border-purple-500 bg-gray-800/50 hover:bg-gray-800/70"
-                        : "text-gray-900 border-purple-500 bg-gray-50 hover:bg-purple-50/50"
-                    }`}
+                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 text-slate-900 border-indigo-500 bg-slate-50 hover:bg-indigo-50/50`}
                   >
-                    <HeartPulse className="h-4 w-4 mr-2 text-purple-500" />
+                    <HeartPulse className="h-4 w-4 mr-2 text-indigo-500" />
                     Eletrocardiograma
                   </button>
                 </div>
               </div>
 
               {user ? (
-                <div
-                  className={`mt-4 pt-4 border-t ${isLanding ? "border-gray-800" : "border-gray-100"}`}
-                >
+                <div className={`mt-4 pt-4 border-t border-slate-100`}>
                   <div className="px-4 flex items-center mb-4">
-                    <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold mr-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold mr-3">
                       {getInitials(
                         userData?.name ||
                           user.name ||
@@ -380,27 +353,17 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                       )}
                     </div>
                     <div>
-                      <p
-                        className={`font-bold ${isLanding ? "text-gray-900" : "text-gray-900"}`}
-                      >
+                      <p className={`font-bold text-slate-900`}>
                         {userData?.name || user.name || "Usuário"}
                       </p>
-                      <p
-                        className={`text-xs ${isLanding ? "text-gray-500" : "text-gray-500"}`}
-                      >
-                        {user.email}
-                      </p>
+                      <p className={`text-xs text-slate-500`}>{user.email}</p>
                     </div>
                   </div>
 
                   {userData?.isAdmin && (
                     <button
                       onClick={() => handleNavigate("admin")}
-                      className={`block w-full text-left px-4 py-3 text-base font-medium rounded-xl ${
-                        isLanding
-                          ? "text-gray-300 hover:bg-gray-800"
-                          : "text-gray-700 hover:bg-gray-50"
-                      }`}
+                      className={`block w-full text-left px-4 py-3 text-base font-medium rounded-xl text-slate-700 hover:bg-slate-50`}
                     >
                       Painel Admin
                     </button>
@@ -417,7 +380,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                 <div className="p-4 mt-2">
                   <button
                     onClick={() => handleNavigate("login")}
-                    className="w-full bg-red-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-red-600/20"
+                    className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-600/20"
                   >
                     Entrar
                   </button>

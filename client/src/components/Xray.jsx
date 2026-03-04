@@ -165,7 +165,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
 
       <div className="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
         {!isAdminUser && !canUseEffective && !usageLoading && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 animate-pulse">
+          <div className="mb-6 p-4 bg-red-50 border border-emerald-500 rounded-xl flex items-center gap-3 animate-pulse">
             <span className="text-2xl">🚫</span>
             <div>
               <p className="text-sm font-bold text-red-800">
@@ -180,7 +180,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
 
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center p-4 bg-white rounded-2xl shadow-sm mb-6 border border-gray-100">
-            <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/30 transform -rotate-3">
+            <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/30 transform -rotate-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -219,7 +219,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
                     value="Espontânea"
                     checked={ventilation === "Espontânea"}
                     onChange={(e) => setVentilation(e.target.value)}
-                    className="text-blue-600 focus:ring-blue-500"
+                    className="text-emerald-600 focus:ring-emerald-500"
                   />
                   <span className="text-sm text-gray-700">Espontânea</span>
                 </label>
@@ -229,7 +229,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
                     value="Mecânica"
                     checked={ventilation === "Mecânica"}
                     onChange={(e) => setVentilation(e.target.value)}
-                    className="text-blue-600 focus:ring-blue-500"
+                    className="text-emerald-600 focus:ring-emerald-500"
                   />
                   <span className="text-sm text-gray-700">Mecânica</span>
                 </label>
@@ -247,7 +247,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
                     value="PA"
                     checked={position === "PA"}
                     onChange={(e) => setPosition(e.target.value)}
-                    className="text-blue-600 focus:ring-blue-500"
+                    className="text-emerald-600 focus:ring-emerald-500"
                   />
                   <span className="text-sm text-gray-700">PA</span>
                 </label>
@@ -257,7 +257,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
                     value="AP"
                     checked={position === "AP"}
                     onChange={(e) => setPosition(e.target.value)}
-                    className="text-blue-600 focus:ring-blue-500"
+                    className="text-emerald-600 focus:ring-emerald-500"
                   />
                   <span className="text-sm text-gray-700">AP</span>
                 </label>
@@ -299,7 +299,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
                   value={obs}
                   onChange={(e) => setObs(e.target.value)}
                   placeholder="Paciente com febre há 3 dias, tosse produtiva. Tem dreno à direita."
-                  className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none h-24"
+                  className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none resize-none h-24"
                 />
               </div>
             </div>
@@ -314,8 +314,8 @@ export default function Xray({ user, onLogout, onNavigate }) {
               htmlFor="file-upload"
               className={`group flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 ${
                 isDragging
-                  ? "border-blue-400 bg-blue-50 scale-[1.02]"
-                  : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-blue-300 hover:shadow-md"
+                  ? "border-emerald-400 bg-emerald-50 scale-[1.02]"
+                  : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-emerald-300 hover:shadow-md"
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -325,7 +325,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
                 className={`transition-transform duration-300 ${isDragging ? "scale-110" : "group-hover:scale-110"}`}
               >
                 <div
-                  className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-colors ${isDragging ? "bg-blue-100" : "bg-white shadow-sm group-hover:bg-blue-50"}`}
+                  className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-colors ${isDragging ? "bg-emerald-100" : "bg-white shadow-sm group-hover:bg-emerald-50"}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -335,7 +335,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.5"
-                    className={`transition-colors ${isDragging ? "text-blue-600" : "text-gray-400 group-hover:text-blue-500"}`}
+                    className={`transition-colors ${isDragging ? "text-emerald-600" : "text-gray-400 group-hover:text-emerald-500"}`}
                   >
                     <rect
                       x="3"
@@ -357,7 +357,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
                   </span>
                 ) : (
                   <>
-                    <span className="text-blue-600 font-bold border-b border-blue-200 hover:border-blue-600 transition-colors">
+                    <span className="text-emerald-600 font-bold border-b border-emerald-200 hover:border-emerald-600 transition-colors">
                       Clique para enviar
                     </span>{" "}
                     ou arraste imagens
@@ -462,7 +462,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
           <button
             onClick={handleAnalyze}
             disabled={files.length === 0 || loading || !canUseEffective}
-            className="w-full bg-blue-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-blue-600/30 hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group"
+            className="w-full bg-emerald-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-emerald-600/30 hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group"
           >
             {loading ? (
               <>
@@ -514,7 +514,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
             <div className="mt-10 pt-8 border-t border-gray-100 animate-fadeIn">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 text-sm font-black">
+                  <span className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600 text-sm font-black">
                     AI
                   </span>
                   Impressão Radiológica
@@ -570,7 +570,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
               <div className="bg-gray-50/80 rounded-2xl p-6 border border-gray-200 min-h-[150px] shadow-inner relative flex flex-col justify-center">
                 {loading ? (
                   <div className="flex flex-col items-center justify-center py-10 text-gray-500 space-y-4">
-                    <p className="animate-pulse font-medium text-blue-600">
+                    <p className="animate-pulse font-medium text-emerald-600">
                       Interpretando imagens e dados clínicos...
                     </p>
                     <p className="text-xs text-gray-400 text-center max-w-md animate-fadeIn opacity-80 h-8 transition-opacity duration-500">
@@ -610,18 +610,18 @@ export default function Xray({ user, onLogout, onNavigate }) {
       <footer className="mt-auto py-6 border-t border-gray-200 bg-white">
         <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-gray-500">
-            © 2026 Hemotrack. Todos os direitos reservados.
+            © 2026 Sintesys. Todos os direitos reservados.
           </p>
           <div className="flex gap-4">
             <button
               onClick={() => openFooterModal("terms")}
-              className="text-xs text-gray-500 hover:text-blue-600 transition"
+              className="text-xs text-gray-500 hover:text-emerald-600 transition"
             >
               Termos de Uso
             </button>
             <button
               onClick={() => openFooterModal("privacy")}
-              className="text-xs text-gray-500 hover:text-blue-600 transition"
+              className="text-xs text-gray-500 hover:text-emerald-600 transition"
             >
               Privacidade
             </button>

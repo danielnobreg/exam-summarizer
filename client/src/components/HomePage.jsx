@@ -1,486 +1,436 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Navbar from './Navbar';
-import Footer from './Footer';
-import { 
-  ArrowUp, 
-  Activity, 
-  PlayCircle, 
+import React, { useState, useEffect, useRef } from "react";
+import {
   ArrowRight,
-  Zap,
   ShieldCheck,
-  Settings,
-  FileUp,
-  Cpu,
-  ClipboardCheck,
-  Beaker,
-  Heart,
-  ScanLine
-} from 'lucide-react';
-import { motion, useInView } from 'framer-motion';
+  Activity,
+  BrainCircuit,
+  Syringe,
+  HeartPulse,
+  Lock,
+  Clock,
+  CheckCircle2,
+  X,
+} from "lucide-react";
+import { motion, useInView } from "framer-motion";
 
-// --- Componentes de UI ---
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
-const FadeIn = ({ 
-  children, 
-  delay = 0, 
-  className = "", 
-  direction = 'up',
-  fullWidth = false
-}) => {
-  const getDirectionOffset = () => {
-    switch (direction) {
-      case 'up': return { y: 40, x: 0 };
-      case 'down': return { y: -40, x: 0 };
-      case 'left': return { x: 40, y: 0 };
-      case 'right': return { x: -40, y: 0 };
-      case 'none': return { x: 0, y: 0 };
-      default: return { y: 40, x: 0 };
-    }
+// --- Utilitários de Animação ---
+const FadeIn = ({ children, delay = 0, direction = "up", className = "" }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, margin: "-50px" });
+
+  const directions = {
+    up: { y: 30, x: 0 },
+    down: { y: -30, x: 0 },
+    left: { x: 30, y: 0 },
+    right: { x: -30, y: 0 },
   };
-
-  const offset = getDirectionOffset();
 
   return (
     <motion.div
-      initial={{ 
-        opacity: 0, 
-        ...offset
-      }}
-      whileInView={{ 
-        opacity: 1, 
-        x: 0, 
-        y: 0 
-      }}
-      viewport={{ once: false, margin: "-10%" }}
-      transition={{ 
-        duration: 0.7, 
-        delay: delay, 
-        ease: [0.21, 0.47, 0.32, 0.98] 
-      }}
-      className={`${fullWidth ? 'w-full' : ''} ${className}`}
+      ref={ref}
+      initial={{ opacity: 0, ...directions[direction] }}
+      animate={
+        isInView
+          ? { opacity: 1, x: 0, y: 0 }
+          : { opacity: 0, ...directions[direction] }
+      }
+      transition={{ duration: 0.6, delay: delay, ease: "easeOut" }}
+      className={className}
     >
       {children}
     </motion.div>
   );
 };
 
-// --- Sub-componentes ---
+// --- Seções ---
 
-const Hero = ({ onCtaClick }) => {
+const Hero = ({ onCtaClick, onScrollToModules }) => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900 pt-20">
-      {/* Gradientes de Fundo */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-red-900/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[800px] h-[600px] bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center z-10">
-        
-        <FadeIn delay={0.1}>
-          <div className="inline-flex items-center px-4 py-2 rounded-full border border-red-500/30 bg-red-500/10 text-red-400 text-sm font-medium mb-8">
-            <span className="flex h-2 w-2 rounded-full bg-red-500 mr-2 animate-pulse"></span>
-            Nova tecnologia IA 2.0 disponível
-          </div>
-        </FadeIn>
-
-        <FadeIn delay={0.2}>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight mb-6">
-            Análise Laboratorial <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">
-              Inteligente
-            </span>
-          </h1>
-        </FadeIn>
-
-        <FadeIn delay={0.3}>
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Faça upload do seu exame em PDF e/ou Imagem e receba uma análise detalhada, 
-            explicativa e profissional em segundos. Tecnologia avançada para sua saúde.
-          </p>
-        </FadeIn>
-
-        <FadeIn delay={0.4} className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-          <button 
-            onClick={onCtaClick}
-            className="w-full sm:w-auto px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg hover:shadow-red-600/30 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center"
-          >
-            Experimentar Grátis
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </button>
-          
-          <button className="w-full sm:w-auto px-8 py-4 border border-gray-600 hover:border-white text-gray-300 hover:text-white font-semibold rounded-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center group">
-            <PlayCircle className="mr-2 h-5 w-5 text-gray-400 group-hover:text-red-500 transition-colors" />
-            Ver demonstração
-          </button>
-        </FadeIn>
-
-        {/* Imagem Hero / Mockup */}
-        <FadeIn delay={0.6} className="mt-16 w-full max-w-5xl">
-          <div className="relative rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm p-4 shadow-2xl">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-900 via-transparent to-transparent z-20 opacity-80 rounded-2xl pointer-events-none"></div>
-            
-            {/* Janela do Navegador Mockup */}
-            <div className="bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-inner">
-              {/* Fake Window Header */}
-              <div className="flex items-center px-4 py-3 bg-gray-800 border-b border-gray-700">
-                <div className="flex space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                </div>
-                <div className="mx-auto text-xs text-gray-500 font-mono">dashboard.hemotrack.ai</div>
-              </div>
-              
-              {/* Conteúdo Placeholder */}
-              <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                 {/* Painel Esquerdo */}
-                 <div className="md:col-span-1 space-y-4">
-                    <div className="h-32 bg-gray-800 rounded-lg animate-pulse"></div>
-                    <div className="h-12 bg-gray-800 rounded-lg opacity-60"></div>
-                    <div className="h-12 bg-gray-800 rounded-lg opacity-60"></div>
-                 </div>
-                 {/* Painel Direito (Análise) */}
-                 <div className="md:col-span-2 space-y-4">
-                    <div className="flex justify-between items-center mb-6">
-                        <div className="h-8 w-1/3 bg-gray-800 rounded animate-pulse"></div>
-                        <div className="h-8 w-24 bg-red-600/20 rounded text-red-500 flex items-center justify-center text-xs font-bold">ALERTA</div>
-                    </div>
-                    <div className="space-y-3">
-                        <div className="h-4 bg-gray-800 rounded w-full"></div>
-                        <div className="h-4 bg-gray-800 rounded w-5/6"></div>
-                        <div className="h-4 bg-gray-800 rounded w-4/6"></div>
-                    </div>
-                    <div className="mt-6 p-4 border border-red-900/30 bg-red-900/10 rounded-lg">
-                        <div className="h-4 w-1/2 bg-red-800/40 rounded mb-2"></div>
-                        <div className="h-16 bg-red-800/20 rounded"></div>
-                    </div>
-                 </div>
-              </div>
-            </div>
-          </div>
-        </FadeIn>
-
+    <section className="relative min-h-[90vh] flex flex-col justify-center bg-white pt-20 border-b border-gray-100">
+      {/* Background Decorativo Médico Minimalista */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-blue-50/50 blur-3xl"></div>
+        <div className="absolute top-[40%] -left-[10%] w-[40%] h-[40%] rounded-full bg-slate-50 blur-3xl"></div>
       </div>
-    </section>
-  );
-};
 
-const HowItWorks = () => {
-  const steps = [
-    {
-      icon: <FileUp className="h-10 w-10 text-red-600" />,
-      title: "Upload do PDF/Imagem",
-      description: "Envie o arquivo PDF ou Imagem do seu exame laboratorial através da nossa plataforma segura.",
-      number: "01"
-    },
-    {
-      icon: <Cpu className="h-10 w-10 text-red-600" />,
-      title: "IA Processa",
-      description: "Nossa inteligência artificial analisa cada parâmetro, comparando com referências atualizadas.",
-      number: "02"
-    },
-    {
-      icon: <ClipboardCheck className="h-10 w-10 text-red-600" />,
-      title: "Receba a Análise",
-      description: "Em segundos, você tem um relatório detalhado e fácil de entender sobre sua saúde.",
-      number: "03"
-    }
-  ];
-
-  return (
-    <section className="py-24 bg-gray-50 relative overflow-hidden">
-        {/* Elemento decorativo de fundo */}
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <FadeIn>
-            <h2 className="text-red-600 font-bold tracking-wide uppercase text-sm mb-3">Passo a Passo</h2>
-            <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900">Como funciona o Hemotrack?</h3>
-          </FadeIn>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative">
-          {/* Linha conectora para Desktop */}
-          <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gray-200 -z-10"></div>
-
-          {steps.map((step, index) => (
-            <FadeIn key={index} delay={index * 0.2}>
-              <div className="relative group p-8 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full flex flex-col items-center text-center">
-                <div className="absolute -top-6 bg-gray-50 p-2 rounded-full border-4 border-white shadow-sm">
-                    <span className="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 text-red-600 font-bold text-lg">
-                        {step.number}
-                    </span>
-                </div>
-                
-                <div className="mt-6 mb-6 p-4 bg-red-50 rounded-full group-hover:bg-red-100 transition-colors">
-                  {step.icon}
-                </div>
-                
-                <h4 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h4>
-                <p className="text-gray-600 leading-relaxed">
-                  {step.description}
-                </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="max-w-3xl">
+            <FadeIn>
+              <div className="inline-flex items-center space-x-2 bg-slate-100 text-slate-700 px-4 py-2 rounded-full mb-8 text-sm font-semibold tracking-wide border border-slate-200">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>Segurança de Dados Médicos (LGPD)</span>
               </div>
             </FadeIn>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
-const Features = () => {
-  const features = [
-    {
-      title: "Análise em Segundos",
-      description: "Não espere dias para entender seus exames. Nosso motor de IA processa PDFs e imagens complexas instantaneamente, destacando alterações e explicando termos médicos em linguagem simples.",
-      icon: <Zap className="h-6 w-6 text-white" />,
-      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      align: 'left'
-    },
-    {
-      title: "Totalmente Seguro",
-      description: "Sua saúde é privada. Utilizamos criptografia de ponta a ponta e armazenamento seguro (Firebase/GCP). Seus dados nunca são compartilhados com terceiros sem seu consentimento explícito.",
-      icon: <ShieldCheck className="h-6 w-6 text-white" />,
-      image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      align: 'right'
-    },
-    {
-      title: "Painel Administrativo",
-      description: "Para clínicas e médicos: gerencie múltiplos pacientes, controle limites de análises e tenha um histórico completo acessível a qualquer momento através de um dashboard intuitivo.",
-      icon: <Settings className="h-6 w-6 text-white" />,
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      align: 'left'
-    }
-  ];
+            <FadeIn delay={0.1}>
+              <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 leading-[1.1]">
+                Apoio à Decisão{" "}
+                <span className="text-blue-600">Clínica Avançada</span>
+              </h1>
+            </FadeIn>
 
-  return (
-    <section className="py-24 bg-gray-900 text-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
-        
-        {features.map((feature, index) => (
-          <div key={index} className={`flex flex-col ${feature.align === 'right' ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12`}>
-            
-            {/* Conteúdo de Texto */}
-            <div className="flex-1 space-y-6">
-              <FadeIn direction={feature.align === 'right' ? 'left' : 'right'}>
-                <div className="inline-flex items-center justify-center p-3 bg-red-600 rounded-xl shadow-lg shadow-red-900/50 mb-4">
-                  {feature.icon}
-                </div>
-                <h3 className="text-3xl md:text-4xl font-bold leading-tight">
-                  {feature.title}
-                </h3>
-                <p className="text-lg text-gray-400 leading-relaxed">
-                  {feature.description}
-                </p>
-                <button className="text-red-500 font-semibold hover:text-red-400 transition-colors flex items-center mt-4">
-                  Saiba mais <span className="ml-2 text-xl">→</span>
-                </button>
-              </FadeIn>
-            </div>
-
-            {/* Conteúdo de Imagem */}
-            <div className="flex-1 w-full">
-              <FadeIn direction={feature.align === 'right' ? 'right' : 'left'} delay={0.2}>
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-700 group">
-                  <div className="absolute inset-0 bg-red-600/10 group-hover:bg-transparent transition-all duration-500 z-10"></div>
-                  <img 
-                    src={feature.image} 
-                    alt={feature.title} 
-                    className="w-full h-[400px] object-cover transform group-hover:scale-105 transition-transform duration-700"
-                  />
-                  {/* Elementos Decorativos */}
-                  <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-red-600/20 blur-3xl rounded-full"></div>
-                </div>
-              </FadeIn>
-            </div>
-
-          </div>
-        ))}
-
-      </div>
-    </section>
-  );
-};
-
-const Counter = ({ from, to, duration }) => {
-  const [count, setCount] = useState(from);
-  const nodeRef = useRef(null);
-  const inView = useInView(nodeRef, { once: false, margin: "-100px" });
-
-  useEffect(() => {
-    if (!inView) {
-      setCount(from);
-      return;
-    }
-
-    let startTime;
-    let animationFrame;
-
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = timestamp - startTime;
-      const percentage = Math.min(progress / (duration * 1000), 1);
-      
-      setCount(Math.floor(from + (to - from) * percentage));
-
-      if (progress < duration * 1000) {
-        animationFrame = requestAnimationFrame(animate);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(animationFrame);
-  }, [inView, from, to, duration]);
-
-  return <span ref={nodeRef}>{count}</span>;
-};
-
-const Stats = () => {
-  const stats = [
-    { label: "Análises Realizadas", value: 500, suffix: "+" },
-    { label: "Precisão na Leitura", value: 98, suffix: "%" },
-    { label: "Disponibilidade", value: 24, suffix: "/7" }
-  ];
-
-  return (
-    <section className="py-20 relative bg-gradient-to-br from-red-900 via-red-800 to-gray-900 text-white overflow-hidden">
-      {/* Overlay de Padrão */}
-      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-red-700/50">
-          
-          {stats.map((stat, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              className="p-8"
-            >
-              <div className="text-5xl md:text-6xl font-extrabold mb-2 text-white tracking-tight">
-                <Counter from={0} to={stat.value} duration={2} />{stat.suffix}
-              </div>
-              <p className="text-red-200 font-medium text-lg uppercase tracking-wider">
-                {stat.label}
+            <FadeIn delay={0.2}>
+              <p className="text-xl text-slate-600 mb-10 leading-relaxed font-light">
+                O Sintesys auxilia profissionais no mapeamento de biomarcadores
+                e interpretação radiológica com processamento inteligente de
+                ponta. Obtenha laudos estruturados, identificação de anomalias e
+                cruzamento de dados com a literatura médica atual.
               </p>
-            </motion.div>
-          ))}
+            </FadeIn>
 
+            <FadeIn delay={0.3}>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={onCtaClick}
+                  className="px-8 py-4 text-lg font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center"
+                >
+                  Confira nossos planos
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </button>
+                <button
+                  onClick={onScrollToModules}
+                  className="px-8 py-4 text-lg font-bold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-center"
+                >
+                  Nossos Módulos
+                </button>
+              </div>
+            </FadeIn>
+          </div>
+
+          <div className="hidden lg:block relative">
+            <FadeIn delay={0.4} direction="left">
+              {/* Minimalist UI Mockup instead of real images */}
+              <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 relative z-10">
+                <div className="flex items-center gap-3 border-b border-gray-100 pb-4 mb-6">
+                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                  <div className="text-xs font-medium text-slate-400 ml-4 flex-1">
+                    Relatório_Paciente_Silva.pdf
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="h-4 bg-slate-100 rounded-md w-1/3"></div>
+                  <div className="h-8 bg-slate-50 rounded-md w-3/4"></div>
+
+                  <div className="grid grid-cols-2 gap-4 pt-4">
+                    <div className="p-4 rounded-xl border border-blue-100 bg-blue-50/30">
+                      <div className="text-xs font-bold text-blue-600 uppercase mb-1">
+                        Achados Críticos
+                      </div>
+                      <div className="text-sm text-slate-700">
+                        Leucocitose severa
+                      </div>
+                    </div>
+                    <div className="p-4 rounded-xl border border-emerald-100 bg-emerald-50/30">
+                      <div className="text-xs font-bold text-emerald-600 uppercase mb-1">
+                        Sinais Vitais
+                      </div>
+                      <div className="text-sm text-slate-700">
+                        Estabilidade confirmada
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 pt-4">
+                    <div className="h-2 bg-slate-100 rounded-full w-full"></div>
+                    <div className="h-2 bg-slate-100 rounded-full w-5/6"></div>
+                    <div className="h-2 bg-slate-100 rounded-full w-4/6"></div>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute -bottom-6 -right-6 w-full h-full bg-slate-900 rounded-2xl -z-10"></div>
+            </FadeIn>
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-const AvailableExams = ({ onAnalyzeClick }) => {
+const Methodology = () => {
+  const pillars = [
+    {
+      icon: <BrainCircuit className="h-8 w-8 text-blue-600" />,
+      title: "Processamento Cognitivo",
+      desc: "Identifica correlações clínicas complexas que podem passar despercebidas na revisão manual rápida.",
+    },
+    {
+      icon: <Clock className="h-8 w-8 text-blue-600" />,
+      title: "Eficiência Operacional",
+      desc: "Reduz drasticamente o tempo de triagem de exames laboratoriais e radiológicos, liberando tempo médico.",
+    },
+    {
+      icon: <Lock className="h-8 w-8 text-blue-600" />,
+      title: "Privacidade by Design",
+      desc: "A infraestrutura não utiliza os dados sensíveis inseridos para treinamento de IA de terceiros (Zero Retention API).",
+    },
+  ];
+
   return (
-    <section id="exames" className="py-24 bg-gray-50">
+    <section className="py-24 bg-slate-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <FadeIn>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6">Comece Agora</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Selecione o tipo de exame que deseja analisar. Estamos constantemente adicionando novos tipos de análises.
-            </p>
+            <h2 className="text-sm font-bold text-blue-600 tracking-wider uppercase mb-3">
+              Tecnologia
+            </h2>
+            <h3 className="text-3xl font-extrabold text-slate-900">
+              Pilares da Plataforma
+            </h3>
           </FadeIn>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* Cartão Ativo - Hemograma */}
-          <FadeIn className="h-full">
-            <div className="h-full bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-red-100 hover:border-red-500 transition-all duration-300 transform hover:-translate-y-1 group">
-              <div className="bg-red-600 p-6 flex justify-between items-center">
-                <div className="flex items-center space-x-3">
-                  <div className="bg-white/20 p-2 rounded-lg">
-                    <Activity className="h-8 w-8 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">Hemograma Completo</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {pillars.map((item, idx) => (
+            <FadeIn key={idx} delay={idx * 0.1}>
+              <div className="bg-white p-8 rounded-2xl border border-slate-200 h-full flex flex-col items-start">
+                <div className="p-3 rounded-xl bg-blue-50 mb-6 border border-blue-100">
+                  {item.icon}
                 </div>
-                <span className="bg-white text-red-600 text-xs font-bold px-3 py-1 rounded-full uppercase">
-                  Disponível
-                </span>
-              </div>
-              
-              <div className="p-8">
-                <p className="text-gray-600 mb-6 text-lg">
-                  Análise detalhada de série vermelha (eritrócitos), série branca (leucócitos) e plaquetas.
+                <h4 className="text-xl font-bold text-slate-900 mb-3">
+                  {item.title}
+                </h4>
+                <p className="text-slate-600 leading-relaxed text-sm">
+                  {item.desc}
                 </p>
-                
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const AvailableModules = ({ onNavigate }) => {
+  const modules = [
+    {
+      id: "hemogram",
+      icon: <Syringe className="h-8 w-8 text-blue-600" />,
+      title: "Exame Laboratorial Completo",
+      desc: "Avaliação laboratorial integral: série vermelha, série branca e plaquetas. Cruzamento de biomarcadores para detecção precoce de desvios.",
+      styles: {
+        bg: "bg-blue-50",
+        hoverBg: "hover:bg-blue-600",
+        text: "text-blue-500",
+        hoverBorder: "hover:border-blue-600",
+      },
+      features: [
+        "Índices Hematimétricos",
+        "Sinalização Infecciosa",
+        "Valores de Pânico",
+      ],
+    },
+    {
+      id: "xray",
+      icon: <Activity className="h-8 w-8 text-emerald-600" />,
+      title: "Radiografia de Tórax",
+      desc: "Suporte à detecção de anomalias pulmonares, alterações na silhueta cardíaca e identificação de derrames pleurais ou opacidades.",
+      styles: {
+        bg: "bg-emerald-50",
+        hoverBg: "hover:bg-emerald-600",
+        text: "text-emerald-500",
+        hoverBorder: "hover:border-emerald-600",
+      },
+      features: [
+        "Análise de Opacidades",
+        "Silhueta Cardíaca",
+        "Dados Clínicos Integrados",
+      ],
+    },
+    {
+      id: "ecg",
+      icon: <HeartPulse className="h-8 w-8 text-indigo-600" />,
+      title: "Eletrocardiograma",
+      desc: "Identificação estruturada de padrões de arritmia, bloqueios de ramo, intervalos (PR, QTi) e sinais de isquemia miocárdica.",
+      styles: {
+        bg: "bg-indigo-50",
+        hoverBg: "hover:bg-indigo-600",
+        text: "text-indigo-500",
+        hoverBorder: "hover:border-indigo-600",
+      },
+      features: [
+        "Leitura de Eixos",
+        "Rastreio de Arritmias",
+        "Análise de Isquemia",
+      ],
+    },
+  ];
+
+  return (
+    <section id="modulos" className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-16">
+          <FadeIn>
+            <h2 className="text-sm font-bold text-slate-500 tracking-wider uppercase mb-3">
+              Módulos Ativos
+            </h2>
+            <h3 className="text-3xl font-extrabold text-slate-900">
+              Especialidades Suportadas
+            </h3>
+          </FadeIn>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {modules.map((mod, idx) => (
+            <FadeIn key={idx} delay={idx * 0.1} className="h-full">
+              <div className="group h-full bg-white rounded-3xl border border-slate-200 hover:border-slate-300 p-8 flex flex-col shadow-sm hover:shadow-xl transition-all duration-300">
+                <div
+                  className={`w-14 h-14 rounded-2xl ${mod.styles.bg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
+                >
+                  {mod.icon}
+                </div>
+                <h4 className="text-xl font-bold text-slate-900 mb-3">
+                  {mod.title}
+                </h4>
+                <p className="text-slate-600 text-sm leading-relaxed mb-8 flex-1">
+                  {mod.desc}
+                </p>
+
                 <div className="space-y-3 mb-8">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <ScanLine className="h-4 w-4 mr-2 text-green-500" />
-                    Detecta anemias e infecções
-                  </div>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <ScanLine className="h-4 w-4 mr-2 text-green-500" />
-                    Interpretação automática de VCM, HCM, CHCM
-                  </div>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <ScanLine className="h-4 w-4 mr-2 text-green-500" />
-                    Alertas visuais para valores críticos
-                  </div>
+                  {mod.features.map((feat, fidx) => (
+                    <div
+                      key={fidx}
+                      className="flex items-center text-sm font-medium text-slate-700"
+                    >
+                      <CheckCircle2
+                        className={`w-4 h-4 mr-3 ${mod.styles.text}`}
+                      />
+                      {feat}
+                    </div>
+                  ))}
                 </div>
 
-                <button 
-                  onClick={onAnalyzeClick}
-                  className="w-full py-4 bg-gray-900 text-white font-bold rounded-xl hover:bg-red-600 transition-colors shadow-lg"
+                <button
+                  onClick={() => onNavigate(mod.id)}
+                  className={`w-full py-3 bg-slate-50 text-slate-800 border border-slate-200 font-bold rounded-xl ${mod.styles.hoverBg} hover:text-white ${mod.styles.hoverBorder} transition-colors`}
                 >
-                  Analisar Hemograma
+                  Acessar Módulo
                 </button>
               </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// --- Planos de Assinatura ---
+const Pricing = () => {
+  return (
+    <section
+      id="planos"
+      className="py-24 bg-slate-50 border-t border-slate-200"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <FadeIn>
+            <h2 className="text-sm font-bold text-blue-600 tracking-wider uppercase mb-3">
+              Modelos de Assinatura
+            </h2>
+            <h3 className="text-3xl font-extrabold text-slate-900">
+              Planos e Vantagens
+            </h3>
+          </FadeIn>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* Plano Gratuito */}
+          <FadeIn>
+            <div className="bg-white rounded-3xl p-8 border border-slate-200 relative opacity-80 h-full flex flex-col">
+              <h4 className="text-2xl font-bold text-slate-800 mb-2">
+                Plano Inicial
+              </h4>
+              <p className="text-slate-500 text-sm mb-6">
+                Para experimentação da interface.
+              </p>
+              <div className="text-4xl font-extrabold text-slate-900 mb-8">
+                Grátis
+              </div>
+
+              <div className="space-y-4 mb-8 flex-1">
+                <div className="flex items-center text-sm text-slate-600">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />{" "}
+                  Acesso ao dashboard
+                </div>
+                <div className="flex items-center text-sm text-slate-400 line-through">
+                  <X className="w-5 h-5 text-slate-300 mr-3 flex-shrink-0" />{" "}
+                  Análise de Hemogramas
+                </div>
+                <div className="flex items-center text-sm text-slate-400 line-through">
+                  <X className="w-5 h-5 text-slate-300 mr-3 flex-shrink-0" />{" "}
+                  Raio-X Torácico
+                </div>
+                <div className="flex items-center text-sm text-slate-400 line-through">
+                  <X className="w-5 h-5 text-slate-300 mr-3 flex-shrink-0" />{" "}
+                  Eletrocardiograma
+                </div>
+                <div className="flex items-center text-sm text-slate-400 line-through">
+                  <X className="w-5 h-5 text-slate-300 mr-3 flex-shrink-0" />{" "}
+                  Suporte Prioritário
+                </div>
+              </div>
+
+              <button
+                disabled
+                className="w-full py-4 bg-slate-100 text-slate-400 font-bold rounded-xl cursor-not-allowed border border-slate-200"
+              >
+                Em breve
+              </button>
             </div>
           </FadeIn>
 
-          {/* Grid de "Em Breve" */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            
-            {/* Cartão 2 */}
-            <FadeIn delay={0.2} className="h-full">
-              <div className="h-full bg-gray-100 rounded-2xl p-6 border border-gray-200 opacity-70 hover:opacity-100 transition-opacity relative overflow-hidden">
-                <div className="absolute top-4 right-4 bg-gray-300 text-gray-600 text-[10px] font-bold px-2 py-1 rounded uppercase">
-                  Em Breve
+          {/* Plano PRO */}
+          <FadeIn delay={0.2}>
+            <div className="bg-white rounded-3xl p-8 border-2 border-blue-500 shadow-xl relative h-full flex flex-col transform md:-translate-y-4">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-md">
+                Mais Escolhido
+              </div>
+
+              <h4 className="text-2xl font-bold text-blue-900 mb-2">
+                Sintesys PRO
+              </h4>
+              <p className="text-slate-500 text-sm mb-6">
+                Acesso completo à plataforma.
+              </p>
+              <div className="text-4xl font-extrabold text-slate-900 mb-2">
+                R$ 9,90
+                <span className="text-lg text-slate-500 font-medium">/mês</span>
+              </div>
+
+              <div className="space-y-4 mb-8 flex-1 mt-6">
+                <div className="flex items-center text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
+                  Análises Ilimitadas de Hemogramas
                 </div>
-                <Beaker className="h-10 w-10 text-gray-400 mb-4" />
-                <h4 className="text-xl font-bold text-gray-800 mb-2">Glicemia & Insulina</h4>
-                <p className="text-sm text-gray-500">Análise de curvas glicêmicas e risco de diabetes.</p>
-              </div>
-            </FadeIn>
-
-            {/* Cartão 3 */}
-            <FadeIn delay={0.3} className="h-full">
-              <div className="h-full bg-gray-100 rounded-2xl p-6 border border-gray-200 opacity-70 hover:opacity-100 transition-opacity relative overflow-hidden">
-                <div className="absolute top-4 right-4 bg-gray-300 text-gray-600 text-[10px] font-bold px-2 py-1 rounded uppercase">
-                  Em Breve
+                <div className="flex items-center text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
+                  Acesso total ao Raio-X Torácico
                 </div>
-                <Heart className="h-10 w-10 text-gray-400 mb-4" />
-                <h4 className="text-xl font-bold text-gray-800 mb-2">Perfil Lipídico</h4>
-                <p className="text-sm text-gray-500">Colesterol total, frações HDL/LDL e triglicerídeos.</p>
+                <div className="flex items-center text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
+                  Identificação de anomalias no ECG
+                </div>
+                <div className="flex items-center text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
+                  Exportação de Laudos Estruturados
+                </div>
+                <div className="flex items-center text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
+                  Suporte Especializado 24/7
+                </div>
               </div>
-            </FadeIn>
 
-             {/* Cartão 4 */}
-             <FadeIn delay={0.4} className="col-span-1 sm:col-span-2">
-              <div className="h-full bg-gray-100 rounded-2xl p-6 border border-gray-200 opacity-70 hover:opacity-100 transition-opacity relative overflow-hidden flex items-center">
-                 <div className="mr-6">
-                    <Activity className="h-10 w-10 text-gray-400" />
-                 </div>
-                 <div>
-                    <h4 className="text-xl font-bold text-gray-800 mb-1">Função Hepática e Renal</h4>
-                    <p className="text-sm text-gray-500">TGO, TGP, Gama GT, Ureia e Creatinina.</p>
-                    <div className="mt-2 inline-block bg-gray-300 text-gray-600 text-[10px] font-bold px-2 py-1 rounded uppercase">
-                        Em desenvolvimento
-                    </div>
-                 </div>
-              </div>
-            </FadeIn>
-
-          </div>
-
+              <button className="w-full py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-600/20 hover:-translate-y-1">
+                Assinar Sintesys PRO
+              </button>
+            </div>
+          </FadeIn>
         </div>
       </div>
     </section>
@@ -490,53 +440,43 @@ const AvailableExams = ({ onAnalyzeClick }) => {
 // --- Componente Principal ---
 
 const HomePage = ({ onNavigateLogin, onNavigate, user, onLogout }) => {
-  const [showScrollTop, setShowScrollTop] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const scrollToModules = () => {
+    document.getElementById("modulos")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-manrope selection:bg-red-200 selection:text-red-900">
-      <Navbar 
+    <div className="min-h-screen bg-white font-manrope selection:bg-blue-100 selection:text-blue-900">
+      <Navbar
         user={user}
         onNavigate={(screen) => {
-          if (screen === 'login') onNavigateLogin();
-          else if (screen === 'landing' || screen === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
-          else if (onNavigate) onNavigate(screen); // Encaminha outras navegações (hemogram, admin, contact) para o App.js
-        }} 
+          if (screen === "login") onNavigateLogin();
+          else if (screen === "landing" || screen === "home")
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          else if (onNavigate) onNavigate(screen);
+        }}
         onLogout={onLogout}
-        isLanding={true} 
+        isLanding={true}
       />
-      
+
       <main>
-        <Hero onCtaClick={() => onNavigate ? onNavigate('hemogram') : onNavigateLogin()} />
-        <HowItWorks />
-        <Features />
-        <Stats />
-        <AvailableExams onAnalyzeClick={() => onNavigate ? onNavigate('hemogram') : onNavigateLogin()} />
+        <Hero
+          onCtaClick={() =>
+            document
+              .getElementById("planos")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          onScrollToModules={scrollToModules}
+        />
+        <Methodology />
+        <Pricing />
+        <AvailableModules
+          onNavigate={(screen) =>
+            onNavigate ? onNavigate(screen) : onNavigateLogin()
+          }
+        />
       </main>
 
       <Footer />
-
-      {/* Botão Voltar ao Topo */}
-      <button
-        onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-xl transition-all duration-300 z-40 transform ${
-          showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-        }`}
-        aria-label="Voltar ao topo"
-      >
-        <ArrowUp className="h-6 w-6" />
-      </button>
     </div>
   );
 };

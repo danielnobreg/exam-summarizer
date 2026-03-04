@@ -183,7 +183,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
 
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center p-4 bg-white rounded-2xl shadow-sm mb-6 border border-gray-100">
-            <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-600/30 transform rotate-3">
+            <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-600/30 transform rotate-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -240,7 +240,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                   value={obs}
                   onChange={(e) => setObs(e.target.value)}
                   placeholder="Queixas relacionadas, uso de marcapasso, histórico de cardiopatias ou arritmias..."
-                  className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-purple-500 outline-none resize-none h-24"
+                  className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none resize-none h-24"
                 />
               </div>
             </div>
@@ -254,8 +254,8 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
               htmlFor="file-upload"
               className={`group flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 ${
                 isDragging
-                  ? "border-purple-400 bg-purple-50 scale-[1.02]"
-                  : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-purple-300 hover:shadow-md"
+                  ? "border-indigo-400 bg-indigo-50 scale-[1.02]"
+                  : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-indigo-300 hover:shadow-md"
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -265,7 +265,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                 className={`transition-transform duration-300 ${isDragging ? "scale-110" : "group-hover:scale-110"}`}
               >
                 <div
-                  className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-colors ${isDragging ? "bg-purple-100" : "bg-white shadow-sm group-hover:bg-purple-50"}`}
+                  className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-colors ${isDragging ? "bg-indigo-100" : "bg-white shadow-sm group-hover:bg-indigo-50"}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -275,7 +275,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.5"
-                    className={`transition-colors ${isDragging ? "text-purple-600" : "text-gray-400 group-hover:text-purple-500"}`}
+                    className={`transition-colors ${isDragging ? "text-indigo-600" : "text-gray-400 group-hover:text-indigo-500"}`}
                   >
                     <rect
                       x="3"
@@ -297,7 +297,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                   </span>
                 ) : (
                   <>
-                    <span className="text-purple-600 font-bold border-b border-purple-200 hover:border-purple-600 transition-colors">
+                    <span className="text-indigo-600 font-bold border-b border-indigo-200 hover:border-indigo-600 transition-colors">
                       Clique para enviar
                     </span>{" "}
                     ou arraste o arquivo
@@ -391,7 +391,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
           <button
             onClick={handleAnalyze}
             disabled={!file || loading || !canUseEffective}
-            className="w-full bg-purple-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-purple-600/30 hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group"
+            className="w-full bg-indigo-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-indigo-600/30 hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group"
           >
             {loading ? (
               <>
@@ -443,7 +443,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
             <div className="mt-10 pt-8 border-t border-gray-100 animate-fadeIn">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 text-sm font-black">
+                  <span className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600 text-sm font-black">
                     AI
                   </span>
                   Laudo Eletrocardiográfico
@@ -499,7 +499,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
               <div className="bg-gray-50/80 rounded-2xl p-6 border border-gray-200 min-h-[150px] shadow-inner relative flex flex-col justify-center">
                 {loading ? (
                   <div className="flex flex-col items-center justify-center py-10 text-gray-500 space-y-4">
-                    <p className="animate-pulse font-medium text-purple-600">
+                    <p className="animate-pulse font-medium text-indigo-600">
                       Processando ondas e ritmo cardíaco...
                     </p>
                     <p className="text-xs text-gray-400 text-center max-w-md animate-fadeIn opacity-80 h-8 transition-opacity duration-500">
@@ -539,18 +539,18 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
       <footer className="mt-auto py-6 border-t border-gray-200 bg-white">
         <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-gray-500">
-            © 2026 Hemotrack. Todos os direitos reservados.
+            © 2026 Sintesys. Todos os direitos reservados.
           </p>
           <div className="flex gap-4">
             <button
               onClick={() => openFooterModal("terms")}
-              className="text-xs text-gray-500 hover:text-purple-600 transition"
+              className="text-xs text-gray-500 hover:text-indigo-600 transition"
             >
               Termos de Uso
             </button>
             <button
               onClick={() => openFooterModal("privacy")}
-              className="text-xs text-gray-500 hover:text-purple-600 transition"
+              className="text-xs text-gray-500 hover:text-indigo-600 transition"
             >
               Privacidade
             </button>

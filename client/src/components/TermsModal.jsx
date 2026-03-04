@@ -1,32 +1,32 @@
-import React from 'react';
-import { X, FileText, CheckCircle } from 'lucide-react';
+import React from "react";
+import { X, FileText, CheckCircle } from "lucide-react";
 
 export default function TermsModal({ isOpen, onClose, type }) {
   if (!isOpen) return null;
 
   const content = {
     terms: {
-      title: 'Termos de Uso - Hemotrack',
+      title: "Termos de Uso - Sintesys",
       text: `
 ## 1. Aceitação dos Termos
 
-Ao acessar e utilizar a plataforma Hemotrack, o usuário declara que leu, compreendeu e concorda integralmente com estes Termos de Uso. Caso não concorde, deverá cessar imediatamente o uso da plataforma.
+Ao acessar e utilizar a plataforma Sintesys, o usuário declara que leu, compreendeu e concorda integralmente com estes Termos de Uso. Caso não concorde, deverá cessar imediatamente o uso da plataforma.
 
 ## 2. Descrição do Serviço
 
-O Hemotrack é uma plataforma tecnológica destinada exclusivamente a profissionais de saúde legalmente habilitados, cujo objetivo é organizar, estruturar e resumir informações contidas em exames médicos, tais como exames laboratoriais, de imagem e registros gráficos clínicos.
+O Sintesys é uma plataforma tecnológica destinada exclusivamente a profissionais de saúde legalmente habilitados, cujo objetivo é organizar, estruturar e resumir informações contidas em exames médicos, tais como exames laboratoriais, de imagem e registros gráficos clínicos.
 
 A plataforma não realiza diagnóstico, prognóstico, prescrição, orientação terapêutica ou qualquer ato privativo de profissão regulamentada, atuando apenas como ferramenta de apoio informacional e organizacional.
 
 ## 3. Declaração de Profissional Habilitado
 
-Ao utilizar o Hemotrack, o usuário declara expressamente que:
+Ao utilizar o Sintesys, o usuário declara expressamente que:
 
 - É profissional de Saúde legalmente habilitado, nos termos da legislação brasileira;
 - Possui registro ativo em seu respectivo conselho profissional, quando aplicável;
 - Utiliza a plataforma como ferramenta auxiliar, sob sua inteira responsabilidade técnica e ética.
 
-O Hemotrack não realiza validação de credenciais profissionais, cabendo exclusivamente ao usuário a veracidade das informações prestadas.
+O Sintesys não realiza validação de credenciais profissionais, cabendo exclusivamente ao usuário a veracidade das informações prestadas.
 
 ## 4. Natureza do Uso e Limitações
 
@@ -36,7 +36,7 @@ O Hemotrack não realiza validação de credenciais profissionais, cabendo exclu
 - Não substituem laudos oficiais;
 - Não substituem a análise crítica, interpretação clínica ou decisão profissional do usuário.
 
-4.2. O Hemotrack não garante a exatidão, completude ou atualidade dos dados processados, especialmente quando os documentos fornecidos forem incompletos, ilegíveis ou imprecisos.
+4.2. O Sintesys não garante a exatidão, completude ou atualidade dos dados processados, especialmente quando os documentos fornecidos forem incompletos, ilegíveis ou imprecisos.
 
 ## 5. Responsabilidades do Usuário
 
@@ -49,7 +49,7 @@ O usuário é integralmente responsável por:
 
 ## 6. Limitação de Responsabilidade
 
-O Hemotrack não se responsabiliza, em nenhuma hipótese, por:
+O Sintesys não se responsabiliza, em nenhuma hipótese, por:
 
 - Condutas profissionais adotadas pelo usuário;
 - Decisões clínicas, médicas ou terapêuticas;
@@ -60,11 +60,11 @@ Nada nestes Termos exclui ou limita responsabilidade nos casos de dolo ou culpa 
 
 ## 7. Suspensão e Encerramento
 
-O Hemotrack poderá suspender ou encerrar o acesso do usuário, a qualquer tempo, caso identifique uso indevido, violação destes Termos ou risco jurídico plataforma.
+O Sintesys poderá suspender ou encerrar o acesso do usuário, a qualquer tempo, caso identifique uso indevido, violação destes Termos ou risco jurídico plataforma.
 
 ## 8. Propriedade Intelectual
 
-Todos os direitos sobre a plataforma, incluindo software, layout, textos e funcionalidades, pertencem ao Hemotrack, sendo vedada a reprodução ou uso não autorizado.
+Todos os direitos sobre a plataforma, incluindo software, layout, textos e funcionalidades, pertencem ao Sintesys, sendo vedada a reprodução ou uso não autorizado.
 
 ## 9. Modificações
 
@@ -72,13 +72,13 @@ Os Termos poderão ser alterados a qualquer momento. O usor continuado da plataf
 
 ## 10. Contato
 
-Email: hemotracksuporte@gmail.com
+Email: suporte@sintesys.com.br
 
 **Última atualização: 03/02/2026**
-      `
+      `,
     },
     privacy: {
-      title: 'Política de Privacidade - Hemotrack',
+      title: "Política de Privacidade - Sintesys",
       text: `
 ## 1. Dados Coletados
 
@@ -91,9 +91,9 @@ Coletamos e tratamos:
 
 Os documentos podem conter dados pessoais sensíveis, incluindo dados de saúde de terceiros (pacientes).
 
-## 2. Papel do Hemotrack na LGPD
+## 2. Papel do Sintesys na LGPD
 
-O Hemotrack atua como operador de dados, realizando o tratamento em nome do profissional de saúde, que figura como controlador, nos termos do art. 5º, VI e VII da LGPD.
+O Sintesys atua como operador de dados, realizando o tratamento em nome do profissional de saúde, que figura como controlador, nos termos do art. 5º, VI e VII da LGPD.
 
 ## 3. Base Legal para o Tratamento
 
@@ -135,15 +135,15 @@ O profissional poderá solicitar exclusão dos dados, respeitadas as limitaçõe
 
 ## 8. Direitos dos Titulares
 
-O titular dos dados poderá exercer os direitos previstos na LGPD por meio do profissional controlador ou diretamente pelos canais do Hemotrack, conforme aplicável.
+O titular dos dados poderá exercer os direitos previstos na LGPD por meio do profissional controlador ou diretamente pelos canais do Sintesys, conforme aplicável.
 
 ## 9. Contato
 
-Email: hemotracksuporte@gmail.com
+Email: suporte@sintesys.com.br
 
 **Última atualização: 03/02/2026**
-      `
-    }
+      `,
+    },
   };
 
   const { title, text } = content[type] || content.terms;
@@ -151,18 +151,23 @@ Email: hemotracksuporte@gmail.com
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 font-manrope animate-fadeIn">
       <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col border border-gray-100 overflow-hidden transform transition-all animate-scaleUp">
-        
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-full ${type === 'terms' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>
-                {type === 'terms' ? <FileText className="h-5 w-5" /> : <CheckCircle className="h-5 w-5" />}
+            <div
+              className={`p-2 rounded-full ${type === "terms" ? "bg-blue-100 text-blue-600" : "bg-green-100 text-green-600"}`}
+            >
+              {type === "terms" ? (
+                <FileText className="h-5 w-5" />
+              ) : (
+                <CheckCircle className="h-5 w-5" />
+              )}
             </div>
             <h2 className="text-xl font-bold text-gray-900">{title}</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 bg-gray-100 hover:bg-red-100 text-gray-400 hover:text-red-600 rounded-full transition-colors"
+            className="p-2 bg-gray-100 hover:bg-slate-200 text-gray-400 hover:text-slate-600 rounded-full transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -171,26 +176,48 @@ Email: hemotracksuporte@gmail.com
         {/* Content */}
         <div className="p-8 overflow-y-auto flex-1 custom-scrollbar">
           <div className="prose prose-sm max-w-none text-gray-600">
-            {text.split('\n').map((line, i) => {
-              if (line.startsWith('# ')) {
+            {text.split("\n").map((line, i) => {
+              if (line.startsWith("# ")) {
                 return (
-                    <div key={i} className="flex items-center gap-2 mt-6 mb-3">
-                        <h1 className="text-2xl font-extrabold text-gray-900">{line.replace('# ', '')}</h1>
-                    </div>
+                  <div key={i} className="flex items-center gap-2 mt-6 mb-3">
+                    <h1 className="text-2xl font-extrabold text-gray-900">
+                      {line.replace("# ", "")}
+                    </h1>
+                  </div>
                 );
-              } else if (line.startsWith('## ')) {
-                return <h2 key={i} className="text-lg font-bold text-gray-800 mt-5 mb-2 pb-1 border-b border-gray-100">{line.replace('## ', '')}</h2>;
-              } else if (line.startsWith('- ')) {
+              } else if (line.startsWith("## ")) {
                 return (
-                    <div key={i} className="flex items-start gap-2 ml-2 my-1.5">
-                        <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0"></div>
-                        <p className="text-gray-600 leading-relaxed">{line.replace('- ', '')}</p>
-                    </div>
+                  <h2
+                    key={i}
+                    className="text-lg font-bold text-gray-800 mt-5 mb-2 pb-1 border-b border-gray-100"
+                  >
+                    {line.replace("## ", "")}
+                  </h2>
                 );
-              } else if (line.startsWith('**')) {
-                return <p key={i} className="font-bold text-gray-800 my-3 bg-gray-50 p-3 rounded-lg border border-gray-100">{line.replace(/\*\*/g, '')}</p>;
+              } else if (line.startsWith("- ")) {
+                return (
+                  <div key={i} className="flex items-start gap-2 ml-2 my-1.5">
+                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0"></div>
+                    <p className="text-gray-600 leading-relaxed">
+                      {line.replace("- ", "")}
+                    </p>
+                  </div>
+                );
+              } else if (line.startsWith("**")) {
+                return (
+                  <p
+                    key={i}
+                    className="font-bold text-gray-800 my-3 bg-gray-50 p-3 rounded-lg border border-gray-100"
+                  >
+                    {line.replace(/\*\*/g, "")}
+                  </p>
+                );
               } else if (line.trim()) {
-                return <p key={i} className="my-2 text-gray-600 leading-relaxed">{line}</p>;
+                return (
+                  <p key={i} className="my-2 text-gray-600 leading-relaxed">
+                    {line}
+                  </p>
+                );
               }
               return null;
             })}
@@ -201,12 +228,11 @@ Email: hemotracksuporte@gmail.com
         <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end">
           <button
             onClick={onClose}
-            className="px-8 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition shadow-lg shadow-red-600/20 hover:-translate-y-0.5"
+            className="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 hover:-translate-y-0.5"
           >
             Entendi e Concordo
           </button>
         </div>
-
       </div>
     </div>
   );

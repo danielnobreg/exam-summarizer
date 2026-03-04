@@ -85,3 +85,31 @@ exports.listUsers = async (req, res) => {
     res.status(500).json({ error: 'Erro interno ao listar usuários' });
   }
 };
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'ID do usuário não fornecido.' });
+    }
+
+    // 1. Deletar o usuário do Firebase Authentication
+    await admin.auth().deleteUser(userId);
+
+    // 2. Deletar o documento do usuário no Firestore (coleção 'users')
+    await db.collection('users').doc(userId).delete();
+
+    res.json({ success: true, message: 'Usuário apagado permanentemente do Auth e Firestore.' });
+  } catch (error) {
+    console.error('Erro ao deletar usuário:', error);
+    
+    if (error.code === 'auth/user-not-found') {
+      // Se não achar no Auth, tenta apagar no Firestore pelo menos para não ficar órfão
+      await db.collection('users').doc(req.params.id).delete().catch(console.error);
+      return res.json({ success: true, message: 'Usuário não encontrado no Auth, mas dados limpos.' });
+    }
+    
+    res.status(500).json({ error: 'Erro interno ao excluir o usuário.' });
+  }
+};

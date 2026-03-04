@@ -9,4 +9,7 @@ router.post('/create-user', authMiddleware, requireAdmin, adminController.create
 // rota protegida — somente admin pode listar usuários
 router.get('/list-users', authMiddleware, requireAdmin, adminController.listUsers);
 
+// rota protegida — somente admin pode apagar usuários
+router.delete('/delete-user/:id', authMiddleware, requireAdmin, adminController.deleteUser);
+
 module.exports = router;

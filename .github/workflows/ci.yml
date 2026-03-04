@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-server:
+    name: Build & Check Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Server Dependencies
+        working-directory: ./server
+        run: npm install
+
+  deploy-render:
+    name: Trigger Render Deployment
+    needs: build-server
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Call Render Deploy Hook
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$deploy_url" ]; then
+            echo "Deploy hook is empty."
+            echo "Please add RENDER_DEPLOY_HOOK_URL to your GitHub Repository Secrets to automatically trigger Render."
+            echo "If your Render service is already set to 'Auto-Deploy: Yes', you can ignore this step as Render will pull from GitHub directly."
+          else
+            echo "Triggering Render deployment..."
+            curl -X POST -d "" "$deploy_url"
+          fi

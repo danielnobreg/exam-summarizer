@@ -8,6 +8,7 @@ import Xray from './components/Xray';
 import Electrocardiogram from './components/Electrocardiogram';
 import Dashboard from './components/Dashboard';
 import Settings from './components/Settings';
+import CustomCursor from './components/CustomCursor';
 import * as authService from './services/authService';
 
 export default function App() {
@@ -41,88 +42,30 @@ export default function App() {
     setCurrentScreen('home');
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Carregando...</p>
-      </div>
-    );
-  }
+  const renderScreen = () => {
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <p>Carregando...</p>
+        </div>
+      );
+    }
+    if (currentScreen === 'admin' && user) return <AdminPanel user={user} onLogout={handleLogout} onNavigate={setCurrentScreen} />;
+    if (currentScreen === 'dashboard' && user) return <Dashboard user={user} onLogout={handleLogout} onNavigate={setCurrentScreen} />;
+    if (currentScreen === 'settings' && user) return <Settings user={user} onLogout={handleLogout} onNavigate={setCurrentScreen} />;
+    if (currentScreen === 'hemogram' && user) return <HemogramAnalyze user={user} onLogout={handleLogout} onNavigate={setCurrentScreen} />;
+    if (currentScreen === 'xray' && user) return <Xray user={user} onLogout={handleLogout} onNavigate={setCurrentScreen} />;
+    if (currentScreen === 'ecg' && user) return <Electrocardiogram user={user} onLogout={handleLogout} onNavigate={setCurrentScreen} />;
+    if (currentScreen === 'contact') return <Contact user={user} onLogout={handleLogout} onNavigate={setCurrentScreen} />;
+    if (currentScreen === 'login') return <Login onLoginSuccess={handleLoginSuccess} onNavigate={setCurrentScreen} />;
+    
+    return <HomePage onNavigateLogin={() => setCurrentScreen('login')} onNavigate={setCurrentScreen} user={user} onLogout={handleLogout} />;
+  };
 
-  if (currentScreen === 'admin' && user) {
-    return (
-      <AdminPanel 
-        user={user} 
-        onLogout={handleLogout}
-        onNavigate={setCurrentScreen}
-      />
-    );
-  }
-
-  if (currentScreen === 'dashboard' && user) {
-    return (
-      <Dashboard 
-        user={user} 
-        onLogout={handleLogout}
-        onNavigate={setCurrentScreen}
-      />
-    );
-  }
-
-  if (currentScreen === 'settings' && user) {
-    return (
-      <Settings 
-        user={user} 
-        onLogout={handleLogout}
-        onNavigate={setCurrentScreen}
-      />
-    );
-  }
-
-  if (currentScreen === 'hemogram' && user) {
-    return (
-      <HemogramAnalyze 
-        user={user} 
-        onLogout={handleLogout}
-        onNavigate={setCurrentScreen}
-      />
-    );
-  }
-
-  if (currentScreen === 'xray' && user) {
-    return (
-      <Xray 
-        user={user} 
-        onLogout={handleLogout}
-        onNavigate={setCurrentScreen}
-      />
-    );
-  }
-
-  if (currentScreen === 'ecg' && user) {
-    return (
-      <Electrocardiogram 
-        user={user} 
-        onLogout={handleLogout}
-        onNavigate={setCurrentScreen}
-      />
-    );
-  }
-
-  if (currentScreen === 'contact') {
-    return (
-      <Contact 
-        user={user} 
-        onLogout={handleLogout}
-        onNavigate={setCurrentScreen}
-      />
-    );
-  }
-
-  if (currentScreen === 'login') {
-    return <Login onLoginSuccess={handleLoginSuccess} onNavigate={setCurrentScreen} />;
-  }
-
-
-  return <HomePage onNavigateLogin={() => setCurrentScreen('login')} onNavigate={setCurrentScreen} user={user} onLogout={handleLogout} />;
+  return (
+    <>
+      {currentScreen === 'home' && <CustomCursor />}
+      {renderScreen()}
+    </>
+  );
 }

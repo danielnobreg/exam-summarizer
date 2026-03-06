@@ -23,7 +23,7 @@ export default function Footer() {
               <div className="flex items-center mb-4">
                 <Droplet className="h-6 w-6 text-blue-500 fill-blue-500" />
                 <span className="ml-2 text-xl font-extrabold tracking-tight">
-                  Sintesys
+                  iXamina
                 </span>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
@@ -65,7 +65,7 @@ export default function Footer() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li className="flex items-center">
                   <Mail className="h-4 w-4 mr-2" />
-                  suporte@sintesys.com.br
+                  suporte@ixamina.com.br
                 </li>
               </ul>
             </div>
@@ -73,7 +73,7 @@ export default function Footer() {
 
           <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm">
-              © 2026 Sintesys. Todos os direitos reservados.
+              © 2026 iXamina. Todos os direitos reservados.
             </p>
             <div className="mt-4 md:mt-0 flex space-x-6 text-sm text-gray-500">
               <span>Feito com ❤️ para sua saúde</span>

@@ -179,7 +179,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-manrope pt-20 flex flex-col">
+    <div className="min-h-screen bg-[#0B0F19] text-white font-manrope pt-20 flex flex-col">
       <Navbar
         user={{ ...user, userData }}
         onLogout={onLogout}
@@ -188,13 +188,13 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
 
       <div className="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
         {!isAdminUser && !canUseEffective && !usageLoading && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 animate-pulse">
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3 animate-pulse">
             <span className="text-2xl">🚫</span>
             <div>
-              <p className="text-sm font-bold text-red-800">
+              <p className="text-sm font-bold text-red-400">
                 Limite Diário Atingido
               </p>
-              <p className="text-xs text-red-700">
+              <p className="text-xs text-red-300">
                 Você já realizou {dailyLimit} análises hoje. Volte amanhã!
               </p>
             </div>
@@ -202,7 +202,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
         )}
 
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center p-4 bg-white rounded-2xl shadow-sm mb-6 border border-gray-100">
+          <div className="inline-flex items-center justify-center p-4 bg-[#111624] rounded-2xl shadow-sm mb-6 border border-white/5">
             <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-600/30 transform rotate-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -217,18 +217,18 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
               </svg>
             </div>
           </div>
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">
+          <h1 className="text-4xl font-extrabold text-white mb-3 tracking-tight">
             Análise de Eletrocardiograma
           </h1>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
             Faça o upload do Eletrocardiograma em PDF ou imagem. Informe dados
             clínicos relevantes para uma análise mais precisa.
           </p>
         </div>
 
-        <div className="bg-white rounded-[2rem] shadow-xl p-8 border border-gray-100 relative overflow-hidden">
+        <div className="bg-[#111624] rounded-[2rem] shadow-2xl p-8 border border-white/5 relative overflow-hidden">
           <div className="mb-6">
-            <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
+            <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wide">
               Identificação do Paciente (Opcional)
             </label>
             <input
@@ -236,20 +236,20 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
               placeholder="Ex: João da Silva"
               value={patientName}
               onChange={(e) => setPatientName(e.target.value)}
-              className="w-full border border-gray-200 bg-gray-50 hover:bg-white focus:bg-white rounded-2xl p-4 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+              className="w-full border border-white/10 bg-[#060913] text-white hover:bg-white/5 focus:bg-[#060913] rounded-2xl p-4 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all placeholder-slate-600 shadow-inner"
             />
-            <p className="text-xs text-gray-400 mt-2 ml-1">
+            <p className="text-xs text-slate-500 mt-2 ml-1">
               Para sua organização. O nome será censurado no histórico (ex:
               Joã***).
             </p>
           </div>
 
-          <div className="mb-8 bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden transition-all duration-300">
+          <div className="mb-8 bg-[#060913] rounded-2xl border border-white/5 overflow-hidden transition-all duration-300">
             <button
               onClick={() => setShowMetadata(!showMetadata)}
-              className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-100 transition-colors"
+              className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
             >
-              <span className="text-sm font-bold text-gray-700">
+              <span className="text-sm font-bold text-slate-300">
                 Dados Adicionais do Paciente (Opcional)
               </span>
               <svg
@@ -260,7 +260,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                className={`text-gray-500 transition-transform duration-300 ${showMetadata ? "rotate-180" : ""}`}
+                className={`text-slate-500 transition-transform duration-300 ${showMetadata ? "rotate-180" : ""}`}
               >
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
@@ -270,29 +270,29 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
               className={`transition-all duration-300 ease-in-out ${showMetadata ? "max-h-96 opacity-100 p-6 pt-2" : "max-h-0 opacity-0 overflow-hidden"}`}
             >
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-bold text-slate-300 mb-2">
                   Observações Clínicas
                 </label>
                 <textarea
                   value={obs}
                   onChange={(e) => setObs(e.target.value)}
                   placeholder="Queixas relacionadas, uso de marcapasso, histórico de cardiopatias ou arritmias..."
-                  className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none resize-none h-24"
+                  className="w-full border border-white/10 bg-[#111624] text-white rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none resize-none h-24 placeholder-slate-600 shadow-inner"
                 />
               </div>
             </div>
           </div>
 
           <div className="mb-8">
-            <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
+            <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wide">
               Arquivo PDF ou Imagem do ECG (Apenas 1)
             </label>
             <label
               htmlFor="file-upload"
               className={`group flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 ${
                 isDragging
-                  ? "border-indigo-400 bg-indigo-50 scale-[1.02]"
-                  : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-indigo-300 hover:shadow-md"
+                  ? "border-indigo-500 bg-indigo-500/10 scale-[1.02]"
+                  : "border-white/10 bg-white/5 hover:bg-white/10 hover:border-indigo-500/50"
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -302,7 +302,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                 className={`transition-transform duration-300 ${isDragging ? "scale-110" : "group-hover:scale-110"}`}
               >
                 <div
-                  className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-colors ${isDragging ? "bg-indigo-100" : "bg-white shadow-sm group-hover:bg-indigo-50"}`}
+                  className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-colors ${isDragging ? "bg-indigo-500/20 text-indigo-400" : "bg-[#060913] border border-white/10 group-hover:bg-indigo-500/10 group-hover:border-indigo-500/30"}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -312,7 +312,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.5"
-                    className={`transition-colors ${isDragging ? "text-indigo-600" : "text-gray-400 group-hover:text-indigo-500"}`}
+                    className={`transition-colors ${isDragging ? "text-indigo-400" : "text-slate-400 group-hover:text-indigo-400"}`}
                   >
                     <rect
                       x="3"
@@ -327,21 +327,21 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                   </svg>
                 </div>
               </div>
-              <p className="text-sm text-gray-700 mb-1 font-medium">
+              <p className="text-sm text-slate-300 mb-1 font-medium">
                 {file ? (
-                  <span className="text-gray-500 font-bold">
+                  <span className="text-slate-400 font-bold">
                     Máximo de arquivos anexado
                   </span>
                 ) : (
                   <>
-                    <span className="text-indigo-600 font-bold border-b border-indigo-200 hover:border-indigo-600 transition-colors">
+                    <span className="text-indigo-400 font-bold border-b border-indigo-500/30 hover:border-indigo-400 transition-colors">
                       Clique para enviar
                     </span>{" "}
                     ou arraste o arquivo
                   </>
                 )}
               </p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 Suporta PDF, JPG e PNG
               </p>
               <input
@@ -357,9 +357,9 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
 
           {/* Estado de Arquivo Selecionado */}
           {file && (
-            <div className="mb-6 flex items-center justify-between p-4 bg-green-50 border border-green-100 rounded-xl animate-fadeIn">
+            <div className="mb-6 flex items-center justify-between p-4 bg-green-500/10 border border-green-500/20 rounded-xl animate-fadeIn">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-white rounded-lg shadow-sm">
+                <div className="p-3 bg-[#060913] border border-white/5 rounded-lg shadow-sm">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -368,24 +368,24 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className="text-green-600"
+                    className="text-green-400"
                   >
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
                     <polyline points="14 2 14 8 20 8" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-green-900">
+                  <p className="text-sm font-bold text-green-400">
                     {file.name}
                   </p>
-                  <p className="text-xs text-green-700">
+                  <p className="text-xs text-green-300/80">
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setFile(null)}
-                className="text-green-700 hover:text-green-900 p-2 hover:bg-green-100 rounded-full transition flex-shrink-0"
+                className="text-green-400 hover:text-green-300 p-2 hover:bg-green-500/20 rounded-full transition flex-shrink-0"
                 title="Remover arquivo"
               >
                 <svg
@@ -405,8 +405,8 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
           )}
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl text-center animate-shake">
-              <p className="text-sm text-red-800 font-bold flex items-center justify-center gap-2">
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center animate-shake">
+              <p className="text-sm text-red-400 font-bold flex items-center justify-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -477,10 +477,10 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
 
           {/* Resultados */}
           {(apiResponse || loading) && (
-            <div className="mt-10 pt-8 border-t border-gray-100 animate-fadeIn">
+            <div className="mt-10 pt-8 border-t border-white/5 animate-fadeIn">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600 text-sm font-black">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-sm font-black">
                     AI
                   </span>
                   Laudo Eletrocardiográfico
@@ -488,7 +488,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                 {apiResponse && (
                   <button
                     onClick={handleCopy}
-                    className="px-4 py-2 text-sm font-medium border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition flex items-center gap-2"
+                    className="px-4 py-2 text-sm font-medium border border-white/10 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition flex items-center gap-2"
                   >
                     {copySuccess ? (
                       <>
@@ -500,11 +500,11 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          className="text-green-600"
+                          className="text-green-400"
                         >
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
-                        <span className="text-green-600">Copiado!</span>
+                        <span className="text-green-400">Copiado!</span>
                       </>
                     ) : (
                       <>
@@ -533,18 +533,18 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
                   </button>
                 )}
               </div>
-              <div className="bg-gray-50/80 rounded-2xl p-6 border border-gray-200 min-h-[150px] shadow-inner relative flex flex-col justify-center">
+              <div className="bg-[#060913] rounded-2xl p-6 border border-white/5 min-h-[150px] shadow-inner relative flex flex-col justify-center">
                 {loading ? (
-                  <div className="flex flex-col items-center justify-center py-10 text-gray-500 space-y-4">
-                    <p className="animate-pulse font-medium text-indigo-600">
+                  <div className="flex flex-col items-center justify-center py-10 text-slate-400 space-y-4">
+                    <p className="animate-pulse font-medium text-indigo-400">
                       Processando ondas e ritmo cardíaco...
                     </p>
-                    <p className="text-xs text-gray-400 text-center max-w-md animate-fadeIn opacity-80 h-8 transition-opacity duration-500">
+                    <p className="text-xs text-slate-500 text-center max-w-md animate-fadeIn opacity-80 h-8 transition-opacity duration-500">
                       {LOADING_MESSAGES[loadingMessageIndex]}
                     </p>
                   </div>
                 ) : (
-                  <pre className="whitespace-pre-wrap text-sm font-mono text-gray-800 leading-relaxed custom-scrollbar relative z-10">
+                  <pre className="whitespace-pre-wrap text-sm font-mono text-slate-300 leading-relaxed custom-scrollbar relative z-10">
                     {renderFormattedText(apiResponse)}
                   </pre>
                 )}
@@ -556,16 +556,16 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
         {!isAdminUser && (
           <div className="text-center mt-8 mb-6">
             {usageLoading ? (
-              <p className="text-sm text-gray-400">Calculando uso...</p>
+              <p className="text-sm text-slate-500">Calculando uso...</p>
             ) : (
-              <div className="inline-flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-100">
+              <div className="inline-flex items-center gap-3 bg-[#111624] px-5 py-3 rounded-2xl shadow-sm border border-white/5">
                 <div
                   className={`w-2 h-2 rounded-full ${remaining === 0 ? "bg-red-500" : "bg-green-500"} animate-pulse`}
                 ></div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-slate-400">
                   Análises hoje:{" "}
-                  <span className="font-bold text-gray-900">{remaining}</span>{" "}
-                  de <span className="text-gray-500">{dailyLimit}</span>
+                  <span className="font-bold text-white">{remaining}</span> de{" "}
+                  <span className="text-slate-500">{dailyLimit}</span>
                 </p>
               </div>
             )}
@@ -573,21 +573,21 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
         )}
       </div>
 
-      <footer className="mt-auto py-6 border-t border-gray-200 bg-white">
+      <footer className="mt-auto py-6 border-t border-white/5 bg-[#0B0F19]">
         <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-gray-500">
-            © 2026 Sintesys. Todos os direitos reservados.
+          <p className="text-xs text-slate-500">
+            © 2026 iXamina. Todos os direitos reservados.
           </p>
           <div className="flex gap-4">
             <button
               onClick={() => openFooterModal("terms")}
-              className="text-xs text-gray-500 hover:text-indigo-600 transition"
+              className="text-xs text-slate-500 hover:text-indigo-400 transition"
             >
               Termos de Uso
             </button>
             <button
               onClick={() => openFooterModal("privacy")}
-              className="text-xs text-gray-500 hover:text-indigo-600 transition"
+              className="text-xs text-slate-500 hover:text-indigo-400 transition"
             >
               Privacidade
             </button>

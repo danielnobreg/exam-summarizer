@@ -76,22 +76,20 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
     if (onNavigate) onNavigate(screen);
   };
 
-  // Cores unificadas para fundos claros em toda a aplicação
+  // Cores unificadas para fundos escuros no topo, e fundo claro com scroll
   const navBackground = isScrolled
-    ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100"
-    : isLanding
-      ? "bg-transparent"
-      : "bg-white/90 border-b border-gray-50";
+    ? "bg-white/80 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/60"
+    : "bg-white/5 backdrop-blur-md border border-white/10";
 
-  const textColor = "text-slate-700";
-  const logoColor = "text-slate-900";
-  const logoIconColor = "text-blue-600";
+  const textColor = !isScrolled ? "text-white" : "text-slate-700";
+  const logoColor = !isScrolled ? "text-white" : "text-slate-900";
+  const logoIconColor = !isScrolled ? "text-blue-400" : "text-blue-600";
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBackground}`}
+      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50 transition-all duration-500 rounded-full ${navBackground}`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="px-6 md:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo (Esquerda) */}
           <div
@@ -104,7 +102,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
             <span
               className={`ml-2 text-2xl font-extrabold tracking-tight ${logoColor}`}
             >
-              Sintesys
+              iXamina
             </span>
           </div>
 
@@ -112,7 +110,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
           <div className="hidden md:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center space-x-8">
             <button
               onClick={() => handleNavigate("home")}
-              className={`${textColor} hover:text-blue-600 transition-colors font-medium text-sm tracking-wide`}
+              className={`interactive ${textColor} hover:text-blue-500 transition-colors font-medium text-sm tracking-wide`}
             >
               Home
             </button>
@@ -139,7 +137,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden"
+                      className="absolute left-1/2 -translate-x-1/2 mt-4 w-64 bg-white/90 backdrop-blur-2xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100/50 overflow-hidden"
                     >
                       <div className="p-2">
                         <button
@@ -198,7 +196,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
               >
                 Dashboard
               </button>
-            )}
+            )}  
 
             <button
               onClick={() => handleNavigate("contact")}
@@ -241,7 +239,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute right-0 mt-2 w-60 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden p-1"
+                      className="absolute right-0 mt-4 w-60 bg-white/90 backdrop-blur-2xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100/50 overflow-hidden p-1 z-50"
                     >
                       <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
                         <p className="text-sm font-bold text-gray-800 truncate">
@@ -281,7 +279,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
               // Usuário não logado: Botão Login
               <button
                 onClick={() => handleNavigate("login")}
-                className={`font-bold px-6 py-2.5 rounded-xl transition-all duration-300 text-sm bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20 hover:-translate-y-0.5`}
+                className={`interactive font-bold px-6 py-2.5 rounded-xl transition-all duration-300 text-sm bg-slate-900 text-white hover:bg-slate-800 shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(0,0,0,0.15)]`}
               >
                 Entrar
               </button>
@@ -319,6 +317,22 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                 className={`block w-full text-left px-4 py-3 text-base font-bold rounded-xl transition-colors text-slate-900 hover:bg-slate-50`}
               >
                 Home
+              </button>
+
+              {user && (
+                <button
+                  onClick={() => handleNavigate("dashboard")}
+                  className={`block w-full text-left px-4 py-3 text-base font-bold rounded-xl transition-colors text-slate-900 hover:bg-slate-50`}
+                >
+                  Dashboard
+                </button>
+              )}
+
+              <button
+                onClick={() => handleNavigate("contact")}
+                className={`block w-full text-left px-4 py-3 text-base font-bold rounded-xl transition-colors text-slate-900 hover:bg-slate-50`}
+              >
+                Contato
               </button>
 
               {user && (

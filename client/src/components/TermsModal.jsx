@@ -6,27 +6,27 @@ export default function TermsModal({ isOpen, onClose, type }) {
 
   const content = {
     terms: {
-      title: "Termos de Uso - Sintesys",
+      title: "Termos de Uso - iXamina",
       text: `
 ## 1. Aceitação dos Termos
 
-Ao acessar e utilizar a plataforma Sintesys, o usuário declara que leu, compreendeu e concorda integralmente com estes Termos de Uso. Caso não concorde, deverá cessar imediatamente o uso da plataforma.
+Ao acessar e utilizar a plataforma iXamina, o usuário declara que leu, compreendeu e concorda integralmente com estes Termos de Uso. Caso não concorde, deverá cessar imediatamente o uso da plataforma.
 
 ## 2. Descrição do Serviço
 
-O Sintesys é uma plataforma tecnológica destinada exclusivamente a profissionais de saúde legalmente habilitados, cujo objetivo é organizar, estruturar e resumir informações contidas em exames médicos, tais como exames laboratoriais, de imagem e registros gráficos clínicos.
+O iXamina é uma plataforma tecnológica destinada exclusivamente a profissionais de saúde legalmente habilitados, cujo objetivo é organizar, estruturar e resumir informações contidas em exames médicos, tais como exames laboratoriais, de imagem e registros gráficos clínicos.
 
 A plataforma não realiza diagnóstico, prognóstico, prescrição, orientação terapêutica ou qualquer ato privativo de profissão regulamentada, atuando apenas como ferramenta de apoio informacional e organizacional.
 
 ## 3. Declaração de Profissional Habilitado
 
-Ao utilizar o Sintesys, o usuário declara expressamente que:
+Ao utilizar o iXamina, o usuário declara expressamente que:
 
 - É profissional de Saúde legalmente habilitado, nos termos da legislação brasileira;
 - Possui registro ativo em seu respectivo conselho profissional, quando aplicável;
 - Utiliza a plataforma como ferramenta auxiliar, sob sua inteira responsabilidade técnica e ética.
 
-O Sintesys não realiza validação de credenciais profissionais, cabendo exclusivamente ao usuário a veracidade das informações prestadas.
+O iXamina não realiza validação de credenciais profissionais, cabendo exclusivamente ao usuário a veracidade das informações prestadas.
 
 ## 4. Natureza do Uso e Limitações
 
@@ -36,7 +36,7 @@ O Sintesys não realiza validação de credenciais profissionais, cabendo exclus
 - Não substituem laudos oficiais;
 - Não substituem a análise crítica, interpretação clínica ou decisão profissional do usuário.
 
-4.2. O Sintesys não garante a exatidão, completude ou atualidade dos dados processados, especialmente quando os documentos fornecidos forem incompletos, ilegíveis ou imprecisos.
+4.2. O iXamina não garante a exatidão, completude ou atualidade dos dados processados, especialmente quando os documentos fornecidos forem incompletos, ilegíveis ou imprecisos.
 
 ## 5. Responsabilidades do Usuário
 
@@ -49,7 +49,7 @@ O usuário é integralmente responsável por:
 
 ## 6. Limitação de Responsabilidade
 
-O Sintesys não se responsabiliza, em nenhuma hipótese, por:
+O iXamina não se responsabiliza, em nenhuma hipótese, por:
 
 - Condutas profissionais adotadas pelo usuário;
 - Decisões clínicas, médicas ou terapêuticas;
@@ -60,11 +60,11 @@ Nada nestes Termos exclui ou limita responsabilidade nos casos de dolo ou culpa 
 
 ## 7. Suspensão e Encerramento
 
-O Sintesys poderá suspender ou encerrar o acesso do usuário, a qualquer tempo, caso identifique uso indevido, violação destes Termos ou risco jurídico plataforma.
+O iXamina poderá suspender ou encerrar o acesso do usuário, a qualquer tempo, caso identifique uso indevido, violação destes Termos ou risco jurídico plataforma.
 
 ## 8. Propriedade Intelectual
 
-Todos os direitos sobre a plataforma, incluindo software, layout, textos e funcionalidades, pertencem ao Sintesys, sendo vedada a reprodução ou uso não autorizado.
+Todos os direitos sobre a plataforma, incluindo software, layout, textos e funcionalidades, pertencem ao iXamina, sendo vedada a reprodução ou uso não autorizado.
 
 ## 9. Modificações
 
@@ -72,13 +72,13 @@ Os Termos poderão ser alterados a qualquer momento. O usor continuado da plataf
 
 ## 10. Contato
 
-Email: suporte@sintesys.com.br
+Email: suporte@ixamina.com.br
 
 **Última atualização: 03/02/2026**
       `,
     },
     privacy: {
-      title: "Política de Privacidade - Sintesys",
+      title: "Política de Privacidade - iXamina",
       text: `
 ## 1. Dados Coletados
 
@@ -91,9 +91,9 @@ Coletamos e tratamos:
 
 Os documentos podem conter dados pessoais sensíveis, incluindo dados de saúde de terceiros (pacientes).
 
-## 2. Papel do Sintesys na LGPD
+## 2. Papel do iXamina na LGPD
 
-O Sintesys atua como operador de dados, realizando o tratamento em nome do profissional de saúde, que figura como controlador, nos termos do art. 5º, VI e VII da LGPD.
+O iXamina atua como operador de dados, realizando o tratamento em nome do profissional de saúde, que figura como controlador, nos termos do art. 5º, VI e VII da LGPD.
 
 ## 3. Base Legal para o Tratamento
 
@@ -135,11 +135,11 @@ O profissional poderá solicitar exclusão dos dados, respeitadas as limitaçõe
 
 ## 8. Direitos dos Titulares
 
-O titular dos dados poderá exercer os direitos previstos na LGPD por meio do profissional controlador ou diretamente pelos canais do Sintesys, conforme aplicável.
+O titular dos dados poderá exercer os direitos previstos na LGPD por meio do profissional controlador ou diretamente pelos canais do iXamina, conforme aplicável.
 
 ## 9. Contato
 
-Email: suporte@sintesys.com.br
+Email: suporte@ixamina.com.br
 
 **Última atualização: 03/02/2026**
       `,

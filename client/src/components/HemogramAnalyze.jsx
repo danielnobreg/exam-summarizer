@@ -164,7 +164,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-manrope pt-20 flex flex-col">
+    <div className="min-h-screen bg-[#0B0F19] text-white font-manrope pt-20 flex flex-col">
       <Navbar
         user={{ ...user, userData }}
         onLogout={onLogout}
@@ -174,7 +174,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
       {/* Botão Guia */}
       <button
         onClick={() => setShowGuide(true)}
-        className="fixed bottom-6 right-6 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-full shadow-lg border border-gray-200 font-medium text-sm transition-all hover:shadow-xl flex items-center gap-2 z-40"
+        className="fixed bottom-6 right-6 bg-[#111624] hover:bg-white/5 text-slate-400 px-4 py-2 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 font-medium text-sm transition-all hover:text-white flex items-center gap-2 z-40"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -194,15 +194,15 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
 
       {/* Modal Guia */}
       {showGuide && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scaleUp">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-[#111624] border border-white/10 rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scaleUp">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                 Guia de Como usar
               </h2>
               <button
                 onClick={() => setShowGuide(false)}
-                className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition"
+                className="p-2 hover:bg-white/10 rounded-full text-slate-400 hover:text-white transition"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -218,13 +218,13 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
               </button>
             </div>
 
-            <div className="space-y-6 text-sm text-gray-600">
+            <div className="space-y-6 text-sm text-slate-400">
               <div className="flex gap-4 items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md shadow-blue-200">
+                <span className="flex-shrink-0 w-8 h-8 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-full flex items-center justify-center font-bold text-sm shadow-md">
                   1
                 </span>
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-1">
+                  <h3 className="font-bold text-white mb-1">
                     Faça upload do PDF
                   </h3>
                   <p>
@@ -235,11 +235,11 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
               </div>
 
               <div className="flex gap-4 items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md shadow-blue-200">
+                <span className="flex-shrink-0 w-8 h-8 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-full flex items-center justify-center font-bold text-sm shadow-md">
                   2
                 </span>
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-1">
+                  <h3 className="font-bold text-white mb-1">
                     Clique em "Resumir Exame"
                   </h3>
                   <p>
@@ -250,11 +250,11 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
               </div>
 
               <div className="flex gap-4 items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md shadow-blue-200">
+                <span className="flex-shrink-0 w-8 h-8 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-full flex items-center justify-center font-bold text-sm shadow-md">
                   3
                 </span>
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-1">
+                  <h3 className="font-bold text-white mb-1">
                     Copie o Resultado
                   </h3>
                   <p>
@@ -264,8 +264,8 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                 </div>
               </div>
 
-              <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                <p className="text-xs text-blue-800 leading-relaxed">
+              <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                <p className="text-xs text-blue-400 leading-relaxed">
                   💡 <strong>Dica:</strong> O sistema destaca valores fora do
                   padrão para facilitar sua atenção.
                 </p>
@@ -274,7 +274,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
 
             <button
               onClick={() => setShowGuide(false)}
-              className="w-full mt-8 bg-gray-900 text-white py-3.5 rounded-xl font-bold hover:bg-gray-800 transition shadow-lg hover:-translate-y-0.5"
+              className="w-full mt-8 bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:-translate-y-0.5"
             >
               Entendi
             </button>
@@ -286,13 +286,13 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
       <div className="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
         {/* Aviso de Limite */}
         {!isAdminUser && !canUseEffective && !usageLoading && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 animate-pulse">
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 animate-pulse">
             <span className="text-2xl">🚫</span>
             <div>
-              <p className="text-sm font-bold text-red-800">
+              <p className="text-sm font-bold text-red-400">
                 Limite Diário Atingido
               </p>
-              <p className="text-xs text-red-700">
+              <p className="text-xs text-red-300">
                 Você já realizou {dailyLimit} análises hoje. Volte amanhã!
               </p>
             </div>
@@ -301,7 +301,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
 
         {/* Cabeçalho */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center p-4 bg-white rounded-2xl shadow-sm mb-6 border border-gray-100">
+          <div className="inline-flex items-center justify-center p-4 bg-[#111624] rounded-2xl shadow-sm mb-6 border border-white/5">
             <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/30 transform rotate-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -316,23 +316,23 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
               </svg>
             </div>
           </div>
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">
+          <h1 className="text-4xl font-extrabold text-white mb-3 tracking-tight">
             Análise Laboratorial
           </h1>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
             Faça o upload do PDF dos seus exames e obtenha um resumo detalhado
             com inteligência artificial.
           </p>
         </div>
 
         {/* Card de Upload */}
-        <div className="bg-white rounded-[2rem] shadow-xl p-8 border border-gray-100 relative overflow-hidden">
+        <div className="bg-[#111624] rounded-[2rem] shadow-2xl p-8 border border-white/5 relative overflow-hidden">
           {/* Blob decorativo de fundo */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl -z-10 opacity-50 translate-x-1/2 -translate-y-1/2"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-50 rounded-full blur-3xl -z-10 opacity-50 -translate-x-1/2 translate-y-1/2"></div>
 
           <div className="mb-6">
-            <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
+            <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wide">
               Identificação do Paciente (Opcional)
             </label>
             <input
@@ -340,24 +340,24 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
               placeholder="Ex: João da Silva"
               value={patientName}
               onChange={(e) => setPatientName(e.target.value)}
-              className="w-full border border-gray-200 bg-gray-50 hover:bg-white focus:bg-white rounded-2xl p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              className="w-full border border-white/10 bg-[#060913] text-white hover:bg-white/5 focus:bg-[#060913] rounded-2xl p-4 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none transition-all placeholder-slate-600"
             />
-            <p className="text-xs text-gray-400 mt-2 ml-1">
+            <p className="text-xs text-slate-500 mt-2 ml-1">
               Para sua organização. O nome será censurado no histórico (ex:
               Joã***).
             </p>
           </div>
 
           <div className="mb-8">
-            <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
+            <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wide">
               Arquivo PDF do Exame
             </label>
             <label
               htmlFor="file-upload"
               className={`group flex flex-col items-center justify-center w-full h-52 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 ${
                 isDragging
-                  ? "border-blue-400 bg-blue-50 scale-[1.02]"
-                  : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-blue-300 hover:shadow-md"
+                  ? "border-blue-500 bg-blue-500/10 scale-[1.02]"
+                  : "border-white/10 bg-white/5 hover:bg-white/10 hover:border-blue-500/50"
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -367,7 +367,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                 className={`transition-transform duration-300 ${isDragging ? "scale-110" : "group-hover:scale-110"}`}
               >
                 <div
-                  className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${isDragging ? "bg-blue-100" : "bg-white shadow-sm group-hover:bg-blue-50"}`}
+                  className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${isDragging ? "bg-blue-500/20 text-blue-400" : "bg-[#060913] border border-white/10 group-hover:bg-blue-500/10 group-hover:border-blue-500/30"}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -377,7 +377,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.5"
-                    className={`transition-colors ${isDragging ? "text-blue-600" : "text-gray-400 group-hover:text-blue-500"}`}
+                    className={`transition-colors ${isDragging ? "text-blue-400" : "text-slate-400 group-hover:text-blue-400"}`}
                   >
                     <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
                     <path d="M12 12v9" />
@@ -385,21 +385,21 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                   </svg>
                 </div>
               </div>
-              <p className="text-base text-gray-700 mb-1 font-medium">
+              <p className="text-base text-slate-300 mb-1 font-medium">
                 {file ? (
-                  <span className="text-gray-500 font-bold">
+                  <span className="text-slate-400 font-bold">
                     Máximo de arquivos anexado
                   </span>
                 ) : (
                   <>
-                    <span className="text-blue-600 font-bold border-b border-blue-200 hover:border-blue-600 transition-colors">
+                    <span className="text-blue-400 font-bold border-b border-blue-500/30 hover:border-blue-400 transition-colors">
                       Clique para enviar
                     </span>{" "}
                     ou arraste
                   </>
                 )}
               </p>
-              <p className="text-xs text-gray-400 mt-1">Suporta apenas PDF</p>
+              <p className="text-xs text-slate-500 mt-1">Suporta apenas PDF</p>
               <input
                 id="file-upload"
                 type="file"
@@ -412,9 +412,9 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
 
           {/* Estado de Arquivo Selecionado */}
           {file && (
-            <div className="mb-6 flex items-center justify-between p-4 bg-green-50 border border-green-100 rounded-xl animate-fadeIn">
+            <div className="mb-6 flex items-center justify-between p-4 bg-green-500/10 border border-green-500/20 rounded-xl animate-fadeIn">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-white rounded-lg shadow-sm">
+                <div className="p-3 bg-[#060913] rounded-lg shadow-sm border border-white/5">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -423,24 +423,24 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className="text-green-600"
+                    className="text-green-400"
                   >
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
                     <polyline points="14 2 14 8 20 8" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-green-900">
+                  <p className="text-sm font-bold text-green-400">
                     {file.name}
                   </p>
-                  <p className="text-xs text-green-700">
+                  <p className="text-xs text-green-300/80">
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setFile(null)}
-                className="text-green-700 hover:text-green-900 p-2 hover:bg-green-100 rounded-full transition"
+                className="text-green-400 hover:text-green-300 p-2 hover:bg-green-500/20 rounded-full transition"
                 title="Remover arquivo"
               >
                 <svg
@@ -461,8 +461,8 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
 
           {/* Mensagem de Erro */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl text-center animate-shake">
-              <p className="text-sm text-red-800 font-bold flex items-center justify-center gap-2">
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center animate-shake">
+              <p className="text-sm text-red-400 font-bold flex items-center justify-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -535,10 +535,10 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
 
           {/* Resultados da Análise */}
           {(apiResponse || loading) && (
-            <div className="mt-10 pt-8 border-t border-gray-100 animate-fadeIn">
+            <div className="mt-10 pt-8 border-t border-white/5 animate-fadeIn">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 text-sm font-black">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-sm font-black">
                     AI
                   </span>
                   Resultado da Análise
@@ -546,7 +546,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                 {apiResponse && (
                   <button
                     onClick={handleCopy}
-                    className="px-4 py-2 text-sm font-medium border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition flex items-center gap-2"
+                    className="px-4 py-2 text-sm font-medium border border-white/10 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition flex items-center gap-2"
                   >
                     {copySuccess ? (
                       <>
@@ -558,11 +558,11 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          className="text-green-600"
+                          className="text-green-400"
                         >
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
-                        <span className="text-green-600">Copiado!</span>
+                        <span className="text-green-400">Copiado!</span>
                       </>
                     ) : (
                       <>
@@ -591,18 +591,18 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
                   </button>
                 )}
               </div>
-              <div className="bg-gray-50/80 rounded-2xl p-6 border border-gray-200 min-h-[150px] shadow-inner relative flex flex-col justify-center">
+              <div className="bg-[#060913] rounded-2xl p-6 border border-white/5 min-h-[150px] shadow-inner relative flex flex-col justify-center">
                 {loading ? (
-                  <div className="flex flex-col items-center justify-center py-10 text-gray-500 space-y-4">
-                    <p className="animate-pulse font-medium text-blue-600">
+                  <div className="flex flex-col items-center justify-center py-10 text-slate-400 space-y-4">
+                    <p className="animate-pulse font-medium text-blue-400">
                       Lendo, cruzando dados e interpretando o exame...
                     </p>
-                    <p className="text-xs text-gray-400 text-center max-w-md animate-fadeIn opacity-80 h-8 transition-opacity duration-500">
+                    <p className="text-xs text-slate-500 text-center max-w-md animate-fadeIn opacity-80 h-8 transition-opacity duration-500">
                       {LOADING_MESSAGES[loadingMessageIndex]}
                     </p>
                   </div>
                 ) : (
-                  <pre className="whitespace-pre-wrap text-sm font-mono text-gray-800 leading-relaxed custom-scrollbar relative z-10">
+                  <pre className="whitespace-pre-wrap text-sm font-mono text-slate-300 leading-relaxed custom-scrollbar relative z-10">
                     {renderFormattedText(apiResponse)}
                   </pre>
                 )}
@@ -615,16 +615,16 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
         {!isAdminUser && (
           <div className="text-center mt-8 mb-6">
             {usageLoading ? (
-              <p className="text-sm text-gray-400">Calculando uso...</p>
+              <p className="text-sm text-slate-500">Calculando uso...</p>
             ) : (
-              <div className="inline-flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-100">
+              <div className="inline-flex items-center gap-3 bg-[#111624] px-5 py-3 rounded-2xl shadow-sm border border-white/5">
                 <div
                   className={`w-2 h-2 rounded-full ${remaining === 0 ? "bg-red-500" : "bg-green-500"} animate-pulse`}
                 ></div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-slate-400">
                   Análises hoje:{" "}
-                  <span className="font-bold text-gray-900">{remaining}</span>{" "}
-                  de <span className="text-gray-500">{dailyLimit}</span>
+                  <span className="font-bold text-white">{remaining}</span> de{" "}
+                  <span className="text-slate-500">{dailyLimit}</span>
                 </p>
               </div>
             )}
@@ -633,21 +633,21 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
       </div>
 
       {/* Footer Minimalista com Links Legais */}
-      <footer className="mt-auto py-6 border-t border-gray-200 bg-white">
+      <footer className="mt-auto py-6 border-t border-white/5 bg-[#0B0F19]">
         <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-gray-500">
-            © 2026 Sintesys. Todos os direitos reservados.
+          <p className="text-xs text-slate-500">
+            © 2026 iXamina. Todos os direitos reservados.
           </p>
           <div className="flex gap-4">
             <button
               onClick={() => openFooterModal("terms")}
-              className="text-xs text-gray-500 hover:text-blue-600 transition"
+              className="text-xs text-slate-500 hover:text-blue-400 transition"
             >
               Termos de Uso
             </button>
             <button
               onClick={() => openFooterModal("privacy")}
-              className="text-xs text-gray-500 hover:text-blue-600 transition"
+              className="text-xs text-slate-500 hover:text-blue-400 transition"
             >
               Privacidade
             </button>

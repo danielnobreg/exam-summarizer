@@ -28,7 +28,7 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
   const navbarUser = { ...user, userData: { isAdmin: true } };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 font-manrope pt-20">
+    <div className="min-h-screen bg-[#0B0F19] text-white font-manrope pt-20">
       <Navbar user={navbarUser} onLogout={onLogout} onNavigate={onNavigate} />
 
       {/* Header / Breadcrumb */}
@@ -36,29 +36,29 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={() => onNavigate("hemogram")}
-            className="p-2 bg-white hover:bg-gray-100 rounded-full shadow-sm text-gray-600 transition-all hover:-translate-x-1"
+            className="p-2 bg-[#111624] border border-white/10 hover:bg-white/5 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] text-slate-400 hover:text-white transition-all hover:-translate-x-1"
             title="Voltar ao Dashboard"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">
               Painel Administrativo
             </h1>
-            <p className="text-sm text-gray-500">
-              Gerenciamento do sistema Sintesys
+            <p className="text-sm text-slate-400">
+              Gerenciamento do sistema iXamina
             </p>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-1 flex gap-2 mb-8 max-w-md">
+        <div className="bg-[#060913] rounded-xl shadow-sm border border-white/5 p-1 flex gap-2 mb-8 max-w-md">
           <button
             onClick={() => setActiveTab("users")}
             className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${
               activeTab === "users"
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-600 hover:bg-gray-50"
+                ? "bg-blue-600/20 text-blue-400 border border-blue-500/30 shadow-md"
+                : "text-slate-400 hover:bg-white/5 border border-transparent hover:border-white/10"
             }`}
           >
             <Users className="h-4 w-4" />
@@ -68,8 +68,8 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
             onClick={() => setActiveTab("prompts")}
             className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${
               activeTab === "prompts"
-                ? "bg-blue-600 text-white shadow-md"
-                : "text-gray-600 hover:bg-gray-50"
+                ? "bg-blue-600/20 text-blue-400 border border-blue-500/30 shadow-md"
+                : "text-slate-400 hover:bg-white/5 border border-transparent hover:border-white/10"
             }`}
           >
             <MessageSquare className="h-4 w-4" />
@@ -78,7 +78,7 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
         </div>
 
         {/* Content */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8 animate-fadeIn">
+        <div className="bg-[#111624] rounded-2xl shadow-2xl border border-white/5 p-6 md:p-8 animate-fadeIn">
           {activeTab === "users" && <UsersTab currentUser={user} />}
           {activeTab === "prompts" && <PromptsTab />}
         </div>
@@ -233,16 +233,16 @@ function UsersTab({ currentUser }) {
   return (
     <div className="space-y-8 relative">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-          <span className="w-2 h-8 bg-blue-600 rounded-full"></span>
+        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <span className="w-2 h-8 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.6)]"></span>
           Usuários Cadastrados
         </h2>
         <button
           onClick={() => setShowForm(!showForm)}
           className={`px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm ${
             showForm
-              ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-blue-600/20"
+              ? "bg-white/10 text-white hover:bg-white/20 border border-white/5"
+              : "bg-blue-600 text-white hover:bg-blue-500 hover:shadow-[0_0_20px_rgba(37,99,235,0.3)]"
           }`}
         >
           {showForm ? "Cancelar" : "+ Novo Usuário"}
@@ -251,14 +251,14 @@ function UsersTab({ currentUser }) {
 
       {/* Form */}
       {showForm && (
-        <div className="p-6 bg-gray-50 rounded-2xl border border-gray-200 animate-slideDown">
-          <h3 className="text-lg font-bold text-gray-800 mb-6">
+        <div className="p-6 bg-[#060913] rounded-2xl border border-white/5 animate-slideDown">
+          <h3 className="text-lg font-bold text-white mb-6">
             Cadastrar Novo Usuário
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-300 mb-2">
                 Nome Completo
               </label>
               <input
@@ -267,13 +267,13 @@ function UsersTab({ currentUser }) {
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                className="w-full px-4 py-3 bg-[#111624] border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all placeholder-slate-500"
                 placeholder="Ex: Dr. João Silva"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-300 mb-2">
                 Email
               </label>
               <input
@@ -282,13 +282,13 @@ function UsersTab({ currentUser }) {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                className="w-full px-4 py-3 bg-[#111624] border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all placeholder-slate-500"
                 placeholder="exemplo@email.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-300 mb-2">
                 Senha Inicial
               </label>
               <input
@@ -297,13 +297,13 @@ function UsersTab({ currentUser }) {
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                className="w-full px-4 py-3 bg-[#111624] border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all placeholder-slate-500"
                 placeholder="Mínimo 6 caracteres"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-300 mb-2">
                 Limite Diário
               </label>
               <input
@@ -316,7 +316,7 @@ function UsersTab({ currentUser }) {
                     dailyLimit: parseInt(e.target.value),
                   })
                 }
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                className="w-full px-4 py-3 bg-[#111624] border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all placeholder-slate-500"
               />
             </div>
           </div>
@@ -347,23 +347,23 @@ function UsersTab({ currentUser }) {
       {/* Tabela Simplificada */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-12">
-          <div className="w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-500 font-medium">Carregando usuários...</p>
+          <div className="w-10 h-10 border-4 border-white/10 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+          <p className="text-slate-400 font-medium">Carregando usuários...</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-200">
+        <div className="overflow-x-auto rounded-xl border border-white/5">
           <table className="w-full text-left">
-            <thead className="bg-gray-50/50">
+            <thead className="bg-[#060913]">
               <tr>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Perfis (Clique para gerenciar)
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-white/5">
               {users.length === 0 ? (
                 <tr>
-                  <td className="px-6 py-4 text-sm text-gray-500 text-center">
+                  <td className="px-6 py-4 text-sm text-slate-500 text-center">
                     Nenhum usuário cadastrado.
                   </td>
                 </tr>
@@ -371,11 +371,11 @@ function UsersTab({ currentUser }) {
                 users.map((u) => (
                   <tr
                     key={u.id}
-                    className="hover:bg-gray-50/50 transition-colors cursor-pointer"
+                    className="hover:bg-white/5 transition-colors cursor-pointer"
                     onClick={() => setSelectedUser(u)}
                   >
-                    <td className="px-6 py-4 text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold mr-3 uppercase">
+                    <td className="px-6 py-4 text-sm font-semibold text-white hover:text-blue-400 transition-colors flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold mr-3 uppercase border border-blue-500/30">
                         {getInitials(u.name)}
                       </div>
                       {u.name}
@@ -405,11 +405,11 @@ function UsersTab({ currentUser }) {
 
       {/* Modal Profile / Detalhes */}
       {selectedUser && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-8 animate-scaleUp relative overflow-hidden">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex justify-center items-center z-50 p-4">
+          <div className="bg-[#111624] border border-white/5 rounded-3xl shadow-2xl w-full max-w-lg p-8 animate-scaleUp relative overflow-hidden">
             <button
               onClick={() => setSelectedUser(null)}
-              className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -426,22 +426,22 @@ function UsersTab({ currentUser }) {
             </button>
 
             <div className="flex items-center mb-8">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center text-xl font-bold mr-4 shadow-lg shadow-blue-500/30 uppercase">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-xl font-bold mr-4 shadow-[0_0_20px_rgba(59,130,246,0.5)] border border-white/10 uppercase">
                 {getInitials(selectedUser.name)}
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-white">
                   {selectedUser.name}
                 </h2>
-                <p className="text-sm text-gray-500">{selectedUser.email}</p>
+                <p className="text-sm text-slate-400">{selectedUser.email}</p>
               </div>
             </div>
 
             <div className="space-y-4 mb-8">
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex justify-between items-center">
-                <div className="text-sm text-gray-600">Limite Diário</div>
+              <div className="bg-[#060913] p-4 rounded-xl border border-white/5 flex justify-between items-center">
+                <div className="text-sm text-slate-400">Limite Diário</div>
                 <div className="flex gap-4 items-center">
-                  <div className="font-bold text-gray-900">
+                  <div className="font-bold text-white">
                     {selectedUser.dailyLimit || 5}
                   </div>
                   <button
@@ -452,22 +452,22 @@ function UsersTab({ currentUser }) {
                       )
                     }
                     disabled={actionLoading}
-                    className="text-xs font-bold text-blue-600 hover:text-blue-800 uppercase p-1 underline disabled:opacity-50"
+                    className="text-xs font-bold text-blue-400 hover:text-white uppercase p-1 underline disabled:opacity-50"
                   >
                     Editar Limite
                   </button>
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex justify-between items-center">
-                <div className="text-sm text-gray-600">Uso no Dia Atual</div>
+              <div className="bg-[#060913] p-4 rounded-xl border border-white/5 flex justify-between items-center">
+                <div className="text-sm text-slate-400">Uso no Dia Atual</div>
                 <div className="flex gap-4 items-center">
                   <span
-                    className={`inline-flex px-2 py-1 rounded text-xs font-bold ${
+                    className={`inline-flex px-2 py-1 rounded text-xs font-bold border ${
                       (selectedUser.dailyUsage || 0) >=
                       (selectedUser.dailyLimit || 5)
-                        ? "bg-red-100 text-red-700"
-                        : "bg-green-100 text-green-700"
+                        ? "bg-red-500/10 text-red-400 border-red-500/20"
+                        : "bg-green-500/10 text-green-400 border-green-500/20"
                     }`}
                   >
                     {selectedUser.dailyUsage || 0}/
@@ -478,32 +478,32 @@ function UsersTab({ currentUser }) {
                       handleResetUsage(selectedUser.id, selectedUser.name)
                     }
                     disabled={actionLoading}
-                    className="text-xs font-bold text-gray-600 hover:text-gray-900 uppercase p-1"
+                    className="text-xs font-bold text-slate-400 hover:text-white uppercase p-1"
                   >
                     Resetar Uso
                   </button>
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex justify-between items-center">
-                <div className="text-sm text-gray-600">Último Acesso</div>
-                <div className="font-medium text-gray-900 text-sm">
+              <div className="bg-[#060913] p-4 rounded-xl border border-white/5 flex justify-between items-center">
+                <div className="text-sm text-slate-400">Último Acesso</div>
+                <div className="font-medium text-white text-sm">
                   {selectedUser.lastUsageDate ? (
                     <>Data: {selectedUser.lastUsageDate}</>
                   ) : (
-                    <span className="text-gray-400">Nunca utilizou</span>
+                    <span className="text-slate-500">Nunca utilizou</span>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-gray-100 pt-6 flex justify-between">
+            <div className="border-t border-white/10 pt-6 flex justify-between">
               <button
                 onClick={() =>
                   handleDeleteUser(selectedUser.id, selectedUser.name)
                 }
                 disabled={actionLoading}
-                className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 font-bold rounded-lg transition-colors text-sm disabled:opacity-50"
+                className="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50"
               >
                 Apagar Perfil Definitivamente
               </button>
@@ -578,21 +578,21 @@ function PromptsTab() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <MessageSquare className="h-6 w-6 text-blue-600" />
-        <h2 className="text-xl font-bold text-gray-800">
+        <MessageSquare className="h-6 w-6 text-blue-500" />
+        <h2 className="text-xl font-bold text-white">
           Gerenciar Instruções Base (Global)
         </h2>
       </div>
 
-      <div className="flex gap-2 bg-gray-50 p-1 rounded-xl w-max">
+      <div className="flex gap-2 bg-[#060913] border border-white/5 p-1 rounded-xl w-max">
         {EXAM_TYPES.map((type) => (
           <button
             key={type.id}
             onClick={() => setActiveTab(type.id)}
             className={`px-4 py-2 text-sm font-bold rounded-lg transition-all ${
               activeTab === type.id
-                ? "bg-white text-blue-600 shadow border border-gray-200"
-                : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                ? "bg-blue-600/20 text-blue-400 shadow border border-blue-500/30"
+                : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent"
             }`}
           >
             {type.label}
@@ -600,18 +600,19 @@ function PromptsTab() {
         ))}
       </div>
 
-      <div className="bg-gray-50 p-4 border border-gray-200 rounded-xl">
-        <div className="flex items-start gap-3 mb-4 text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200">
+      <div className="bg-[#060913] p-4 border border-white/5 rounded-xl">
+        <div className="flex items-start gap-3 mb-4 text-amber-400 bg-amber-500/10 p-3 rounded-lg border border-amber-500/20">
           <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <p className="text-sm font-medium">
             Atenção: A instrução aqui definida será usada como o{" "}
-            <b>modelo padrão</b> para todos os usuários que não tiverem uma
-            instrução customizada configurada em seus perfis para este exame.
+            <b className="text-white">modelo padrão</b> para todos os usuários
+            que não tiverem uma instrução customizada configurada em seus perfis
+            para este exame.
           </p>
         </div>
 
         <textarea
-          className="w-full h-80 p-4 font-mono text-sm text-gray-700 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
+          className="w-full h-80 p-4 font-mono text-sm text-slate-300 bg-[#111624] border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none resize-y custom-scrollbar"
           value={prompts[activeTab]}
           onChange={(e) =>
             setPrompts({ ...prompts, [activeTab]: e.target.value })
@@ -620,7 +621,7 @@ function PromptsTab() {
 
         {message.text && (
           <div
-            className={`mt-4 p-3 rounded-lg font-bold text-sm ${message.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+            className={`mt-4 p-3 rounded-lg font-bold text-sm border ${message.type === "success" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-red-500/10 text-red-400 border-red-500/20"}`}
           >
             {message.text}
           </div>
@@ -630,7 +631,7 @@ function PromptsTab() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow hover:bg-blue-700 transition disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:bg-blue-500 transition disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             {saving ? "Salvando..." : "Salvar Instrução Global"}

@@ -30,6 +30,7 @@ exports.createUser = async (req, res) => {
       name: name,
       email: email,
       isAdmin: false,
+      plan: 'basico',
       dailyLimit: dailyLimit || 5,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       createdBy: createdBy

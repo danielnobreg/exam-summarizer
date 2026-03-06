@@ -117,78 +117,88 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
               Home
             </button>
 
-            {/* Dropdown de Exames */}
-            <div
-              className="relative group"
-              onMouseEnter={() => setIsDropdownOpen(true)}
-              onMouseLeave={() => setIsDropdownOpen(false)}
-            >
-              <button
-                className={`flex items-center ${textColor} hover:text-blue-600 transition-colors font-medium text-sm tracking-wide focus:outline-none`}
+            {user && (
+              <div
+                className="relative group"
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
               >
-                Exames
-                <ChevronDown
-                  className={`ml-1 h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
-                />
-              </button>
+                <button
+                  className={`flex items-center ${textColor} hover:text-blue-600 transition-colors font-medium text-sm tracking-wide focus:outline-none`}
+                >
+                  Exames
+                  <ChevronDown
+                    className={`ml-1 h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
 
-              <AnimatePresence>
-                {isDropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden"
-                  >
-                    <div className="p-2">
-                      <button
-                        onClick={() => handleNavigate("hemogram")}
-                        className="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-50 transition flex items-center group"
-                      >
-                        <Activity className="h-5 w-5 text-blue-500 mr-3 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <p className="text-sm font-bold text-gray-800">
-                            Laboratorial
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            Análise laboratorial completa
-                          </p>
-                        </div>
-                      </button>
-                      <button
-                        onClick={() => handleNavigate("xray")}
-                        className="w-full text-left px-4 py-3 rounded-lg hover:bg-emerald-50 transition flex items-center group"
-                      >
-                        <LungsIcon className="h-5 w-5 text-emerald-500 mr-3 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <p className="text-sm font-bold text-gray-800">
-                            Radiografia de Tórax
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            Análise de Radiografia de Tórax
-                          </p>
-                        </div>
-                      </button>
-                      <button
-                        onClick={() => handleNavigate("ecg")}
-                        className="w-full text-left px-4 py-3 rounded-lg hover:bg-indigo-50 transition flex items-center group"
-                      >
-                        <HeartPulse className="h-5 w-5 text-indigo-500 mr-3 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <p className="text-sm font-bold text-gray-800">
-                            Eletrocardiograma
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            Análise de Eletrocardiograma
-                          </p>
-                        </div>
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                <AnimatePresence>
+                  {isDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden"
+                    >
+                      <div className="p-2">
+                        <button
+                          onClick={() => handleNavigate("hemogram")}
+                          className="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-50 transition flex items-center group"
+                        >
+                          <Activity className="h-5 w-5 text-blue-500 mr-3 group-hover:scale-110 transition-transform" />
+                          <div>
+                            <p className="text-sm font-bold text-gray-800">
+                              Laboratorial
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Análise laboratorial completa
+                            </p>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => handleNavigate("xray")}
+                          className="w-full text-left px-4 py-3 rounded-lg hover:bg-emerald-50 transition flex items-center group"
+                        >
+                          <LungsIcon className="h-5 w-5 text-emerald-500 mr-3 group-hover:scale-110 transition-transform" />
+                          <div>
+                            <p className="text-sm font-bold text-gray-800">
+                              Radiografia de Tórax
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Análise de Radiografia de Tórax
+                            </p>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => handleNavigate("ecg")}
+                          className="w-full text-left px-4 py-3 rounded-lg hover:bg-indigo-50 transition flex items-center group"
+                        >
+                          <HeartPulse className="h-5 w-5 text-indigo-500 mr-3 group-hover:scale-110 transition-transform" />
+                          <div>
+                            <p className="text-sm font-bold text-gray-800">
+                              Eletrocardiograma
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Análise de Eletrocardiograma
+                            </p>
+                          </div>
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+
+            {user && (
+              <button
+                onClick={() => handleNavigate("dashboard")}
+                className={`${textColor} hover:text-blue-600 transition-colors font-medium text-sm tracking-wide`}
+              >
+                Dashboard
+              </button>
+            )}
 
             <button
               onClick={() => handleNavigate("contact")}
@@ -311,36 +321,38 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
                 Home
               </button>
 
-              <div className="px-4 py-2">
-                <p
-                  className={`text-xs font-bold uppercase tracking-wider mb-2 text-slate-400`}
-                >
-                  Exames
-                </p>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => handleNavigate("hemogram")}
-                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 text-slate-900 border-blue-500 bg-slate-50 hover:bg-blue-50/50`}
+              {user && (
+                <div className="px-4 py-2">
+                  <p
+                    className={`text-xs font-bold uppercase tracking-wider mb-2 text-slate-400`}
                   >
-                    <Activity className="h-4 w-4 mr-2 text-blue-500" />
-                    Hemograma
-                  </button>
-                  <button
-                    onClick={() => handleNavigate("xray")}
-                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 text-slate-900 border-emerald-500 bg-slate-50 hover:bg-emerald-50/50`}
-                  >
-                    <LungsIcon className="h-4 w-4 mr-2 text-emerald-500" />
-                    Raio-X
-                  </button>
-                  <button
-                    onClick={() => handleNavigate("ecg")}
-                    className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 text-slate-900 border-indigo-500 bg-slate-50 hover:bg-indigo-50/50`}
-                  >
-                    <HeartPulse className="h-4 w-4 mr-2 text-indigo-500" />
-                    Eletrocardiograma
-                  </button>
+                    Exames
+                  </p>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => handleNavigate("hemogram")}
+                      className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 text-slate-900 border-blue-500 bg-slate-50 hover:bg-blue-50/50`}
+                    >
+                      <Activity className="h-4 w-4 mr-2 text-blue-500" />
+                      Hemograma
+                    </button>
+                    <button
+                      onClick={() => handleNavigate("xray")}
+                      className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 text-slate-900 border-emerald-500 bg-slate-50 hover:bg-emerald-50/50`}
+                    >
+                      <LungsIcon className="h-4 w-4 mr-2 text-emerald-500" />
+                      Raio-X
+                    </button>
+                    <button
+                      onClick={() => handleNavigate("ecg")}
+                      className={`flex items-center w-full px-4 py-3 rounded-xl border-l-2 text-slate-900 border-indigo-500 bg-slate-50 hover:bg-indigo-50/50`}
+                    >
+                      <HeartPulse className="h-4 w-4 mr-2 text-indigo-500" />
+                      Eletrocardiograma
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {user ? (
                 <div className={`mt-4 pt-4 border-t border-slate-100`}>

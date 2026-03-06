@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import * as authService from "../services/authService";
 import TermsModal from "./TermsModal";
 import Navbar from "./Navbar";
@@ -21,6 +22,10 @@ export default function Login({ onLoginSuccess, onNavigate }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState("terms");
   const [showPassword, setShowPassword] = useState(false);
+  const [captchaValue, setCaptchaValue] = useState(null);
+
+  const recaptchaRef = useRef(null);
+  const RECAPTCHA_SITE_KEY = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
 
   const handleLogin = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -44,6 +49,11 @@ export default function Login({ onLoginSuccess, onNavigate }) {
       setError(
         "Você precisa aceitar os Termos de Uso e Políticas de Privacidade",
       );
+      return;
+    }
+
+    if (!captchaValue) {
+      setError("Por favor, confirme que você não é um robô (reCAPTCHA).");
       return;
     }
 
@@ -182,6 +192,14 @@ export default function Login({ onLoginSuccess, onNavigate }) {
                 </p>
               </div>
             )}
+
+            <div className="flex justify-center my-4">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={RECAPTCHA_SITE_KEY}
+                onChange={(val) => setCaptchaValue(val)}
+              />
+            </div>
 
             <button
               onClick={handleLogin}

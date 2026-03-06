@@ -6,6 +6,8 @@ import HomePage from './components/HomePage';
 import Contact from './components/Contact';
 import Xray from './components/Xray';
 import Electrocardiogram from './components/Electrocardiogram';
+import Dashboard from './components/Dashboard';
+import Settings from './components/Settings';
 import * as authService from './services/authService';
 
 export default function App() {
@@ -20,7 +22,7 @@ export default function App() {
           uid: firebaseUser.uid,
           email: firebaseUser.email
         });
-        setCurrentScreen('home');
+        setCurrentScreen('dashboard');
       }
       setLoading(false);
     });
@@ -30,7 +32,7 @@ export default function App() {
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
-    setCurrentScreen('home');
+    setCurrentScreen('dashboard');
   };
 
   const handleLogout = async () => {
@@ -50,6 +52,26 @@ export default function App() {
   if (currentScreen === 'admin' && user) {
     return (
       <AdminPanel 
+        user={user} 
+        onLogout={handleLogout}
+        onNavigate={setCurrentScreen}
+      />
+    );
+  }
+
+  if (currentScreen === 'dashboard' && user) {
+    return (
+      <Dashboard 
+        user={user} 
+        onLogout={handleLogout}
+        onNavigate={setCurrentScreen}
+      />
+    );
+  }
+
+  if (currentScreen === 'settings' && user) {
+    return (
+      <Settings 
         user={user} 
         onLogout={handleLogout}
         onNavigate={setCurrentScreen}

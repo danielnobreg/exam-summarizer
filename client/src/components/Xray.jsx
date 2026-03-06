@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import * as analysisService from "../services/analysisService";
-import { getUserData } from "../services/userService";
+import { getUserData, addHistoryEntry } from "../services/userService";
 import { useUsageLimit } from "../hooks/useUsageLimit";
 import TermsModal from "./TermsModal";
 import { LOADING_MESSAGES } from "../services/analysisService";
@@ -12,6 +12,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
   const [ventilation, setVentilation] = useState("Espontânea");
   const [position, setPosition] = useState("PA");
   const [obs, setObs] = useState("");
+  const [patientName, setPatientName] = useState("");
   const [showMetadata, setShowMetadata] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -92,6 +93,25 @@ export default function Xray({ user, onLogout, onNavigate }) {
 
       if (result.usage) {
         updateUsageAfterAnalysis(result.usage);
+      }
+
+      let censoredName = "";
+      if (patientName.trim()) {
+        const parts = patientName.trim().split(" ");
+        censoredName = parts
+          .map((p) => (p.length > 2 ? p.substring(0, 3) + "***" : p))
+          .join(" ");
+      }
+
+      try {
+        await addHistoryEntry(user.uid, {
+          type: "xray",
+          fileName: files[0].name,
+          patientName: censoredName,
+          result: result.reply,
+        });
+      } catch (historyErr) {
+        console.error("Failed to save history:", historyErr);
       }
     } catch (err) {
       if (err.message?.includes("Limite")) {
@@ -206,6 +226,23 @@ export default function Xray({ user, onLogout, onNavigate }) {
         </div>
 
         <div className="bg-white rounded-[2rem] shadow-xl p-8 border border-gray-100 relative overflow-hidden">
+          <div className="mb-6">
+            <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
+              Identificação do Paciente (Opcional)
+            </label>
+            <input
+              type="text"
+              placeholder="Ex: João da Silva"
+              value={patientName}
+              onChange={(e) => setPatientName(e.target.value)}
+              className="w-full border border-gray-200 bg-gray-50 hover:bg-white focus:bg-white rounded-2xl p-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+            />
+            <p className="text-xs text-gray-400 mt-2 ml-1">
+              Para sua organização. O nome será censurado no histórico (ex:
+              Joã***).
+            </p>
+          </div>
+
           {/* Formulário Principal (Obrigatórios) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>

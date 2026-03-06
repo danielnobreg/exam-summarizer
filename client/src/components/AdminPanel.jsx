@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import * as adminService from "../services/adminService";
 import * as usageService from "../services/usageService";
-import { ArrowLeft, Users, MessageSquare } from "lucide-react";
+import { getSystemPrompt, updateSystemPrompt } from "../services/userService";
+import {
+  ArrowLeft,
+  Users,
+  MessageSquare,
+  Save,
+  AlertCircle,
+} from "lucide-react";
 
 function getInitials(name) {
   if (!name) return "";
@@ -509,18 +516,127 @@ function UsersTab({ currentUser }) {
 }
 
 function PromptsTab() {
-  return (
-    <div className="text-center py-12">
-      <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-        <MessageSquare className="h-8 w-8 text-gray-400" />
+  const [activeTab, setActiveTab] = useState("hemogram");
+  const [prompts, setPrompts] = useState({ hemogram: "", xray: "", ecg: "" });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
+  const EXAM_TYPES = [
+    { id: "hemogram", label: "Hemograma" },
+    { id: "xray", label: "Raio-X" },
+    { id: "ecg", label: "ECG" },
+  ];
+
+  useEffect(() => {
+    async function loadPrompts() {
+      try {
+        const [hemo, rx, ecg] = await Promise.all([
+          getSystemPrompt("hemogram"),
+          getSystemPrompt("xray"),
+          getSystemPrompt("ecg"),
+        ]);
+        setPrompts({
+          hemogram: hemo || "Você é um assistente...",
+          xray: rx || "Você é um assistente...",
+          ecg: ecg || "Você é um clínico...",
+        });
+      } catch (err) {
+        console.error("Erro", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPrompts();
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setMessage({ type: "", text: "" });
+    try {
+      await updateSystemPrompt(activeTab, prompts[activeTab]);
+      setMessage({
+        type: "success",
+        text: "Instrução base atualizada (afetará todos os usuários s/ prompt customizado).",
+      });
+      setTimeout(() => setMessage({ type: "", text: "" }), 4000);
+    } catch (e) {
+      setMessage({ type: "error", text: "Erro ao salvar." });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="py-12 text-center text-gray-500">
+        Carregando prompts base...
       </div>
-      <h2 className="text-xl font-bold text-gray-800 mb-2">
-        Gerenciar Prompts da IA
-      </h2>
-      <p className="text-gray-500 max-w-md mx-auto">
-        Em breve você poderá personalizar as instruções do sistema para análise
-        dos exames.
-      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 mb-6">
+        <MessageSquare className="h-6 w-6 text-blue-600" />
+        <h2 className="text-xl font-bold text-gray-800">
+          Gerenciar Instruções Base (Global)
+        </h2>
+      </div>
+
+      <div className="flex gap-2 bg-gray-50 p-1 rounded-xl w-max">
+        {EXAM_TYPES.map((type) => (
+          <button
+            key={type.id}
+            onClick={() => setActiveTab(type.id)}
+            className={`px-4 py-2 text-sm font-bold rounded-lg transition-all ${
+              activeTab === type.id
+                ? "bg-white text-blue-600 shadow border border-gray-200"
+                : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            {type.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="bg-gray-50 p-4 border border-gray-200 rounded-xl">
+        <div className="flex items-start gap-3 mb-4 text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200">
+          <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+          <p className="text-sm font-medium">
+            Atenção: A instrução aqui definida será usada como o{" "}
+            <b>modelo padrão</b> para todos os usuários que não tiverem uma
+            instrução customizada configurada em seus perfis para este exame.
+          </p>
+        </div>
+
+        <textarea
+          className="w-full h-80 p-4 font-mono text-sm text-gray-700 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
+          value={prompts[activeTab]}
+          onChange={(e) =>
+            setPrompts({ ...prompts, [activeTab]: e.target.value })
+          }
+        />
+
+        {message.text && (
+          <div
+            className={`mt-4 p-3 rounded-lg font-bold text-sm ${message.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+          >
+            {message.text}
+          </div>
+        )}
+
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow hover:bg-blue-700 transition disabled:opacity-50"
+          >
+            <Save className="w-4 h-4" />
+            {saving ? "Salvando..." : "Salvar Instrução Global"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

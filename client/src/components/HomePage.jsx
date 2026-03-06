@@ -10,6 +10,7 @@ import {
   Clock,
   CheckCircle2,
   X,
+  ChevronDown,
 } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
@@ -207,7 +208,7 @@ const Methodology = () => {
   );
 };
 
-const AvailableModules = ({ onNavigate }) => {
+const AvailableModules = ({ onNavigate, user }) => {
   const modules = [
     {
       id: "hemogram",
@@ -307,10 +308,18 @@ const AvailableModules = ({ onNavigate }) => {
                 </div>
 
                 <button
-                  onClick={() => onNavigate(mod.id)}
-                  className={`w-full py-3 bg-slate-50 text-slate-800 border border-slate-200 font-bold rounded-xl ${mod.styles.hoverBg} hover:text-white ${mod.styles.hoverBorder} transition-colors`}
+                  onClick={() => {
+                    if (!user) {
+                      alert("Faça login para acessar os módulos.");
+                      onNavigate("login");
+                    } else {
+                      onNavigate(mod.id);
+                    }
+                  }}
+                  className={`w-full py-3 flex justify-center items-center gap-2 bg-slate-50 text-slate-800 border border-slate-200 font-bold rounded-xl ${user ? mod.styles.hoverBg : "opacity-70"} ${user ? "hover:text-white" : ""} ${user ? mod.styles.hoverBorder : ""} transition-colors`}
                 >
-                  Acessar Módulo
+                  {!user && <Lock className="w-4 h-4" />}
+                  {user ? "Acessar Módulo" : "Bloqueado"}
                 </button>
               </div>
             </FadeIn>
@@ -339,40 +348,32 @@ const Pricing = () => {
             </h3>
           </FadeIn>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Plano Gratuito */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Plano Free */}
           <FadeIn>
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 relative opacity-80 h-full flex flex-col">
+            <div className="bg-white rounded-3xl p-8 border border-slate-200 relative opacity-90 h-full flex flex-col">
               <h4 className="text-2xl font-bold text-slate-800 mb-2">
-                Plano Inicial
+                Plano Free
               </h4>
               <p className="text-slate-500 text-sm mb-6">
-                Para experimentação da interface.
+                Para conhecer a interface.
               </p>
               <div className="text-4xl font-extrabold text-slate-900 mb-8">
-                Grátis
+                Gratuito
               </div>
 
               <div className="space-y-4 mb-8 flex-1">
                 <div className="flex items-center text-sm text-slate-600">
                   <CheckCircle2 className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />{" "}
-                  Acesso ao dashboard
+                  Acesso ao Dashboard Integrado
+                </div>
+                <div className="flex items-center text-sm text-slate-600">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />{" "}
+                  Chatbot Assistente no App
                 </div>
                 <div className="flex items-center text-sm text-slate-400 line-through">
                   <X className="w-5 h-5 text-slate-300 mr-3 flex-shrink-0" />{" "}
-                  Análise de Hemogramas
-                </div>
-                <div className="flex items-center text-sm text-slate-400 line-through">
-                  <X className="w-5 h-5 text-slate-300 mr-3 flex-shrink-0" />{" "}
-                  Raio-X Torácico
-                </div>
-                <div className="flex items-center text-sm text-slate-400 line-through">
-                  <X className="w-5 h-5 text-slate-300 mr-3 flex-shrink-0" />{" "}
-                  Eletrocardiograma
-                </div>
-                <div className="flex items-center text-sm text-slate-400 line-through">
-                  <X className="w-5 h-5 text-slate-300 mr-3 flex-shrink-0" />{" "}
-                  Suporte Prioritário
+                  Acesso aos Módulos de Exames
                 </div>
               </div>
 
@@ -380,58 +381,202 @@ const Pricing = () => {
                 disabled
                 className="w-full py-4 bg-slate-100 text-slate-400 font-bold rounded-xl cursor-not-allowed border border-slate-200"
               >
-                Em breve
+                Plano Atual
               </button>
             </div>
           </FadeIn>
 
-          {/* Plano PRO */}
-          <FadeIn delay={0.2}>
-            <div className="bg-white rounded-3xl p-8 border-2 border-blue-500 shadow-xl relative h-full flex flex-col transform md:-translate-y-4">
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-md">
-                Mais Escolhido
-              </div>
-
-              <h4 className="text-2xl font-bold text-blue-900 mb-2">
-                Sintesys PRO
+          {/* Plano Básico */}
+          <FadeIn delay={0.1}>
+            <div className="bg-white rounded-3xl p-8 border border-blue-200 shadow-md relative h-full flex flex-col">
+              <h4 className="text-2xl font-bold text-blue-800 mb-2">
+                Plano Básico
               </h4>
               <p className="text-slate-500 text-sm mb-6">
-                Acesso completo à plataforma.
+                Para uso clínico moderado.
               </p>
-              <div className="text-4xl font-extrabold text-slate-900 mb-2">
-                R$ 9,90
-                <span className="text-lg text-slate-500 font-medium">/mês</span>
+              <div className="text-4xl font-extrabold text-blue-900 mb-8">
+                Básico
               </div>
 
-              <div className="space-y-4 mb-8 flex-1 mt-6">
+              <div className="space-y-4 mb-8 flex-1">
                 <div className="flex items-center text-sm text-slate-700 font-medium">
                   <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
-                  Análises Ilimitadas de Hemogramas
+                  Tudo do plano Free
                 </div>
                 <div className="flex items-center text-sm text-slate-700 font-medium">
                   <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
-                  Acesso total ao Raio-X Torácico
+                  Análise Completa de Exames
                 </div>
                 <div className="flex items-center text-sm text-slate-700 font-medium">
                   <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
-                  Identificação de anomalias no ECG
+                  Customização da Inteligência
                 </div>
-                <div className="flex items-center text-sm text-slate-700 font-medium">
-                  <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
-                  Exportação de Laudos Estruturados
-                </div>
-                <div className="flex items-center text-sm text-slate-700 font-medium">
-                  <CheckCircle2 className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0" />{" "}
-                  Suporte Especializado 24/7
+                <div className="flex items-center text-sm text-slate-400 line-through">
+                  <X className="w-5 h-5 text-slate-300 mr-3 flex-shrink-0" />{" "}
+                  Chatbot de WhatsApp
                 </div>
               </div>
 
-              <button className="w-full py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-600/20 hover:-translate-y-1">
-                Assinar Sintesys PRO
+              <button className="w-full py-4 bg-blue-100 text-blue-700 font-bold rounded-xl hover:bg-blue-200 transition-all duration-300">
+                Assinar Básico
+              </button>
+            </div>
+          </FadeIn>
+
+          {/* Plano Pro */}
+          <FadeIn delay={0.2}>
+            <div className="bg-white rounded-3xl p-8 border-2 border-indigo-500 shadow-xl relative h-full flex flex-col transform md:-translate-y-4">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-md">
+                Maior Valor
+              </div>
+
+              <h4 className="text-2xl font-bold text-indigo-900 mb-2">
+                Plano Pro
+              </h4>
+              <p className="text-slate-500 text-sm mb-6">
+                Ferramentas completas e integrações exclusivas.
+              </p>
+              <div className="text-4xl font-extrabold text-slate-900 mb-8">
+                Pro
+              </div>
+
+              <div className="space-y-4 mb-8 flex-1">
+                <div className="flex items-center text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-500 mr-3 flex-shrink-0" />{" "}
+                  Tudo do plano Básico
+                </div>
+                <div className="flex items-center text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-500 mr-3 flex-shrink-0" />{" "}
+                  Chatbot Exclusivo no WhatsApp
+                </div>
+                <div className="flex items-center text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-500 mr-3 flex-shrink-0" />{" "}
+                  Exportação de Laudos
+                </div>
+                <div className="flex items-center text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-5 h-5 text-indigo-500 mr-3 flex-shrink-0" />{" "}
+                  Maior Limite Diário
+                </div>
+              </div>
+
+              <button className="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all duration-300 shadow-lg shadow-indigo-600/20 hover:-translate-y-1">
+                Assinar Pro
               </button>
             </div>
           </FadeIn>
         </div>
+      </div>
+    </section>
+  );
+};
+
+// --- FAQ e Segurança ---
+const FAQ = () => {
+  const [openIdx, setOpenIdx] = useState(null);
+
+  const faqs = [
+    {
+      q: "A inteligência artificial substitui o diagnóstico médico?",
+      a: "Não. A plataforma atua exclusivamente como ferramenta de apoio à decisão clínica. Nossas análises focam na estruturação e facilitação da leitura de exames, mas o parecer final, a conduta e o diagnóstico contínuo devem sempre partir do profissional de saúde devidamente habilitado.",
+    },
+    {
+      q: "Meus dados e os exames enviados estão seguros?",
+      a: "Sim. A segurança e privacidade (LGPD) são pilares arquiteturais do nosso sistema. Empregamos mascaramento de dados e técnicas avançadas para remover identificadores pessoais (Nomes, CPFs, RGs) dos laudos antes que a inteligência artificial sequer tenha acesso às imagens ou textos originais.",
+    },
+    {
+      q: "Como o meu limite diário de uso é contabilizado?",
+      a: "O limite diário de análises é consumido a cada exame processado pela IA. Ele é reiniciado automaticamente a cada 24 horas (à meia-noite, horário de Brasília) para todos os perfis cadastrados, não sendo acumulativo.",
+    },
+    {
+      q: "Como funciona a integração com o WhatsApp?",
+      a: "No Plano Superior, você obtém acesso ao nosso Chatbot Exclusivo no WhatsApp. Através dele, você pode solicitar sumarizações rápidas e buscar diagnósticos na literatura médica via mensagens diretas, ideal para uso assistente imediato.",
+    },
+  ];
+
+  return (
+    <section className="py-24 bg-white border-t border-gray-100">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <FadeIn>
+            <h2 className="text-sm font-bold text-blue-600 tracking-wider uppercase mb-3">
+              Informações
+            </h2>
+            <h3 className="text-3xl font-extrabold text-slate-900">
+              Perguntas Frequentes
+            </h3>
+          </FadeIn>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, idx) => {
+            const isOpen = openIdx === idx;
+            return (
+              <FadeIn key={idx} delay={idx * 0.1}>
+                <div
+                  className={`border ${isOpen ? "border-blue-500 shadow-md" : "border-slate-200"} rounded-2xl overflow-hidden transition-all duration-300 bg-white`}
+                >
+                  <button
+                    onClick={() => setOpenIdx(isOpen ? null : idx)}
+                    className="w-full text-left px-6 py-5 flex items-center justify-between focus:outline-none"
+                  >
+                    <span className="font-bold text-slate-800">{faq.q}</span>
+                    <ChevronDown
+                      className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isOpen ? "rotate-180 text-blue-500" : ""}`}
+                    />
+                  </button>
+                  <div
+                    className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-56 pb-5 opacity-100" : "max-h-0 opacity-0"}`}
+                  >
+                    <p className="text-slate-600 text-sm leading-relaxed">
+                      {faq.a}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const SecurityBadges = () => {
+  return (
+    <section className="py-12 bg-slate-900 border-t border-slate-800 text-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <FadeIn>
+          <p className="text-slate-400 text-sm mb-6 uppercase tracking-widest font-semibold">
+            Certificações & Conformidade
+          </p>
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-80">
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-slate-800/50 flex items-center justify-center mb-3">
+                <ShieldCheck className="w-6 h-6 text-blue-400" />
+              </div>
+              <span className="text-slate-300 font-medium text-sm text-center">
+                LGPD Compliant
+              </span>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-slate-800/50 flex items-center justify-center mb-3">
+                <Lock className="w-6 h-6 text-emerald-400" />
+              </div>
+              <span className="text-slate-300 font-medium text-sm text-center max-w-[120px]">
+                Mascaramento PII Real-time
+              </span>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-slate-800/50 flex items-center justify-center mb-3">
+                <Activity className="w-6 h-6 text-indigo-400" />
+              </div>
+              <span className="text-slate-300 font-medium text-sm text-center max-w-[120px]">
+                TLS 1.3 / Endpoints Seguros
+              </span>
+            </div>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
@@ -470,10 +615,13 @@ const HomePage = ({ onNavigateLogin, onNavigate, user, onLogout }) => {
         <Methodology />
         <Pricing />
         <AvailableModules
+          user={user}
           onNavigate={(screen) =>
             onNavigate ? onNavigate(screen) : onNavigateLogin()
           }
         />
+        <FAQ />
+        <SecurityBadges />
       </main>
 
       <Footer />

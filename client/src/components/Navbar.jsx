@@ -76,18 +76,23 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
     if (onNavigate) onNavigate(screen);
   };
 
-  // Cores unificadas para fundos escuros no topo, e fundo claro com scroll
-  const navBackground = isScrolled
-    ? "bg-white/80 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/60"
-    : "bg-white/5 backdrop-blur-md border border-white/10";
+  // Cores unificadas para fundos escuros no topo, e fundo claro com scroll e menu mobile
+  const navBackground = isMobileMenuOpen
+    ? "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100"
+    : isScrolled
+      ? "bg-white/80 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/60"
+      : "bg-white/5 backdrop-blur-md border border-white/10";
 
-  const textColor = !isScrolled ? "text-white" : "text-slate-700";
-  const logoColor = !isScrolled ? "text-white" : "text-slate-900";
-  const logoIconColor = !isScrolled ? "text-blue-400" : "text-blue-600";
+  const textColor =
+    isMobileMenuOpen || isScrolled ? "text-slate-700" : "text-white";
+  const logoColor =
+    isMobileMenuOpen || isScrolled ? "text-slate-900" : "text-white";
+  const logoIconColor =
+    isMobileMenuOpen || isScrolled ? "text-blue-600" : "text-blue-400";
 
   return (
     <nav
-      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50 transition-all duration-500 rounded-full ${navBackground}`}
+      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-[999] transition-all duration-500 ${isMobileMenuOpen ? "rounded-[2rem]" : "rounded-full"} ${navBackground}`}
     >
       <div className="px-6 md:px-8">
         <div className="flex justify-between items-center h-16">
@@ -196,7 +201,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
               >
                 Dashboard
               </button>
-            )}  
+            )}
 
             <button
               onClick={() => handleNavigate("contact")}

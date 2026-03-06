@@ -1,11 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 
 const CustomCursor = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 1024 || navigator.maxTouchPoints > 0;
+      setIsMobile(mobile);
+      return mobile;
+    };
+
+    const mobile = checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    if (mobile) {
+      return () => window.removeEventListener("resize", checkMobile);
+    }
+
     const updateMousePosition = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -24,28 +42,29 @@ const CustomCursor = () => {
       }
     };
 
-    window.addEventListener("mousemove", updateMousePosition);
-    window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener("mousemove", updateMousePosition, {
+      passive: true,
+    });
+    window.addEventListener("mouseover", handleMouseOver, { passive: true });
 
-    // Esconde o cursor padrão do sistema na HomePage
+    // Esconde o cursor padrão do sistema globalmente
     document.body.style.cursor = "none";
-
-    // Cria um estilo global para forçar o cursor nativo a não aparecer sobre nenhum elemento
     const style = document.createElement("style");
-    style.innerHTML = `
-      * {
-        cursor: none !important;
-      }
-    `;
+    style.innerHTML = `* { cursor: none !important; }`;
     document.head.appendChild(style);
 
     return () => {
+      window.removeEventListener("resize", checkMobile);
       window.removeEventListener("mousemove", updateMousePosition);
       window.removeEventListener("mouseover", handleMouseOver);
       document.body.style.cursor = "auto";
-      document.head.removeChild(style);
+      if (document.head.contains(style)) {
+        document.head.removeChild(style);
+      }
     };
   }, []);
+
+  if (!isMounted || isMobile) return null;
 
   const variants = {
     default: {
@@ -91,20 +110,27 @@ const CustomCursor = () => {
     },
   };
 
-  return (
-    <>
+  return createPortal(
+    <div
+      style={{
+        pointerEvents: "none",
+        position: "fixed",
+        inset: 0,
+        zIndex: 2147483647,
+      }}
+    >
       {/* Luz de projeção grande (SaaS Premium Glow) */}
       <motion.div
         variants={variants}
         animate={isHovering ? "hover" : "default"}
         transition={{ type: "tween", ease: "backOut", duration: 0.15 }}
         style={{
-          position: "fixed",
+          position: "absolute",
           top: 0,
           left: 0,
           borderRadius: "50%",
           pointerEvents: "none",
-          zIndex: 9998,
+          willChange: "transform",
         }}
       />
 
@@ -114,16 +140,17 @@ const CustomCursor = () => {
         animate={isHovering ? "hover" : "default"}
         transition={{ type: "tween", ease: "backOut", duration: 0.1 }}
         style={{
-          position: "fixed",
+          position: "absolute",
           top: 0,
           left: 0,
           borderRadius: "50%",
           pointerEvents: "none",
-          zIndex: 9999,
           boxShadow: "0 0 10px rgba(59, 130, 246, 0.8)",
+          willChange: "transform",
         }}
       />
-    </>
+    </div>,
+    document.body,
   );
 };
 

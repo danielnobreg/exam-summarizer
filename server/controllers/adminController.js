@@ -12,6 +12,10 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ error: 'Preencha todos os campos obrigatórios' });
     }
 
+    if (dailyLimit && dailyLimit > 10) {
+      return res.status(400).json({ error: 'O limite diário máximo permitido para novos perfis é 10' });
+    }
+
     // segurança mínima da senha
     if (password.length < 6) {
       return res.status(400).json({ error: 'Senha deve ter no mínimo 6 caracteres' });

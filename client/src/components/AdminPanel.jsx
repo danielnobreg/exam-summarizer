@@ -130,6 +130,13 @@ function UsersTab({ currentUser }) {
       return;
     }
 
+    if (formData.dailyLimit > 10) {
+      setError(
+        "O limite diário não pode exceder 10 análises para garantir o desempenho.",
+      );
+      return;
+    }
+
     try {
       await adminService.createUserProfile(formData);
 
@@ -177,6 +184,11 @@ function UsersTab({ currentUser }) {
     const parsedLimit = parseInt(newLimit, 10);
     if (isNaN(parsedLimit) || parsedLimit < 1) {
       window.alert("Limite inválido.");
+      return;
+    }
+
+    if (parsedLimit > 10) {
+      window.alert("O limite diário não pode exceder 10 análises.");
       return;
     }
 
@@ -304,11 +316,12 @@ function UsersTab({ currentUser }) {
 
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-2">
-                Limite Diário
+                Limite Diário (Máx 10)
               </label>
               <input
                 type="number"
                 min="1"
+                max="10"
                 value={formData.dailyLimit}
                 onChange={(e) =>
                   setFormData({

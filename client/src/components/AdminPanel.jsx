@@ -21,6 +21,7 @@ function getInitials(name) {
 
 export default function AdminPanel({ user, onLogout, onNavigate }) {
   const [activeTab, setActiveTab] = useState("users");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Constrói um objeto de usuário que satisfaz os requisitos do Navbar
   // Assumimos que se eles estão aqui, são administradores, então podemos mockar userData se necessário,
@@ -29,8 +30,12 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
   const navbarUser = { ...user, userData: { isAdmin: true } };
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white font-manrope pt-20">
-      <Navbar user={navbarUser} onLogout={onLogout} onNavigate={onNavigate} />
+    <div
+      className={`min-h-screen bg-[#0B0F19] text-white font-manrope ${!isModalOpen ? "pt-20" : ""}`}
+    >
+      {!isModalOpen && (
+        <Navbar user={navbarUser} onLogout={onLogout} onNavigate={onNavigate} />
+      )}
 
       {/* Header / Breadcrumb */}
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -80,7 +85,9 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
 
         {/* Content */}
         <div className="bg-[#111624] rounded-2xl shadow-2xl border border-white/5 p-6 md:p-8 animate-fadeIn">
-          {activeTab === "users" && <UsersTab currentUser={user} />}
+          {activeTab === "users" && (
+            <UsersTab currentUser={user} onModalChange={setIsModalOpen} />
+          )}
           {activeTab === "prompts" && <PromptsTab />}
         </div>
       </div>
@@ -88,7 +95,7 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
   );
 }
 
-function UsersTab({ currentUser }) {
+function UsersTab({ currentUser, onModalChange }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -108,6 +115,26 @@ function UsersTab({ currentUser }) {
   useEffect(() => {
     loadUsers();
   }, []);
+
+  // Controla a Navbar e o scroll da página quando abrir o modal
+  useEffect(() => {
+    const isModalOpen = selectedUser !== null;
+
+    if (onModalChange) {
+      onModalChange(isModalOpen);
+    }
+
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    // Cleanup caso o componente desmonte
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [selectedUser, onModalChange]);
 
   async function loadUsers() {
     try {

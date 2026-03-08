@@ -9,26 +9,39 @@ import Electrocardiogram from './components/Electrocardiogram';
 import Dashboard from './components/Dashboard';
 import Settings from './components/Settings';
 import CustomCursor from './components/CustomCursor';
+import ResetPassword from './components/ResetPassword';
 import * as authService from './services/authService';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('home');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [resetParams, setResetParams] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = authService.onAuthChange((firebaseUser) => {
-      if (firebaseUser) {
-        setUser({
-          uid: firebaseUser.uid,
-          email: firebaseUser.email
-        });
-        setCurrentScreen('dashboard');
-      }
-      setLoading(false);
-    });
+    // Intercepta os links de ação do Firebase (Recuperação de Senha)
+    const searchParams = new URLSearchParams(window.location.search);
+    const mode = searchParams.get('mode');
+    const oobCode = searchParams.get('oobCode');
 
-    return () => unsubscribe();
+    if (mode === 'resetPassword' && oobCode) {
+      setResetParams(oobCode);
+      setCurrentScreen('reset-password');
+      setLoading(false);
+    } else {
+      const unsubscribe = authService.onAuthChange((firebaseUser) => {
+        if (firebaseUser) {
+          setUser({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email
+          });
+          setCurrentScreen('dashboard');
+        }
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
+    }
   }, []);
 
   const handleLoginSuccess = (userData) => {
@@ -58,6 +71,18 @@ export default function App() {
     if (currentScreen === 'ecg' && user) return <Electrocardiogram user={user} onLogout={handleLogout} onNavigate={setCurrentScreen} />;
     if (currentScreen === 'contact') return <Contact user={user} onLogout={handleLogout} onNavigate={setCurrentScreen} />;
     if (currentScreen === 'login') return <Login onLoginSuccess={handleLoginSuccess} onNavigate={setCurrentScreen} />;
+    if (currentScreen === 'reset-password' && resetParams) {
+      return (
+        <ResetPassword 
+          oobCode={resetParams} 
+          onNavigateLogin={() => {
+            // Remove os parâmetros da URL para evitar ficar preso na tela de reset caso demore para redirecionar
+            window.history.replaceState({}, document.title, window.location.pathname);
+            setCurrentScreen('login');
+          }} 
+        />
+      );
+    }
     
     return <HomePage onNavigateLogin={() => setCurrentScreen('login')} onNavigate={setCurrentScreen} user={user} onLogout={handleLogout} />;
   };

@@ -385,11 +385,11 @@ const Pricing = ({ user, userData, onNavigateLogin }) => {
 
                 <div className="space-y-4 mb-8 flex-1">
                   <div className="flex items-center text-sm text-slate-300">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />{" "}
+                    <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 flex-shrink-0" />{" "}
                     Menu Dashboard Ativo
                   </div>
                   <div className="flex items-center text-sm text-slate-300">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />{" "}
+                    <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 flex-shrink-0" />{" "}
                     Chatbot Geral Básico
                   </div>
                 </div>

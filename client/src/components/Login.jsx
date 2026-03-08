@@ -22,6 +22,8 @@ export default function Login({ onLoginSuccess, onNavigate }) {
   const [modalType, setModalType] = useState("terms");
   const [showPassword, setShowPassword] = useState(false);
   const [captchaValue, setCaptchaValue] = useState(null);
+  const [isResetting, setIsResetting] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState("");
 
   const recaptchaRef = useRef(null);
   const RECAPTCHA_SITE_KEY = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
@@ -69,6 +71,34 @@ export default function Login({ onLoginSuccess, onNavigate }) {
     }
   };
 
+  const handleResetPassword = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      setError("Insira um email válido para recuperar a senha");
+      return;
+    }
+
+    if (!captchaValue) {
+      setError("Por favor, confirme que você não é um robô (reCAPTCHA).");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setResetSuccess("");
+
+    try {
+      await authService.resetPassword(email);
+      setResetSuccess(
+        "Link de recuperação enviado! Verifique sua caixa de entrada.",
+      );
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const openModal = (type) => {
     setModalType(type);
     setModalOpen(true);
@@ -89,10 +119,12 @@ export default function Login({ onLoginSuccess, onNavigate }) {
               </div>
             </div>
             <h1 className="text-3xl font-extrabold text-white tracking-tight">
-              Bem-vindo!
+              {isResetting ? "Recuperar Senha" : "Bem-vindo!"}
             </h1>
             <p className="text-slate-400 mt-2">
-              Acesse sua conta para continuar
+              {isResetting
+                ? "Enviaremos um link de recuperação para seu email"
+                : "Acesse sua conta para continuar"}
             </p>
           </div>
 
@@ -115,79 +147,104 @@ export default function Login({ onLoginSuccess, onNavigate }) {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-bold text-slate-300 mb-2">
-                Senha
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+            {!isResetting && (
+              <div>
+                <label className="block text-sm font-bold text-slate-300 mb-2">
+                  Senha
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-12 pr-12 py-3.5 bg-[#060913]/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all placeholder-slate-500 text-white"
+                    placeholder="••••••••"
+                    onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition p-1"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
                 </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-12 py-3.5 bg-[#060913]/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all placeholder-slate-500 text-white"
-                  placeholder="••••••••"
-                  onKeyPress={(e) => e.key === "Enter" && handleLogin()}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition p-1"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
+                <div className="flex justify-end mt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsResetting(true);
+                      setError("");
+                      setResetSuccess("");
+                    }}
+                    className="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors"
+                  >
+                    Esqueceu a senha?
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
-            <div
-              className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/5 cursor-pointer hover:bg-white/10 transition-colors"
-              onClick={() => setAcceptedTerms(!acceptedTerms)}
-            >
+            {!isResetting && (
               <div
-                className={`mt-0.5 transition-colors ${acceptedTerms ? "text-blue-400" : "text-slate-500"}`}
+                className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/5 cursor-pointer hover:bg-white/10 transition-colors"
+                onClick={() => setAcceptedTerms(!acceptedTerms)}
               >
-                {acceptedTerms ? (
-                  <CheckSquare className="h-5 w-5" />
-                ) : (
-                  <Square className="h-5 w-5" />
-                )}
+                <div
+                  className={`mt-0.5 transition-colors ${acceptedTerms ? "text-blue-400" : "text-slate-500"}`}
+                >
+                  {acceptedTerms ? (
+                    <CheckSquare className="h-5 w-5" />
+                  ) : (
+                    <Square className="h-5 w-5" />
+                  )}
+                </div>
+                <label className="text-sm text-slate-300 cursor-pointer select-none leading-relaxed">
+                  Li e aceito os{" "}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openModal("terms");
+                    }}
+                    className="text-blue-400 hover:text-blue-300 font-bold hover:underline transition-colors"
+                  >
+                    Termos de Uso
+                  </button>{" "}
+                  e a{" "}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openModal("privacy");
+                    }}
+                    className="text-blue-400 hover:text-blue-300 font-bold hover:underline transition-colors"
+                  >
+                    Política de Privacidade
+                  </button>
+                </label>
               </div>
-              <label className="text-sm text-slate-300 cursor-pointer select-none leading-relaxed">
-                Li e aceito os{" "}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal("terms");
-                  }}
-                  className="text-blue-400 hover:text-blue-300 font-bold hover:underline transition-colors"
-                >
-                  Termos de Uso
-                </button>{" "}
-                e a{" "}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal("privacy");
-                  }}
-                  className="text-blue-400 hover:text-blue-300 font-bold hover:underline transition-colors"
-                >
-                  Política de Privacidade
-                </button>
-              </label>
-            </div>
+            )}
 
             {error && (
               <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl animate-shake">
                 <p className="text-sm text-red-400 font-medium flex items-center gap-2">
                   <span className="text-lg">⚠️</span> {error}
+                </p>
+              </div>
+            )}
+
+            {resetSuccess && (
+              <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
+                <p className="text-sm text-green-400 font-medium flex items-center gap-2">
+                  <span className="text-lg">✓</span> {resetSuccess}
                 </p>
               </div>
             )}
@@ -201,22 +258,38 @@ export default function Login({ onLoginSuccess, onNavigate }) {
             </div>
 
             <button
-              onClick={handleLogin}
-              disabled={loading}
+              onClick={isResetting ? handleResetPassword : handleLogin}
+              disabled={loading || resetSuccess !== ""}
               className="w-full bg-indigo-600 text-white py-4 vector-btn rounded-xl font-bold hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] hover:-translate-y-1 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Entrando...
+                  {isResetting ? "Enviando..." : "Entrando..."}
                 </>
               ) : (
                 <>
-                  Entrar
+                  {isResetting ? "Enviar Link de Recuperação" : "Entrar"}
                   <ArrowRight className="h-5 w-5" />
                 </>
               )}
             </button>
+
+            {isResetting && (
+              <div className="text-center mt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsResetting(false);
+                    setError("");
+                    setResetSuccess("");
+                  }}
+                  className="text-sm font-bold text-slate-400 hover:text-white transition-colors"
+                >
+                  Voltar para o Login
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import * as adminService from "../services/adminService";
 import * as usageService from "../services/usageService";
+import * as authService from "../services/authService";
 import { getSystemPrompt, updateSystemPrompt } from "../services/userService";
 import {
   ArrowLeft,
@@ -98,7 +99,6 @@ function UsersTab({ currentUser }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
     dailyLimit: 5,
   });
   const [error, setError] = useState("");
@@ -125,7 +125,7 @@ function UsersTab({ currentUser }) {
     setError("");
     setSuccess("");
 
-    if (!formData.name || !formData.email || !formData.password) {
+    if (!formData.name || !formData.email) {
       setError("Preencha todos os campos obrigatórios.");
       return;
     }
@@ -140,8 +140,10 @@ function UsersTab({ currentUser }) {
     try {
       await adminService.createUserProfile(formData);
 
-      setSuccess("Usuário criado com sucesso!");
-      setFormData({ name: "", email: "", password: "", dailyLimit: 5 });
+      setSuccess(
+        "Usuário adicionado! Um link para criar a senha foi enviado para o email dele.",
+      );
+      setFormData({ name: "", email: "", dailyLimit: 5 });
       setShowForm(false);
       loadUsers();
     } catch (err) {
@@ -242,6 +244,27 @@ function UsersTab({ currentUser }) {
     }
   }
 
+  async function handleSendResetEmail(email) {
+    if (
+      !window.confirm(
+        `Deseja enviar um link de redefinição de senha para ${email}?`,
+      )
+    ) {
+      return;
+    }
+    setActionLoading(true);
+    try {
+      await authService.resetPassword(email);
+      setSuccess(`Link de redefinição enviado com sucesso para ${email}!`);
+      setTimeout(() => setSuccess(""), 4000);
+    } catch (err) {
+      setError(err.message || "Erro ao enviar e-mail de redefinição");
+      setTimeout(() => setError(""), 4000);
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
   return (
     <div className="space-y-8 relative">
       <div className="flex items-center justify-between">
@@ -301,21 +324,6 @@ function UsersTab({ currentUser }) {
 
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-2">
-                Senha Inicial
-              </label>
-              <input
-                type="password"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-                className="w-full px-4 py-3 bg-[#111624] border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all placeholder-slate-500"
-                placeholder="Mínimo 6 caracteres"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
                 Limite Diário (Máx 10)
               </label>
               <input
@@ -332,6 +340,15 @@ function UsersTab({ currentUser }) {
                 className="w-full px-4 py-3 bg-[#111624] border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all placeholder-slate-500"
               />
             </div>
+          </div>
+
+          <div className="flex items-start gap-3 mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+            <AlertCircle className="w-5 h-5 flex-shrink-0 text-blue-400 mt-0.5" />
+            <p className="text-sm font-medium text-blue-300">
+              Ao adicionar o usuário, ele receberá um e-mail com instruções para
+              criar a sua própria senha com segurança, sem que você precise
+              saber qual é.
+            </p>
           </div>
 
           {error && !selectedUser && (
@@ -510,13 +527,20 @@ function UsersTab({ currentUser }) {
               </div>
             </div>
 
-            <div className="border-t border-white/10 pt-6 flex justify-between">
+            <div className="border-t border-white/10 pt-6 flex justify-between gap-4">
+              <button
+                onClick={() => handleSendResetEmail(selectedUser.email)}
+                disabled={actionLoading}
+                className="px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50 text-center"
+              >
+                Enviar Reset de Senha
+              </button>
               <button
                 onClick={() =>
                   handleDeleteUser(selectedUser.id, selectedUser.name)
                 }
                 disabled={actionLoading}
-                className="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50"
+                className="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50 text-center"
               >
                 Apagar Perfil Definitivamente
               </button>

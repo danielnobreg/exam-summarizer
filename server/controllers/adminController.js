@@ -2,13 +2,13 @@ const { admin, db } = require('../config/firebaseAdmin');
 
 exports.createUser = async (req, res) => {
   try {
-    const { email, password, name, dailyLimit } = req.body;
+    const { email, name, dailyLimit } = req.body;
     
     // quem criou esse usuário foi o admin logado, a gente pega o id dele do token
     const createdBy = req.user.uid;
 
     // se o admin esqueceu de mandar os dados básicos, barra na hora
-    if (!email || !password || !name) {
+    if (!email || !name) {
       return res.status(400).json({ error: 'Preencha todos os campos obrigatórios' });
     }
 
@@ -16,15 +16,15 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ error: 'O limite diário máximo permitido para novos perfis é 10' });
     }
 
-    // segurança mínima da senha
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'Senha deve ter no mínimo 6 caracteres' });
-    }
+    // Gera uma senha aleatória extremamente forte e irreversível
+    // O usuário não precisa saber essa senha, pois ele próprio setará a dele via "Reset Password"
+    const crypto = require('crypto');
+    const secureRandomPassword = crypto.randomBytes(32).toString('hex') + "A1@";
 
     // primeiro cria a conta no Firebase Authentication pra ele poder logar
     const userRecord = await admin.auth().createUser({
       email: email,
-      password: password,
+      password: secureRandomPassword,
       displayName: name
     });
 

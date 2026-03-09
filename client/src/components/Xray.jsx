@@ -12,7 +12,6 @@ export default function Xray({ user, onLogout, onNavigate }) {
   const [ventilation, setVentilation] = useState("Espontânea");
   const [position, setPosition] = useState("PA");
   const [obs, setObs] = useState("");
-  const [patientName, setPatientName] = useState("");
   const [showMetadata, setShowMetadata] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -95,19 +94,23 @@ export default function Xray({ user, onLogout, onNavigate }) {
         updateUsageAfterAnalysis(result.usage);
       }
 
-      let censoredName = "";
-      if (patientName.trim()) {
-        const parts = patientName.trim().split(" ");
-        censoredName = parts
-          .map((p) => (p.length > 2 ? p.substring(0, 3) + "***" : p))
-          .join(" ");
+      let initials = "";
+      if (user?.name) {
+        initials = user.name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .substring(0, 3)
+          .toUpperCase();
+      } else if (user?.email) {
+        initials = user.email.substring(0, 3).toUpperCase();
       }
 
       try {
         await addHistoryEntry(user.uid, {
           type: "xray",
           fileName: files[0].name,
-          patientName: censoredName,
+          patientName: initials, // Using initials for history log
           result: result.reply,
         });
       } catch (historyErr) {
@@ -226,23 +229,6 @@ export default function Xray({ user, onLogout, onNavigate }) {
         </div>
 
         <div className="bg-[#111624]/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.4)] p-10 border border-white/5 relative overflow-hidden">
-          <div className="mb-8">
-            <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-[0.1em]">
-              Identificação do Paciente (Opcional)
-            </label>
-            <input
-              type="text"
-              placeholder="Ex: João da Silva"
-              value={patientName}
-              onChange={(e) => setPatientName(e.target.value)}
-              className="w-full border border-white/10 bg-[#060913] text-white hover:bg-white/5 focus:bg-[#060913] rounded-2xl p-4 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all placeholder-slate-600 shadow-inner"
-            />
-            <p className="text-xs text-slate-500 mt-2 ml-1">
-              Para sua organização. O nome será censurado no histórico (ex:
-              Joã***).
-            </p>
-          </div>
-
           {/* Formulário Principal (Obrigatórios) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>

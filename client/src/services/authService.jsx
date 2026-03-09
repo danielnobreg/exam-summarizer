@@ -9,7 +9,8 @@ import {
 import { auth } from "../config/firebaseConfig";
 import { getUserData } from "./userService";
 
-const API_URL = process.env.REACT_APP_API_URL;
+// const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = "http://localhost:5000";
 
 export async function authFetch(path, options = {}) {
   const user = auth.currentUser;

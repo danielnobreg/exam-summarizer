@@ -77,10 +77,10 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
   };
 
   // Cores unificadas para fundos escuros no topo, e fundo claro com scroll e menu mobile
-  const navBackground = isMobileMenuOpen
-    ? "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100"
-    : isScrolled
-      ? "bg-white/80 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/60"
+  // Cores unificadas para fundos escuros no topo, e fundo claro com scroll e menu mobile
+  const navBackground =
+    isMobileMenuOpen || isScrolled
+      ? "bg-white/95 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/60"
       : "bg-white/5 backdrop-blur-md border border-white/10";
 
   const textColor =
@@ -92,7 +92,7 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
 
   return (
     <nav
-      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-[999] transition-all duration-500 ${isMobileMenuOpen ? "rounded-[2rem]" : "rounded-full"} ${navBackground}`}
+      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-[999] transition-all duration-500 rounded-full ${navBackground}`}
     >
       <div className="px-6 md:px-8">
         <div className="flex justify-between items-center h-16">
@@ -311,12 +311,13 @@ const Navbar = ({ user, onNavigate, onLogout, isLanding = false }) => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className={`md:hidden border-b overflow-hidden bg-white border-gray-100 shadow-xl`}
+            initial={{ opacity: 0, scale: 0.95, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className={`absolute top-full left-0 w-full mt-2 md:hidden bg-white/95 backdrop-blur-xl border border-gray-100 shadow-2xl rounded-3xl overflow-hidden origin-top`}
           >
-            <div className="px-4 pt-2 pb-6 space-y-1">
+            <div className="px-4 py-4 space-y-1">
               <button
                 onClick={() => handleNavigate("home")}
                 className={`block w-full text-left px-4 py-3 text-base font-bold rounded-xl transition-colors text-slate-900 hover:bg-slate-50`}

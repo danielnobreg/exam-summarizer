@@ -2,7 +2,8 @@ const { admin, db } = require('../config/firebaseAdmin');
 
 exports.createUser = async (req, res) => {
   try {
-    const { email, name, dailyLimit } = req.body;
+    const { name, email, customPassword } = req.body;
+    let { dailyLimit } = req.body;
     
     // quem criou esse usuário foi o admin logado, a gente pega o id dele do token
     const createdBy = req.user.uid;
@@ -11,9 +12,9 @@ exports.createUser = async (req, res) => {
     if (!email || !name) {
       return res.status(400).json({ error: 'Preencha todos os campos obrigatórios' });
     }
-
-    if (dailyLimit && dailyLimit > 10) {
-      return res.status(400).json({ error: 'O limite diário máximo permitido para novos perfis é 10' });
+    dailyLimit = dailyLimit || 20;
+    if (dailyLimit > 20) {
+      return res.status(400).json({ error: 'O limite diário máximo permitido para novos perfis é 20' });
     }
 
     // Gera uma senha aleatória extremamente forte e irreversível
@@ -116,5 +117,82 @@ exports.deleteUser = async (req, res) => {
     }
     
     res.status(500).json({ error: 'Erro interno ao excluir o usuário.' });
+  }
+};
+
+exports.getGlobalHistory = async (req, res) => {
+  try {
+    const usersSnapshot = await db.collection('users').get();
+    const allHistory = [];
+
+    // Busca até 20 itens por usuário para evitar sobrecarga
+    for (const userDoc of usersSnapshot.docs) {
+      const userData = userDoc.data();
+      const historySnapshot = await db.collection('users').doc(userDoc.id).collection('history')
+        .orderBy('createdAt', 'desc').limit(20).get();
+
+      historySnapshot.forEach(docSnap => {
+        allHistory.push({
+          id: docSnap.id,
+          userId: userDoc.id,
+          userEmail: userData.email || 'N/A',
+          userName: userData.name || 'N/A',
+          ...docSnap.data()
+        });
+      });
+    }
+
+    // Ordenação global por data decrescente
+    allHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // Retorna os 100 mais recentes
+    res.status(200).json({ history: allHistory.slice(0, 100) });
+  } catch (error) {
+    console.error('Erro ao buscar histórico global:', error);
+    res.status(500).json({ error: 'Erro ao buscar histórico global' });
+  }
+};
+
+exports.undoHistoryItem = async (req, res) => {
+  try {
+    const { userId, historyId } = req.params;
+
+    const historyRef = db.collection('users').doc(userId).collection('history').doc(historyId);
+    const historyDoc = await historyRef.get();
+
+    if (!historyDoc.exists) {
+      return res.status(404).json({ error: 'Histórico não encontrado' });
+    }
+
+    const historyData = historyDoc.data();
+    const createdAtDate = historyData.createdAt ? historyData.createdAt.split('T')[0] : null;
+
+    // Deleta o documento do histórico
+    await historyRef.delete();
+
+    // Reembolsa um uso se tiver sido criado hoje
+    const userRef = db.collection('users').doc(userId);
+    const userDoc = await userRef.get();
+    
+    let refunded = false;
+    
+    if (userDoc.exists) {
+      const userData = userDoc.data();
+      const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(new Date());
+      
+      // Se usou hoje e dailyUsage > 0, decrementa
+      if (userData.lastUsageDate === today && createdAtDate === today && (userData.dailyUsage || 0) > 0) {
+        const adminFirebase = require('firebase-admin');
+        await userRef.update({
+          dailyUsage: adminFirebase.firestore.FieldValue.increment(-1)
+        });
+        refunded = true;
+      }
+    }
+
+    res.status(200).json({ success: true, refunded });
+  } catch (error) {
+    console.error('Erro ao fazer undo do history:', error);
+    res.status(500).json({ error: 'Erro ao reverter histórico e reembolsar uso' });
   }
 };

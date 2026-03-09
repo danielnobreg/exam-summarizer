@@ -110,9 +110,42 @@ export async function getSystemPrompt(examType) {
 export async function updateSystemPrompt(examType, promptText) {
   try {
     const docRef = doc(db, "system", "prompts");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists() && docSnap.data()[examType]) {
+      const current = docSnap.data()[examType];
+      if (current !== promptText) {
+        await setDoc(
+          docRef,
+          { [`${examType}_previous`]: current },
+          { merge: true },
+        );
+      }
+    }
     await setDoc(docRef, { [examType]: promptText }, { merge: true });
   } catch (error) {
     console.error("Erro ao salvar prompt master:", error);
+    throw error;
+  }
+}
+
+export async function undoSystemPrompt(examType) {
+  try {
+    const docRef = doc(db, "system", "prompts");
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists() && docSnap.data()[`${examType}_previous`]) {
+      const prev = docSnap.data()[`${examType}_previous`];
+      const current = docSnap.data()[examType];
+      // Revert para o anterior, e o "anterior" vira o atual (flip para permitir refazer)
+      await setDoc(
+        docRef,
+        { [examType]: prev, [`${examType}_previous`]: current },
+        { merge: true },
+      );
+      return prev;
+    }
+    return null;
+  } catch (error) {
+    console.error("Erro ao desfazer prompt master:", error);
     throw error;
   }
 }

@@ -14,7 +14,7 @@ async function executeWithUsageLimit(req, res, next, analysisCallback) {
 
     // Administrador passa livremente
     if (userData.isAdmin) {
-      const analysis = await analysisCallback();
+      const analysis = await analysisCallback(userData);
       return res.json({
         reply: analysis,
         usage: { unlimited: true, canUse: true },
@@ -35,7 +35,7 @@ async function executeWithUsageLimit(req, res, next, analysisCallback) {
     }
 
     // Executa a chamada real para a IA
-    const analysis = await analysisCallback();
+    const analysis = await analysisCallback(userData);
 
     const newUsage = userData.lastUsageDate === today ? currentUsage + 1 : 1;
 
@@ -112,11 +112,18 @@ exports.analyzeHemogram = async (req, res, next) => {
     return res.status(400).json({ error: "message é obrigatório" });
   }
 
-  await executeWithUsageLimit(req, res, next, async () => {
+  await executeWithUsageLimit(req, res, next, async (userData) => {
     const redactedMessage = sanitizePII(message);
     const customInstruction = await getCustomInstruction(req.user.uid, 'hemogram');
     const systemInstruction = await getSystemInstruction('hemogram');
-    return await geminiService.generateAnalysis(redactedMessage, customInstruction || systemInstruction);
+    
+    let combinedInstruction = customInstruction 
+      ? `${systemInstruction}\n\n--- INSTRUÇÕES ADICIONAIS DO USUÁRIO ---\n${customInstruction}`
+      : systemInstruction;
+
+    combinedInstruction += `\n\nATENÇÃO: Adicione obrigatoriamente uma seção no início ou final chamada "🚨 ALERTA DE URGÊNCIA" fazendo cruzamento detalhado de dados, valores de referência e destacando riscos iminentes ou achados críticos. Se não houver urgência, diga que os alertas são baixos mas evidencie o raciocínio clínico.`;
+
+    return await geminiService.generateAnalysis(redactedMessage, combinedInstruction);
   });
 };
 
@@ -127,11 +134,18 @@ exports.analyzeXray = async (req, res, next) => {
     return res.status(400).json({ error: "promptText e images (array) são obrigatórios" });
   }
 
-  await executeWithUsageLimit(req, res, next, async () => {
+  await executeWithUsageLimit(req, res, next, async (userData) => {
     const redactedMessage = sanitizePII(promptText);
     const customInstruction = await getCustomInstruction(req.user.uid, 'xray');
     const systemInstruction = await getSystemInstruction('xray');
-    return await geminiService.generateXrayAnalysis(redactedMessage, images, customInstruction || systemInstruction);
+    
+    let combinedInstruction = customInstruction 
+      ? `${systemInstruction}\n\n--- INSTRUÇÕES ADICIONAIS DO USUÁRIO ---\n${customInstruction}`
+      : systemInstruction;
+
+    combinedInstruction += `\n\nATENÇÃO: Adicione obrigatoriamente uma seção no início ou final chamada "🚨 ALERTA DE URGÊNCIA" fazendo cruzamento detalhado de dados, valores de referência e destacando riscos iminentes ou achados críticos. Se não houver urgência, diga que os alertas são baixos mas evidencie o raciocínio clínico.`;
+
+    return await geminiService.generateXrayAnalysis(redactedMessage, images, combinedInstruction);
   });
 };
 
@@ -142,10 +156,17 @@ exports.analyzeECG = async (req, res, next) => {
     return res.status(400).json({ error: "promptText é obrigatório" });
   }
 
-  await executeWithUsageLimit(req, res, next, async () => {
+  await executeWithUsageLimit(req, res, next, async (userData) => {
     const redactedMessage = sanitizePII(promptText);
     const customInstruction = await getCustomInstruction(req.user.uid, 'ecg');
     const systemInstruction = await getSystemInstruction('ecg');
-    return await geminiService.generateECGAnalysis(redactedMessage, images, customInstruction || systemInstruction);
+    
+    let combinedInstruction = customInstruction 
+      ? `${systemInstruction}\n\n--- INSTRUÇÕES ADICIONAIS DO USUÁRIO ---\n${customInstruction}`
+      : systemInstruction;
+
+    combinedInstruction += `\n\nATENÇÃO: Adicione obrigatoriamente uma seção no início ou final chamada "🚨 ALERTA DE URGÊNCIA" fazendo cruzamento detalhado de dados, valores de referência e destacando riscos iminentes ou achados críticos. Se não houver urgência, diga que os alertas são baixos mas evidencie o raciocínio clínico.`;
+
+    return await geminiService.generateECGAnalysis(redactedMessage, images, combinedInstruction);
   });
 };

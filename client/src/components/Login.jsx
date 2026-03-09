@@ -3,6 +3,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import * as authService from "../services/authService";
 import TermsModal from "./TermsModal";
 import {
+  ArrowLeft,
   ArrowRight,
   Mail,
   Lock,
@@ -108,6 +109,15 @@ export default function Login({ onLoginSuccess, onNavigate }) {
     <div className="min-h-screen bg-[#0B0F19] font-manrope flex flex-col text-white">
       <div className="flex-1 flex items-center justify-center p-4 pt-20">
         <div className="bg-[#111624] rounded-[2.5rem] shadow-2xl p-8 md:p-10 w-full max-w-md border border-white/5 relative overflow-hidden">
+          {/* Botão de Voltar */}
+          <button
+            onClick={() => onNavigate("home")}
+            className="absolute top-6 left-6 p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors group z-10"
+            title="Voltar ao Início"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+          </button>
+
           {/* Decorative blob */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] -z-10 translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
 

@@ -11,6 +11,15 @@ export default function ResetPassword({ oobCode, onNavigateLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const requirements = [
+    { label: "Pelo menos 8 caracteres", met: newPassword.length >= 8 },
+    { label: "1 Letra maiúscula", met: /[A-Z]/.test(newPassword) },
+    { label: "1 Número", met: /\d/.test(newPassword) },
+    { label: "1 Símbolo (!@#$%, etc)", met: /\W/.test(newPassword) },
+  ];
+
+  const allReqsMet = requirements.every((r) => r.met);
+
   const handleReset = async () => {
     setError("");
 
@@ -134,6 +143,24 @@ export default function ResetPassword({ oobCode, onNavigateLogin }) {
                     )}
                   </button>
                 </div>
+
+                {/* Checklist Visual */}
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
+                  {requirements.map((req, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      {req.met ? (
+                        <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
+                      ) : (
+                        <div className="w-4 h-4 rounded-full border border-slate-600 flex-shrink-0"></div>
+                      )}
+                      <span
+                        className={`text-xs ${req.met ? "text-green-400 font-medium" : "text-slate-500"}`}
+                      >
+                        {req.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div>
@@ -176,7 +203,9 @@ export default function ResetPassword({ oobCode, onNavigateLogin }) {
 
               <button
                 onClick={handleReset}
-                disabled={loading}
+                disabled={
+                  loading || !allReqsMet || newPassword !== confirmPassword
+                }
                 className="w-full bg-indigo-600 text-white py-4 vector-btn rounded-xl font-bold hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] hover:-translate-y-1 flex items-center justify-center gap-2"
               >
                 {loading ? (

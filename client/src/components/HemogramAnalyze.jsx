@@ -12,7 +12,6 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState("");
   const [error, setError] = useState("");
-  const [patientName, setPatientName] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -92,19 +91,23 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
         updateUsageAfterAnalysis(result.usage);
       }
 
-      let censoredName = "";
-      if (patientName.trim()) {
-        const parts = patientName.trim().split(" ");
-        censoredName = parts
-          .map((p) => (p.length > 2 ? p.substring(0, 3) + "***" : p))
-          .join(" ");
+      let initials = "";
+      if (user?.name) {
+        initials = user.name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .substring(0, 3)
+          .toUpperCase();
+      } else if (user?.email) {
+        initials = user.email.substring(0, 3).toUpperCase();
       }
 
       try {
         await addHistoryEntry(user.uid, {
           type: "hemogram",
           fileName: file.name,
-          patientName: censoredName,
+          patientName: initials,
           result: result.reply,
         });
       } catch (historyErr) {
@@ -320,7 +323,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
             Análise Laboratorial
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Faça o upload do PDF dos seus exames e obtenha um resumo detalhado
+            Faça o upload do PDF dos seus exames e obtenha um resumo detalado
             com inteligência artificial.
           </p>
         </div>
@@ -330,23 +333,6 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
           {/* Blob decorativo de fundo */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl -z-10 opacity-50 translate-x-1/2 -translate-y-1/2"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-50 rounded-full blur-3xl -z-10 opacity-50 -translate-x-1/2 translate-y-1/2"></div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wide">
-              Identificação do Paciente (Opcional)
-            </label>
-            <input
-              type="text"
-              placeholder="Ex: João da Silva"
-              value={patientName}
-              onChange={(e) => setPatientName(e.target.value)}
-              className="w-full border border-white/10 bg-[#060913] text-white hover:bg-white/5 focus:bg-[#060913] rounded-2xl p-4 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none transition-all placeholder-slate-600"
-            />
-            <p className="text-xs text-slate-500 mt-2 ml-1">
-              Para sua organização. O nome será censurado no histórico (ex:
-              Joã***).
-            </p>
-          </div>
 
           <div className="mb-8">
             <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wide">

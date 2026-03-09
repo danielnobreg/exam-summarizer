@@ -24,3 +24,20 @@ export async function deleteUser(userId) {
   });
   return data;
 }
+
+export async function getGlobalHistory() {
+  const data = await authFetch("/api/admin/global-history", {
+    method: "GET",
+  });
+  return data.history;
+}
+
+export async function undoHistoryItem(userId, historyId) {
+  const data = await authFetch(
+    `/api/admin/global-history/${userId}/${historyId}`,
+    {
+      method: "DELETE",
+    },
+  );
+  return data;
+}

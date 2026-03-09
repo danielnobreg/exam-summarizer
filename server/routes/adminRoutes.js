@@ -12,4 +12,8 @@ router.get('/list-users', authMiddleware, requireAdmin, adminController.listUser
 // rota protegida — somente admin pode apagar usuários
 router.delete('/delete-user/:id', authMiddleware, requireAdmin, adminController.deleteUser);
 
+// histórico global
+router.get('/global-history', authMiddleware, requireAdmin, adminController.getGlobalHistory);
+router.delete('/global-history/:userId/:historyId', authMiddleware, requireAdmin, adminController.undoHistoryItem);
+
 module.exports = router;

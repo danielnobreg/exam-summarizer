@@ -11,6 +11,7 @@ import Settings from './components/Settings';
 import CustomCursor from './components/CustomCursor';
 import ResetPassword from './components/ResetPassword';
 import * as authService from './services/authService';
+import { Droplet } from 'lucide-react';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('home');
@@ -58,8 +59,19 @@ export default function App() {
   const renderScreen = () => {
     if (loading) {
       return (
-        <div className="min-h-screen flex items-center justify-center">
-          <p>Carregando...</p>
+        <div className="min-h-screen bg-[#0B0F19] flex flex-col items-center justify-center font-manrope">
+          <div className="relative mb-6">
+            <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse delay-75"></div>
+            <div className="relative outline outline-white/5 bg-gradient-to-br from-white/10 to-transparent p-4 rounded-3xl shadow-2xl backdrop-blur-md animate-pulse">
+              <Droplet className="h-12 w-12 text-blue-500" />
+            </div>
+          </div>
+          <p className="text-white font-extrabold text-xl tracking-wide uppercase mt-4 shadow-blue-500/50">iXamina</p>
+          <div className="flex items-center gap-2 mt-3">
+             <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce"></div>
+             <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+             <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
         </div>
       );
     }

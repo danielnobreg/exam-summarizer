@@ -1,22 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  ArrowRight,
-  ShieldCheck,
   Activity,
-  BrainCircuit,
-  Syringe,
   HeartPulse,
+  Syringe,
   Lock,
+  Zap,
+  Sparkles,
+  ArrowRight,
+  BrainCircuit,
   CheckCircle2,
   ChevronDown,
-  Sparkles,
-  Zap,
+  ShieldCheck,
 } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { getUserData } from "../services/userService";
+
+const LungsIcon = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M12 2v4M8 6h8M6 8c-2.5 0-4 2-4 5s1.5 8 4 8c1.5 0 2.5-1 4-3v-5c0-1.5-1.5-2.5-3-2V8zM18 8c2.5 0 4 2 4 5s-1.5 8-4 8c-1.5 0-2.5-1-4-3v-5c0-1.5 1.5-2.5 3-2V8z" />
+  </svg>
+);
 
 // --- Utilitários de Animação ---
 const FadeIn = ({
@@ -86,8 +101,8 @@ const Hero = ({ onCtaClick, onScrollToModules }) => {
         <FadeIn delay={0.4}>
           <p className="text-xl md:text-2xl text-slate-400 mb-12 leading-relaxed font-light max-w-3xl">
             O iXamina processa exames laboratoriais e de imagem em segundos,
-            extraindo achados clínicos estruturados com precisão absurda e zero
-            retenção de dados sensíveis.
+            extraindo achados clínicos estruturados com precisão e zero retenção
+            de dados sensíveis.
           </p>
         </FadeIn>
 
@@ -130,7 +145,7 @@ const Methodology = () => {
             </h3>
             <p className="text-lg text-slate-400">
               Desenhado meticulosamente para acelerar fluxos clínicos sem abrir
-              mão da precisão médica.
+              mão da acurácia.
             </p>
           </FadeIn>
         </div>
@@ -150,8 +165,8 @@ const Methodology = () => {
                 </h4>
                 <p className="text-slate-400 text-lg leading-relaxed relative z-10">
                   O motor cruza dados identificando gatilhos que exigiriam
-                  checagem manual, reduzindo o tempo de triagem
-                  significativamente com alta precisão.
+                  checagem manual - reduzindo o tempo de triagem
+                  significativamente.
                 </p>
               </div>
             </div>
@@ -169,9 +184,8 @@ const Methodology = () => {
                   Arquitetura Ultra-rápida
                 </h4>
                 <p className="text-slate-400 text-lg leading-relaxed relative z-10">
-                  Respostas de alta complexidade em menos de 3 segundos,
-                  processando laudos extensos em tempo recorde para garantir
-                  agilidade.
+                  Respostas de alta complexidade em segundos, processando laudos
+                  extensos para garantir agilidade.
                 </p>
               </div>
             </div>
@@ -216,9 +230,9 @@ const AvailableModules = ({ onNavigate, user }) => {
     },
     {
       id: "xray",
-      icon: <Activity className="h-10 w-10 text-cyan-400" />,
+      icon: <LungsIcon className="h-10 w-10 text-cyan-400" />,
       title: "Raio-X de Tórax",
-      desc: "Análise assistida para opacidades pleurais, silhueta cardíaca e desvios radiológicos.",
+      desc: "Análise assistida para reconhecer padrões e desvios radiológicos.",
       gradient: "from-cyan-500/20 to-blue-500/5",
       borderHover: "hover:border-cyan-500/50",
       btnHighlight:
@@ -228,7 +242,7 @@ const AvailableModules = ({ onNavigate, user }) => {
       id: "ecg",
       icon: <HeartPulse className="h-10 w-10 text-amber-500" />,
       title: "Eletrocardiograma",
-      desc: "Rastreio paramétrico de intervalos, eixos ventriculares e isquemias a partir de imagens ou PDFs.",
+      desc: "Análise inteligente de ECG com triagem automatizada e rastreamento avançado.",
       gradient: "from-amber-500/20 to-yellow-500/5",
       borderHover: "hover:border-amber-500/50",
       btnHighlight:
@@ -254,7 +268,7 @@ const AvailableModules = ({ onNavigate, user }) => {
           <FadeIn delay={0.2} className="max-w-lg">
             <p className="text-slate-400 text-lg">
               Os módulos do iXamina são construídos sobre guardrails clínicos
-              restritos, garantindo precisão documental.
+              restritos, garantindo os limites técnicos, éticos e legais.
             </p>
           </FadeIn>
         </div>
@@ -429,11 +443,7 @@ const Pricing = ({ user, userData, onNavigateLogin }) => {
                   </div>
                   <div className="flex items-center text-sm text-slate-300">
                     <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 flex-shrink-0" />{" "}
-                    Total Controle dos Prompts da Nossa IA
-                  </div>
-                  <div className="flex items-center text-sm text-slate-300">
-                    <CheckCircle2 className="w-5 h-5 text-blue-400 mr-3 flex-shrink-0" />{" "}
-                    Dashboard & Log History
+                    Análise Clínica & Alertas de Urgências
                   </div>
                 </div>
 
@@ -468,8 +478,9 @@ const Pricing = ({ user, userData, onNavigateLogin }) => {
                     iXamina PRO
                   </h4>
                   <p className="text-slate-300 text-lg mb-12 max-w-sm relative z-10">
-                    O poder absoluto para a sua clínica. Obtenha segurança
-                    total, restauração avançada e limites estendidos.
+                    O poder absoluto para a sua clínica. Tenha maior capacidade
+                    de processamento e ferramentas exclusivas para otimizar seu
+                    fluxo de trabalho.
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 mb-14 relative z-10">
@@ -488,6 +499,14 @@ const Pricing = ({ user, userData, onNavigateLogin }) => {
                     <div className="flex items-center text-sm md:text-base text-slate-200">
                       <CheckCircle2 className="w-6 h-6 text-indigo-400 mr-4 flex-shrink-0" />
                       Limites Estendidos
+                    </div>
+                    <div className="flex items-center text-sm md:text-base text-slate-200">
+                      <CheckCircle2 className="w-6 h-6 text-indigo-400 mr-4 flex-shrink-0" />
+                      Total Controle dos Prompts da Nossa IA
+                    </div>
+                    <div className="flex items-center text-sm md:text-base text-slate-200">
+                      <CheckCircle2 className="w-6 h-6 text-indigo-400 mr-4 flex-shrink-0" />
+                      Dashboard & Histórico de Análises
                     </div>
                   </div>
                 </div>
@@ -519,7 +538,7 @@ const FAQ = () => {
   const faqs = [
     {
       q: "A inteligência artificial substitui o diagnóstico médico?",
-      a: "Não. A plataforma atua exclusivamente como ferramenta de apoio à decisão clínica. Nossas análises focam na estruturação e facilitação da leitura de exames, mas o parecer final, a conduta e o diagnóstico contínuo devem sempre partir do profissional de saúde devidamente habilitado.",
+      a: "Não. A plataforma atua exclusivamente como ferramenta de apoio à decisão clínica. Nossas análises focam na estruturação e facilitação da leitura de exames, mas o parecer final, diagnóstico e conduta devem sempre partir do profissional de saúde devidamente habilitado.",
     },
     {
       q: "Meus dados e os exames enviados estão seguros?",

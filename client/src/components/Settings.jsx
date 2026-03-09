@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { ArrowLeft, Save, RotateCcw, MessageSquare } from "lucide-react";
-import {
-  getCustomPrompt,
-  setCustomPrompt,
-  getSystemPrompt,
-} from "../services/userService";
+import { getCustomPrompt, setCustomPrompt } from "../services/userService";
 
 const EXAM_TYPES = [
   { id: "hemogram", label: "Laboratorial", icon: "🩸" },
@@ -17,11 +13,6 @@ const EXAM_TYPES = [
 export default function Settings({ user, onLogout, onNavigate }) {
   const [activeTab, setActiveTab] = useState("hemogram");
   const [prompts, setPrompts] = useState({ hemogram: "", xray: "", ecg: "" });
-  const [systemPrompts, setSystemPrompts] = useState({
-    hemogram: "",
-    xray: "",
-    ecg: "",
-  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
@@ -35,22 +26,11 @@ export default function Settings({ user, onLogout, onNavigate }) {
           getCustomPrompt(user.uid, "xray"),
           getCustomPrompt(user.uid, "ecg"),
         ]);
-        const [sysHemo, sysRx, sysEco] = await Promise.all([
-          getSystemPrompt("hemogram"),
-          getSystemPrompt("xray"),
-          getSystemPrompt("ecg"),
-        ]);
-
-        setSystemPrompts({
-          hemogram: sysHemo || "Instrução do Hemograma",
-          xray: sysRx || "Instrução do Raio-X",
-          ecg: sysEco || "Instrução do ECG",
-        });
 
         setPrompts({
-          hemogram: hemo || sysHemo || "Instruções do Hemograma",
-          xray: rx || sysRx || "Instruções do Raio-X",
-          ecg: eco || sysEco || "Instruções do ECG",
+          hemogram: hemo || "",
+          xray: rx || "",
+          ecg: eco || "",
         });
       } catch (err) {
         console.error("Erro ao carregar prompts", err);
@@ -78,7 +58,7 @@ export default function Settings({ user, onLogout, onNavigate }) {
   const handleReset = async () => {
     if (
       !window.confirm(
-        "Deseja restaurar as instruções originais da iXamina para este exame?",
+        "Deseja remover suas instruções personalizadas e voltar ao modelo original do sistema?",
       )
     )
       return;
@@ -87,11 +67,11 @@ export default function Settings({ user, onLogout, onNavigate }) {
       await setCustomPrompt(user.uid, activeTab, "");
       setPrompts((prev) => ({
         ...prev,
-        [activeTab]: systemPrompts[activeTab],
+        [activeTab]: "",
       }));
       setMessage({
         type: "success",
-        text: "Prompt restaurado para o original da iXamina.",
+        text: "Customizações removidas. Usando o original da iXamina.",
       });
       setTimeout(() => setMessage({ type: "", text: "" }), 3000);
     } catch (err) {
@@ -168,17 +148,17 @@ export default function Settings({ user, onLogout, onNavigate }) {
                   </span>
                 </h2>
                 <p className="text-sm text-slate-400 mt-2 leading-relaxed">
-                  Escreva aqui como você quer que o laudo saia. Seja claro e
-                  inclua um modelo ou estrutura se necessário. Deixe este campo
-                  em branco se quiser usar a configuração estruturada original
-                  da iXamina.
+                  Escreva aqui regras e comandos adicionais para a IA incorporar
+                  nos laudos desse módulo. Essas regras são exclusivas do seu
+                  usuário e se juntarão às instruções rigorosas do sistema.
+                  Deixe vazio caso não queira personalizar nada.
                 </p>
               </div>
 
               <div className="flex-1 relative group">
                 <textarea
                   className="w-full h-full min-h-[300px] p-4 text-slate-300 font-mono text-sm bg-[#060913]/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-[#060913] transition-all outline-none resize-none custom-scrollbar"
-                  placeholder="Carregando instrução..."
+                  placeholder="Ex: 'Sempre faça um resumo em tópicos no final...' ou 'Não forneça interpretações diretas, apenas liste os achados...'"
                   value={prompts[activeTab]}
                   onChange={(e) =>
                     setPrompts((prev) => ({
@@ -209,13 +189,11 @@ export default function Settings({ user, onLogout, onNavigate }) {
               <div className="mt-6 flex flex-col-reverse md:flex-row justify-end gap-4 border-t border-white/5 pt-6">
                 <button
                   onClick={handleReset}
-                  disabled={
-                    saving || prompts[activeTab] === systemPrompts[activeTab]
-                  }
+                  disabled={saving || !prompts[activeTab]}
                   className="px-6 py-2.5 flex items-center justify-center gap-2 text-sm font-bold text-slate-300 border border-white/10 bg-white/5 rounded-xl hover:bg-white/10 transition-colors disabled:opacity-50"
                 >
                   <RotateCcw className="w-4 h-4" />
-                  Restaurar Original
+                  Limpar Regras
                 </button>
                 <button
                   onClick={handleSave}

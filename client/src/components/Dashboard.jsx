@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from "react";
 import {
   Activity,
-  Syringe,
-  HeartPulse,
   History,
   Settings,
-  ShieldCheck,
+  Syringe,
+  HeartPulse,
   ChevronRight,
-  BrainCircuit,
+  ShieldCheck,
   Lock,
+  BrainCircuit,
 } from "lucide-react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { getUserData, getUserHistory } from "../services/userService";
 import { renderFormattedText } from "../utils/formatters";
 
+// Ícone Customizado de Pulmão
 const LungsIcon = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -28,9 +27,7 @@ const LungsIcon = ({ className }) => (
     strokeLinejoin="round"
     className={className}
   >
-    <path d="M12 2v4" />
-    <path d="M12 5v11c0 2-1.5 4-3.5 4C6 20 4 17.5 3.5 14c-.5-3.5 1-7 4-8l4.5-1z" />
-    <path d="M12 5v11c0 2 1.5 4 3.5 4C18 20 20 17.5 20.5 14c.5-3.5-1-7-4-8L12 5z" />
+    <path d="M12 2v4M8 6h8M6 8c-2.5 0-4 2-4 5s1.5 8 4 8c1.5 0 2.5-1 4-3v-5c0-1.5-1.5-2.5-3-2V8zM18 8c2.5 0 4 2 4 5s-1.5 8-4 8c-1.5 0-2.5-1-4-3v-5c0-1.5 1.5-2.5 3-2V8z" />
   </svg>
 );
 
@@ -40,6 +37,17 @@ const Dashboard = ({ user, onNavigate, onLogout }) => {
   const [loading, setLoading] = useState(true);
   const [selectedResult, setSelectedResult] = useState(null);
   const [copySuccess, setCopySuccess] = useState(false);
+
+  useEffect(() => {
+    if (selectedResult) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedResult]);
 
   const handleCopy = () => {
     if (selectedResult?.result) {
@@ -80,9 +88,9 @@ const Dashboard = ({ user, onNavigate, onLogout }) => {
     },
     {
       id: "xray",
-      icon: <LungsIcon className="h-6 w-6 text-emerald-600" />,
-      title: "Raio-X",
-      desc: "Análise Torácica",
+      icon: <LungsIcon className="w-8 h-8 text-emerald-400" />,
+      title: "Raio-X de Tórax",
+      desc: "Reconhecimento de opacidades",
       color: "emerald",
     },
     {
@@ -115,7 +123,9 @@ const Dashboard = ({ user, onNavigate, onLogout }) => {
 
   return (
     <div className="min-h-screen bg-[#0B0F19] flex flex-col font-manrope">
-      <Navbar user={user} onNavigate={onNavigate} onLogout={onLogout} />
+      {!selectedResult && (
+        <Navbar user={user} onLogout={onLogout} onNavigate={onNavigate} />
+      )}
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full text-white">
         <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -290,7 +300,7 @@ const Dashboard = ({ user, onNavigate, onLogout }) => {
                           <Syringe className="w-5 h-5 text-blue-500" />
                         )}
                         {item.type === "xray" && (
-                          <Activity className="w-5 h-5 text-emerald-500" />
+                          <LungsIcon className="w-5 h-5 text-emerald-500" />
                         )}
                         {item.type === "ecg" && (
                           <HeartPulse className="w-5 h-5 text-indigo-500" />

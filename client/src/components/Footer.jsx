@@ -27,7 +27,7 @@ export default function Footer() {
                 </span>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
-                Revolucionando a análise de exames laboratoriais com
+                Revolucionando a análise clínica com
                 inteligência artificial. Rápido, preciso e seguro.
               </p>
             </div>
@@ -76,7 +76,7 @@ export default function Footer() {
               © 2026 iXamina. Todos os direitos reservados.
             </p>
             <div className="mt-4 md:mt-0 flex space-x-6 text-sm text-gray-500">
-              <span>Feito com ❤️ para sua saúde</span>
+              <span>Feito com ❤️ para a saúde</span>
             </div>
           </div>
         </div>

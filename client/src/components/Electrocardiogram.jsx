@@ -10,7 +10,6 @@ import { renderFormattedText } from "../utils/formatters";
 export default function Electrocardiogram({ user, onLogout, onNavigate }) {
   const [file, setFile] = useState(null);
   const [obs, setObs] = useState("");
-  const [patientName, setPatientName] = useState("");
   const [showMetadata, setShowMetadata] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -99,19 +98,23 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
         updateUsageAfterAnalysis(result.usage);
       }
 
-      let censoredName = "";
-      if (patientName.trim()) {
-        const parts = patientName.trim().split(" ");
-        censoredName = parts
-          .map((p) => (p.length > 2 ? p.substring(0, 3) + "***" : p))
-          .join(" ");
+      let initials = "";
+      if (user?.name) {
+        initials = user.name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .substring(0, 3)
+          .toUpperCase();
+      } else if (user?.email) {
+        initials = user.email.substring(0, 3).toUpperCase();
       }
 
       try {
         await addHistoryEntry(user.uid, {
           type: "ecg",
           fileName: file.name,
-          patientName: censoredName,
+          patientName: initials,
           result: result.reply,
         });
       } catch (historyErr) {
@@ -227,23 +230,6 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
         </div>
 
         <div className="bg-[#111624] rounded-[2rem] shadow-2xl p-8 border border-white/5 relative overflow-hidden">
-          <div className="mb-6">
-            <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wide">
-              Identificação do Paciente (Opcional)
-            </label>
-            <input
-              type="text"
-              placeholder="Ex: João da Silva"
-              value={patientName}
-              onChange={(e) => setPatientName(e.target.value)}
-              className="w-full border border-white/10 bg-[#060913] text-white hover:bg-white/5 focus:bg-[#060913] rounded-2xl p-4 text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all placeholder-slate-600 shadow-inner"
-            />
-            <p className="text-xs text-slate-500 mt-2 ml-1">
-              Para sua organização. O nome será censurado no histórico (ex:
-              Joã***).
-            </p>
-          </div>
-
           <div className="mb-8 bg-[#060913] rounded-2xl border border-white/5 overflow-hidden transition-all duration-300">
             <button
               onClick={() => setShowMetadata(!showMetadata)}

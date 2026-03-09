@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Navbar from "./Navbar";
 import * as adminService from "../services/adminService";
 import * as usageService from "../services/usageService";
 import * as authService from "../services/authService";
-import { getSystemPrompt, updateSystemPrompt } from "../services/userService";
+import {
+  getSystemPrompt,
+  updateSystemPrompt,
+  undoSystemPrompt,
+} from "../services/userService";
 import {
   ArrowLeft,
   Users,
   MessageSquare,
   Save,
   AlertCircle,
+  History,
+  Trash2,
 } from "lucide-react";
 
 function getInitials(name) {
@@ -81,6 +88,17 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
             <MessageSquare className="h-4 w-4" />
             Gerenciar Prompts
           </button>
+          <button
+            onClick={() => setActiveTab("history")}
+            className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+              activeTab === "history"
+                ? "bg-blue-600/20 text-blue-400 border border-blue-500/30 shadow-md"
+                : "text-slate-400 hover:bg-white/5 border border-transparent hover:border-white/10"
+            }`}
+          >
+            <History className="h-4 w-4" />
+            Histórico Global
+          </button>
         </div>
 
         {/* Content */}
@@ -89,6 +107,7 @@ export default function AdminPanel({ user, onLogout, onNavigate }) {
             <UsersTab currentUser={user} onModalChange={setIsModalOpen} />
           )}
           {activeTab === "prompts" && <PromptsTab />}
+          {activeTab === "history" && <GlobalHistoryTab />}
         </div>
       </div>
     </div>
@@ -157,9 +176,9 @@ function UsersTab({ currentUser, onModalChange }) {
       return;
     }
 
-    if (formData.dailyLimit > 10) {
+    if (Number(formData.dailyLimit) > 20) {
       setError(
-        "O limite diário não pode exceder 10 análises para garantir o desempenho.",
+        "O limite diário não pode exceder 20 análises para garantir o desempenho.",
       );
       return;
     }
@@ -204,8 +223,8 @@ function UsersTab({ currentUser, onModalChange }) {
 
   async function handleEditLimit(userId, currentLimit) {
     const newLimit = window.prompt(
-      "Digite o novo limite diário:",
-      currentLimit,
+      "Digite o novo limite diário:\nEx: 20 (Para usuários Pró/Basic), 5 (Mínimo recomendado)",
+      currentLimit || 20,
     );
     if (newLimit === null || newLimit === "") return;
 
@@ -216,8 +235,8 @@ function UsersTab({ currentUser, onModalChange }) {
       return;
     }
 
-    if (parsedLimit > 10) {
-      window.alert("O limite diário não pode exceder 10 análises.");
+    if (parsedLimit > 20) {
+      window.alert("O limite diário não pode exceder 20 análises.");
       return;
     }
 
@@ -351,7 +370,7 @@ function UsersTab({ currentUser, onModalChange }) {
 
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-2">
-                Limite Diário (Máx 10)
+                Limite Diário (Máx 20)
               </label>
               <input
                 type="number"
@@ -461,120 +480,123 @@ function UsersTab({ currentUser, onModalChange }) {
       )}
 
       {/* Modal Profile / Detalhes */}
-      {selectedUser && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex justify-center items-center z-50 p-4">
-          <div className="bg-[#111624] border border-white/5 rounded-3xl shadow-2xl w-full max-w-lg p-8 animate-scaleUp relative overflow-hidden">
-            <button
-              onClick={() => setSelectedUser(null)}
-              className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+      {selectedUser &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex justify-center items-center z-50 p-4">
+            <div className="bg-[#111624] border border-white/5 rounded-3xl shadow-2xl w-full max-w-lg p-8 animate-scaleUp relative overflow-hidden">
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
               >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
 
-            <div className="flex items-center mb-8">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-xl font-bold mr-4 shadow-[0_0_20px_rgba(59,130,246,0.5)] border border-white/10 uppercase">
-                {getInitials(selectedUser.name)}
+              <div className="flex items-center mb-8">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-xl font-bold mr-4 shadow-[0_0_20px_rgba(59,130,246,0.5)] border border-white/10 uppercase">
+                  {getInitials(selectedUser.name)}
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">
+                    {selectedUser.name}
+                  </h2>
+                  <p className="text-sm text-slate-400">{selectedUser.email}</p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white">
-                  {selectedUser.name}
-                </h2>
-                <p className="text-sm text-slate-400">{selectedUser.email}</p>
-              </div>
-            </div>
 
-            <div className="space-y-4 mb-8">
-              <div className="bg-[#060913] p-4 rounded-xl border border-white/5 flex justify-between items-center">
-                <div className="text-sm text-slate-400">Limite Diário</div>
-                <div className="flex gap-4 items-center">
-                  <div className="font-bold text-white">
-                    {selectedUser.dailyLimit || 5}
+              <div className="space-y-4 mb-8">
+                <div className="bg-[#060913] p-4 rounded-xl border border-white/5 flex justify-between items-center">
+                  <div className="text-sm text-slate-400">Limite Diário</div>
+                  <div className="flex gap-4 items-center">
+                    <div className="font-bold text-white">
+                      {selectedUser.dailyLimit || 5}
+                    </div>
+                    <button
+                      onClick={() =>
+                        handleEditLimit(
+                          selectedUser.id,
+                          selectedUser.dailyLimit || 5,
+                        )
+                      }
+                      disabled={actionLoading}
+                      className="text-xs font-bold text-blue-400 hover:text-white uppercase p-1 underline disabled:opacity-50"
+                    >
+                      Editar Limite
+                    </button>
                   </div>
-                  <button
-                    onClick={() =>
-                      handleEditLimit(
-                        selectedUser.id,
-                        selectedUser.dailyLimit || 5,
-                      )
-                    }
-                    disabled={actionLoading}
-                    className="text-xs font-bold text-blue-400 hover:text-white uppercase p-1 underline disabled:opacity-50"
-                  >
-                    Editar Limite
-                  </button>
+                </div>
+
+                <div className="bg-[#060913] p-4 rounded-xl border border-white/5 flex justify-between items-center">
+                  <div className="text-sm text-slate-400">Uso no Dia Atual</div>
+                  <div className="flex gap-4 items-center">
+                    <span
+                      className={`inline-flex px-2 py-1 rounded text-xs font-bold border ${
+                        (selectedUser.dailyUsage || 0) >=
+                        (selectedUser.dailyLimit || 5)
+                          ? "bg-red-500/10 text-red-400 border-red-500/20"
+                          : "bg-green-500/10 text-green-400 border-green-500/20"
+                      }`}
+                    >
+                      {selectedUser.dailyUsage || 0}/
+                      {selectedUser.dailyLimit || 5}
+                    </span>
+                    <button
+                      onClick={() =>
+                        handleResetUsage(selectedUser.id, selectedUser.name)
+                      }
+                      disabled={actionLoading}
+                      className="text-xs font-bold text-slate-400 hover:text-white uppercase p-1"
+                    >
+                      Resetar Uso
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-[#060913] p-4 rounded-xl border border-white/5 flex justify-between items-center">
+                  <div className="text-sm text-slate-400">Último Acesso</div>
+                  <div className="font-medium text-white text-sm">
+                    {selectedUser.lastUsageDate ? (
+                      <>Data: {selectedUser.lastUsageDate}</>
+                    ) : (
+                      <span className="text-slate-500">Nunca utilizou</span>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-[#060913] p-4 rounded-xl border border-white/5 flex justify-between items-center">
-                <div className="text-sm text-slate-400">Uso no Dia Atual</div>
-                <div className="flex gap-4 items-center">
-                  <span
-                    className={`inline-flex px-2 py-1 rounded text-xs font-bold border ${
-                      (selectedUser.dailyUsage || 0) >=
-                      (selectedUser.dailyLimit || 5)
-                        ? "bg-red-500/10 text-red-400 border-red-500/20"
-                        : "bg-green-500/10 text-green-400 border-green-500/20"
-                    }`}
-                  >
-                    {selectedUser.dailyUsage || 0}/
-                    {selectedUser.dailyLimit || 5}
-                  </span>
-                  <button
-                    onClick={() =>
-                      handleResetUsage(selectedUser.id, selectedUser.name)
-                    }
-                    disabled={actionLoading}
-                    className="text-xs font-bold text-slate-400 hover:text-white uppercase p-1"
-                  >
-                    Resetar Uso
-                  </button>
-                </div>
-              </div>
-
-              <div className="bg-[#060913] p-4 rounded-xl border border-white/5 flex justify-between items-center">
-                <div className="text-sm text-slate-400">Último Acesso</div>
-                <div className="font-medium text-white text-sm">
-                  {selectedUser.lastUsageDate ? (
-                    <>Data: {selectedUser.lastUsageDate}</>
-                  ) : (
-                    <span className="text-slate-500">Nunca utilizou</span>
-                  )}
-                </div>
+              <div className="border-t border-white/10 pt-6 flex justify-between gap-4">
+                <button
+                  onClick={() => handleSendResetEmail(selectedUser.email)}
+                  disabled={actionLoading}
+                  className="px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50 text-center"
+                >
+                  Enviar Reset de Senha
+                </button>
+                <button
+                  onClick={() =>
+                    handleDeleteUser(selectedUser.id, selectedUser.name)
+                  }
+                  disabled={actionLoading}
+                  className="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50 text-center"
+                >
+                  Apagar Perfil Definitivamente
+                </button>
               </div>
             </div>
-
-            <div className="border-t border-white/10 pt-6 flex justify-between gap-4">
-              <button
-                onClick={() => handleSendResetEmail(selectedUser.email)}
-                disabled={actionLoading}
-                className="px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50 text-center"
-              >
-                Enviar Reset de Senha
-              </button>
-              <button
-                onClick={() =>
-                  handleDeleteUser(selectedUser.id, selectedUser.name)
-                }
-                disabled={actionLoading}
-                className="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white font-bold rounded-lg transition-colors text-sm disabled:opacity-50 text-center"
-              >
-                Apagar Perfil Definitivamente
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }
@@ -621,11 +643,36 @@ function PromptsTab() {
       await updateSystemPrompt(activeTab, prompts[activeTab]);
       setMessage({
         type: "success",
-        text: "Instrução base atualizada (afetará todos os usuários s/ prompt customizado).",
+        text: "Instrução base atualizada (versão anterior salva no histórico).",
       });
       setTimeout(() => setMessage({ type: "", text: "" }), 4000);
     } catch (e) {
       setMessage({ type: "error", text: "Erro ao salvar." });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleUndo = async () => {
+    setSaving(true);
+    setMessage({ type: "", text: "" });
+    try {
+      const prev = await undoSystemPrompt(activeTab);
+      if (prev !== null) {
+        setPrompts((prevPrompts) => ({ ...prevPrompts, [activeTab]: prev }));
+        setMessage({
+          type: "success",
+          text: "Desfeito com sucesso. O prompt voltou para a versão anterior.",
+        });
+      } else {
+        setMessage({
+          type: "error",
+          text: "Nenhuma versão anterior encontrada no histórico.",
+        });
+      }
+      setTimeout(() => setMessage({ type: "", text: "" }), 4000);
+    } catch (e) {
+      setMessage({ type: "error", text: "Erro ao desfazer." });
     } finally {
       setSaving(false);
     }
@@ -691,7 +738,15 @@ function PromptsTab() {
           </div>
         )}
 
-        <div className="mt-4 flex justify-end">
+        <div className="mt-4 flex justify-end gap-4">
+          <button
+            onClick={handleUndo}
+            disabled={saving}
+            className="flex items-center gap-2 px-6 py-3 bg-slate-700/50 text-white font-bold rounded-xl border border-white/10 hover:bg-slate-700 transition disabled:opacity-50"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Desfazer (Versão Anterior)
+          </button>
           <button
             onClick={handleSave}
             disabled={saving}
@@ -702,6 +757,196 @@ function PromptsTab() {
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function GlobalHistoryTab() {
+  const [historyItems, setHistoryItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [actionLoading, setActionLoading] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    loadHistory();
+  }, []);
+
+  async function loadHistory() {
+    try {
+      setLoading(true);
+      const data = await adminService.getGlobalHistory();
+      setHistoryItems(data);
+    } catch (err) {
+      setError("Erro ao carregar o histórico global.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleUndo(item) {
+    if (
+      !window.confirm(
+        `Deseja estornar a análise de ${item.userName}? Isso apagará do histórico e reembolsará 1 uso se tiver sido feito hoje.`,
+      )
+    ) {
+      return;
+    }
+    setActionLoading(item.id);
+    try {
+      const res = await adminService.undoHistoryItem(item.userId, item.id);
+      setSuccess(
+        `Histórico removido.` +
+          (res.refunded
+            ? " 1 uso foi reembolsado."
+            : " Sem reembolso (o uso não foi registrado hoje ou o usuário tem 0)."),
+      );
+      setTimeout(() => setSuccess(""), 5000);
+      loadHistory();
+    } catch (err) {
+      setError("Erro ao estornar.");
+      setTimeout(() => setError(""), 4000);
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="py-12 text-center text-slate-500">
+        Carregando histórico global...
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 mb-6">
+        <History className="h-6 w-6 text-blue-500" />
+        <h2 className="text-xl font-bold text-white">
+          Histórico Global de Análises
+        </h2>
+      </div>
+
+      {error && (
+        <div className="p-3 mb-4 rounded-lg font-bold text-sm bg-red-500/10 text-red-400 border border-red-500/20">
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="p-3 mb-4 rounded-lg font-bold text-sm bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          {success}
+        </div>
+      )}
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b border-white/10 text-slate-400 text-sm">
+              <th className="pb-3 px-4 font-bold">Data</th>
+              <th className="pb-3 px-4 font-bold">Usuário (Médico)</th>
+              <th className="pb-3 px-4 font-bold">Módulo</th>
+              <th className="pb-3 px-4 font-bold">Arquivo/Paciente</th>
+              <th className="pb-3 px-4 font-bold text-right">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {historyItems
+              .slice(
+                (currentPage - 1) * itemsPerPage,
+                currentPage * itemsPerPage,
+              )
+              .map((item) => (
+                <tr
+                  key={item.id}
+                  className="border-b border-white/5 hover:bg-white/5 transition-colors group"
+                >
+                  <td className="py-4 px-4 text-sm text-slate-300 whitespace-nowrap">
+                    {new Date(item.createdAt).toLocaleDateString("pt-BR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </td>
+                  <td className="py-4 px-4 text-sm text-white font-medium">
+                    {item.userName} <br />
+                    <span className="text-xs text-slate-500 font-normal">
+                      {item.userEmail}
+                    </span>
+                  </td>
+                  <td className="py-4 px-4 text-sm text-slate-400 capitalize">
+                    {item.type}
+                  </td>
+                  <td className="py-4 px-4 text-sm text-slate-300">
+                    <div
+                      className="max-w-[200px] truncate"
+                      title={item.fileName}
+                    >
+                      {item.fileName}
+                    </div>
+                    {item.patientName && (
+                      <div className="text-xs text-slate-500 mt-1">
+                        Paciente: {getInitials(item.patientName)}
+                      </div>
+                    )}
+                  </td>
+                  <td className="py-4 px-4 text-right">
+                    <button
+                      onClick={() => handleUndo(item)}
+                      disabled={actionLoading === item.id}
+                      className="p-2 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-colors flex items-center justify-center w-full max-w-[120px] ml-auto gap-2 disabled:opacity-50"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      <span className="text-sm font-bold">
+                        {actionLoading === item.id ? "..." : "Estornar"}
+                      </span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            {historyItems.length === 0 && (
+              <tr>
+                <td colSpan="5" className="py-8 text-center text-slate-500">
+                  Nenhuma análise registrada no sistema.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Paginação */}
+      {historyItems.length > itemsPerPage && (
+        <div className="flex justify-between items-center mt-4">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 text-sm font-bold bg-white/5 hover:bg-white/10 text-white rounded-lg disabled:opacity-50"
+          >
+            Anterior
+          </button>
+          <span className="text-sm text-slate-400">
+            Página {currentPage} de{" "}
+            {Math.ceil(historyItems.length / itemsPerPage)}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((p) =>
+                Math.min(Math.ceil(historyItems.length / itemsPerPage), p + 1),
+              )
+            }
+            disabled={
+              currentPage === Math.ceil(historyItems.length / itemsPerPage)
+            }
+            className="px-4 py-2 text-sm font-bold bg-white/5 hover:bg-white/10 text-white rounded-lg disabled:opacity-50"
+          >
+            Próxima
+          </button>
+        </div>
+      )}
     </div>
   );
 }

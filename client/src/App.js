@@ -101,7 +101,7 @@ export default function App() {
 
   return (
     <>
-      {currentScreen === 'home' && <CustomCursor />}
+      {!loading && currentScreen === 'home' && <CustomCursor />}
       {renderScreen()}
     </>
   );

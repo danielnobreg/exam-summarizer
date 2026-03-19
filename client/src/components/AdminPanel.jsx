@@ -609,7 +609,7 @@ function PromptsTab() {
   const [message, setMessage] = useState({ type: "", text: "" });
 
   const EXAM_TYPES = [
-    { id: "hemogram", label: "Hemograma" },
+    { id: "hemogram", label: "Laboratorial" },
     { id: "xray", label: "Raio-X" },
     { id: "ecg", label: "ECG" },
   ];
@@ -887,11 +887,6 @@ function GlobalHistoryTab() {
                     >
                       {item.fileName}
                     </div>
-                    {item.patientName && (
-                      <div className="text-xs text-slate-500 mt-1">
-                        Paciente: {getInitials(item.patientName)}
-                      </div>
-                    )}
                   </td>
                   <td className="py-4 px-4 text-right">
                     <button

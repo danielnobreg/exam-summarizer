@@ -5,7 +5,14 @@ import { getUserData, addHistoryEntry } from "../services/userService";
 import { useUsageLimit } from "../hooks/useUsageLimit";
 import TermsModal from "./TermsModal";
 import { LOADING_MESSAGES } from "../services/analysisService";
-import { renderFormattedText } from "../utils/formatters";
+import {
+  UploadCloud,
+  FileText,
+  AlertCircle,
+  X,
+  Stethoscope,
+} from "lucide-react";
+import { renderFormattedText, extractInitialsFromFileName } from "../utils/formatters";
 
 export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
   const [file, setFile] = useState(null);
@@ -91,17 +98,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
         updateUsageAfterAnalysis(result.usage);
       }
 
-      let initials = "";
-      if (user?.name) {
-        initials = user.name
-          .split(" ")
-          .map((n) => n[0])
-          .join("")
-          .substring(0, 3)
-          .toUpperCase();
-      } else if (user?.email) {
-        initials = user.email.substring(0, 3).toUpperCase();
-      }
+      let initials = extractInitialsFromFileName(file?.name);
 
       try {
         await addHistoryEntry(user.uid, {

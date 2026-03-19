@@ -313,11 +313,6 @@ const Dashboard = ({ user, onNavigate, onLogout }) => {
                             : item.type === "xray"
                               ? "Raio-X de Tórax"
                               : "Eletrocardiograma"}
-                          {item.patientName && (
-                            <span className="text-blue-400 ml-2 font-normal text-sm opacity-90">
-                              ({item.patientName})
-                            </span>
-                          )}
                         </h4>
                         <p className="text-sm text-slate-500 mt-1">
                           {new Date(item.createdAt).toLocaleDateString(

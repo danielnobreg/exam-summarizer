@@ -5,13 +5,6 @@ import { getUserData, addHistoryEntry } from "../services/userService";
 import { useUsageLimit } from "../hooks/useUsageLimit";
 import TermsModal from "./TermsModal";
 import { LOADING_MESSAGES } from "../services/analysisService";
-import {
-  UploadCloud,
-  FileText,
-  AlertCircle,
-  X,
-  Stethoscope,
-} from "lucide-react";
 import { renderFormattedText, extractInitialsFromFileName } from "../utils/formatters";
 
 export default function HemogramAnalyze({ user, onLogout, onNavigate }) {

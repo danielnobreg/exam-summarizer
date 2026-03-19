@@ -18,7 +18,7 @@ export default function Electrocardiogram({ user, onLogout, onNavigate }) {
   const [copySuccess, setCopySuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [userData, setUserData] = useState(null);
-z
+
   const [footerModalOpen, setFooterModalOpen] = useState(false);
   const [footerModalType, setFooterModalType] = useState("terms");
 

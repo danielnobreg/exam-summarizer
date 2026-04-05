@@ -6,6 +6,8 @@ import { useUsageLimit } from "../hooks/useUsageLimit";
 import TermsModal from "./TermsModal";
 import { LOADING_MESSAGES } from "../services/analysisService";
 import { renderFormattedText, extractInitialsFromFileName } from "../utils/formatters";
+import FirstTimeAlert from "./FirstTimeAlert";
+import { ImageIcon } from "lucide-react";
 
 export default function Xray({ user, onLogout, onNavigate }) {
   const [files, setFiles] = useState([]);
@@ -16,6 +18,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
 
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState("");
+  const [analyzedFileName, setAnalyzedFileName] = useState("");
   const [error, setError] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -76,6 +79,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
     setLoading(true);
     setError("");
     setApiResponse("");
+    setAnalyzedFileName("");
 
     try {
       const promptText = `Ventilação: ${ventilation}\nPosição: ${position}\nObservações clínicas: ${obs || "Nenhuma"}`;
@@ -115,6 +119,7 @@ export default function Xray({ user, onLogout, onNavigate }) {
       }
     } finally {
       setLoading(false);
+      setAnalyzedFileName(files.length > 0 ? files.map(f => f.name).join(", ") : "");
       setFiles([]); // Limpa seleção
     }
   }
@@ -175,6 +180,8 @@ export default function Xray({ user, onLogout, onNavigate }) {
         onLogout={onLogout}
         onNavigate={onNavigate}
       />
+
+      <FirstTimeAlert />
 
       <div className="flex-1 max-w-4xl mx-auto px-4 py-8 w-full">
         {!isAdminUser && !canUseEffective && !usageLoading && (
@@ -342,24 +349,17 @@ export default function Xray({ user, onLogout, onNavigate }) {
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
+                    width="28"
+                    height="28"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.5"
-                    className={`transition-colors ${isDragging ? "text-emerald-400" : "text-slate-400 group-hover:text-emerald-400"}`}
+                    className={`transition-colors ${isDragging ? "text-blue-400" : "text-slate-400 group-hover:text-blue-400"}`}
                   >
-                    <rect
-                      x="3"
-                      y="3"
-                      width="18"
-                      height="18"
-                      rx="2"
-                      ry="2"
-                    ></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <polyline points="21 15 16 10 5 21"></polyline>
+                    <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+                    <path d="M12 12v9" />
+                    <path d="m16 16-4-4-4 4" />
                   </svg>
                 </div>
               </div>
@@ -526,12 +526,20 @@ export default function Xray({ user, onLogout, onNavigate }) {
           {(apiResponse || loading) && (
             <div className="mt-10 pt-8 border-t border-white/5 animate-fadeIn">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-sm font-black">
-                    AI
-                  </span>
-                  Impressão Radiológica
-                </h2>
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-2">
+                    <span className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-sm font-black">
+                      AI
+                    </span>
+                    Impressão Radiológica
+                  </h2>
+                  {analyzedFileName && !loading && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs font-medium text-slate-300">
+                      <ImageIcon className="w-3.5 h-3.5 text-emerald-400" />
+                      Imagens analisadas: <span className="text-white">{analyzedFileName}</span>
+                    </div>
+                  )}
+                </div>
                 {apiResponse && (
                   <button
                     onClick={handleCopy}

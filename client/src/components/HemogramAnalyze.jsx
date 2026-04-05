@@ -6,11 +6,14 @@ import { useUsageLimit } from "../hooks/useUsageLimit";
 import TermsModal from "./TermsModal";
 import { LOADING_MESSAGES } from "../services/analysisService";
 import { renderFormattedText, extractInitialsFromFileName } from "../utils/formatters";
+import FirstTimeAlert from "./FirstTimeAlert";
+import { FileText } from "lucide-react";
 
 export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState("");
+  const [analyzedFileName, setAnalyzedFileName] = useState("");
   const [error, setError] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -81,6 +84,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
     setLoading(true);
     setError("");
     setApiResponse("");
+    setAnalyzedFileName("");
 
     try {
       const pdfText = await analysisService.extractTextFromPdf(file);
@@ -112,6 +116,7 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
       }
     } finally {
       setLoading(false);
+      setAnalyzedFileName(file ? file.name : ""); // Set earlier in finally to capture before wiping
       setFile(null); // Limpa seleção de arquivo
     }
   }
@@ -163,6 +168,8 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
         onLogout={onLogout}
         onNavigate={onNavigate}
       />
+
+      <FirstTimeAlert />
 
       {/* Botão Guia */}
       <button
@@ -513,12 +520,20 @@ export default function HemogramAnalyze({ user, onLogout, onNavigate }) {
           {(apiResponse || loading) && (
             <div className="mt-10 pt-8 border-t border-white/5 animate-fadeIn">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-sm font-black">
-                    AI
-                  </span>
-                  Resultado da Análise
-                </h2>
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-2">
+                    <span className="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-sm font-black">
+                      AI
+                    </span>
+                    Resultado da Análise
+                  </h2>
+                  {analyzedFileName && !loading && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs font-medium text-slate-300">
+                      <FileText className="w-3.5 h-3.5 text-blue-400" />
+                      Extraído de: <span className="text-white">{analyzedFileName}</span>
+                    </div>
+                  )}
+                </div>
                 {apiResponse && (
                   <button
                     onClick={handleCopy}

@@ -307,12 +307,17 @@ const Dashboard = ({ user, onNavigate, onLogout }) => {
                         )}
                       </div>
                       <div>
-                        <h4 className="font-bold text-white capitalize">
+                        <h4 className="font-bold text-white capitalize flex items-center gap-2 flex-wrap">
                           {item.type === "hemogram"
                             ? "Hemograma"
                             : item.type === "xray"
                               ? "Raio-X de Tórax"
                               : "Eletrocardiograma"}
+                          {item.fileName && (
+                            <span className="text-xs font-normal bg-white/10 px-2 py-0.5 rounded-md text-slate-300 border border-white/5 truncate max-w-[150px] md:max-w-xs" title={item.fileName}>
+                              Arquivo: {item.fileName}
+                            </span>
+                          )}
                         </h4>
                         <p className="text-sm text-slate-500 mt-1">
                           {new Date(item.createdAt).toLocaleDateString(

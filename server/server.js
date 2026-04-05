@@ -64,6 +64,7 @@ app.get('/', (req, res) => {
 app.use('/api/analysis', analysisLimiter, analysisRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/usage', usageRoutes);
+app.use('/api/settings', require('./routes/settingsRoutes'));
 
 app.use(errorHandler);
 
